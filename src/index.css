@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #0A5C36;
+  --color-brand-dark: #084f2e;
+  --color-brand-light: #35B97D;
+  --color-navy: #1E2A4A;
+  --color-slate-bg: #F8FAFC;
+  --color-gray-900: #111827;
+  --color-gray-500: #6B7280;
+  
+  --font-sans: "Inter", "system-ui", "sans-serif";
+  --shadow-card: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+@layer base {
+  body {
+    @apply bg-slate-bg text-gray-900 font-sans antialiased text-[14px];
+  }
+  
+  h1 {
+    @apply text-[20px] font-semibold text-gray-900;
+  }
+  
+  h2 {
+    @apply text-[15px] font-semibold text-gray-800;
+  }
+}
+
+@layer utilities {
+  /* Base button styling applied to all variations */
+  .btn, .btn-primary, .btn-secondary, .btn-danger, .btn-success, .btn-white {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer duration-150;
+  }
+  
+  .btn-primary {
+    @apply bg-brand text-white hover:bg-brand-dark active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 active:scale-[0.98];
+  }
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 active:scale-[0.98];
+  }
+  .btn-success {
+    @apply bg-emerald-600 text-white hover:bg-emerald-700 active:scale-[0.98];
+  }
+  .btn-white {
+    @apply bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 active:scale-[0.98];
+  }
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+  .btn-xs {
+    @apply px-2 py-1 text-[11px];
+  }
+  
+  .input {
+    @apply w-full border border-gray-200 rounded-lg px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent h-10 transition-all;
+  }
+  .card {
+    @apply bg-white rounded-xl border border-gray-100 shadow-card;
+  }
+  .page-pad {
+    @apply p-6 max-w-7xl mx-auto;
+  }
+  
+  /* Scrollbar styling for a premium feel */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+}
