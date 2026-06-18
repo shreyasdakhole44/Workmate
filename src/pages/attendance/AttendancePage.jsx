@@ -318,9 +318,9 @@ export default function AttendancePage() {
         <div className="space-y-6">
           
           {/* Punch Card Widget */}
-          <div className="card p-5 bg-white flex flex-col md:flex-row items-center justify-between gap-5 border border-gray-100 shadow-card">
+          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-5 flex flex-col md:flex-row items-center justify-between gap-5 shadow-sm">
             <div className="flex items-center gap-4 flex-wrap md:flex-nowrap">
-              <div className="flex items-center justify-center w-12 h-12 bg-slate-50 border border-gray-150 rounded-2xl">
+              <div className="flex items-center justify-center w-12 h-12 bg-[#FEF2EE] border border-[#E8420A]/10 rounded-2xl">
                 {todayLog?.checkInTime && !todayLog?.checkOutTime ? (
                   <span className="relative flex h-3.5 w-3.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -331,7 +331,7 @@ export default function AttendancePage() {
                 )}
               </div>
               <div className="space-y-1">
-                <p className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">Attendance Clock</p>
+                <p className="text-[12px] font-bold text-gray-405 uppercase tracking-wider">Attendance Clock</p>
                 <div className="flex items-center gap-2">
                   <TimeDisplay />
                   {todayLog?.status && <Badge label={todayLog.checkOutTime ? "PRESENT" : "PRESENT"} />}
@@ -342,15 +342,15 @@ export default function AttendancePage() {
             <div className="grid grid-cols-3 gap-6 max-w-md w-full md:w-auto text-center md:text-left">
               <div>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Punch In</p>
-                <p className="text-xs font-semibold text-gray-900 mt-0.5">{todayLog?.checkInTime || "—"}</p>
+                <p className="text-xs font-bold text-gray-900 mt-0.5">{todayLog?.checkInTime || "—"}</p>
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Punch Out</p>
-                <p className="text-xs font-semibold text-gray-900 mt-0.5">{todayLog?.checkOutTime || "—"}</p>
+                <p className="text-xs font-bold text-gray-900 mt-0.5">{todayLog?.checkOutTime || "—"}</p>
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Hours Worked</p>
-                <p className="text-xs font-semibold text-gray-900 mt-0.5">{tickingHours}</p>
+                <p className="text-xs font-bold text-gray-900 mt-0.5">{tickingHours}</p>
               </div>
             </div>
 
@@ -360,19 +360,19 @@ export default function AttendancePage() {
               ) : !todayLog?.checkInTime ? (
                 <button
                   onClick={handleCheckIn}
-                  className="btn bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-5 py-3 rounded-lg shadow-sm flex items-center gap-2 cursor-pointer w-full md:w-auto"
+                  className="bg-[#E8420A] hover:bg-[#C73708] text-white font-bold text-xs px-5 py-3 rounded-lg shadow-sm flex items-center gap-2 cursor-pointer w-full md:w-auto transition-colors"
                 >
                   <Play size={14} fill="currentColor" /> Punch In Shift
                 </button>
               ) : !todayLog?.checkOutTime ? (
                 <button
                   onClick={handleCheckOut}
-                  className="btn bg-red-600 hover:bg-red-700 text-white font-semibold text-xs px-5 py-3 rounded-lg shadow-sm flex items-center gap-2 cursor-pointer w-full md:w-auto"
+                  className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-5 py-3 rounded-lg shadow-sm flex items-center gap-2 cursor-pointer w-full md:w-auto transition-colors"
                 >
                   <Power size={14} /> Punch Out Shift
                 </button>
               ) : (
-                <div className="text-xs font-semibold text-gray-400 border border-gray-150 px-4 py-2.5 rounded-lg bg-gray-50 flex items-center gap-2 select-none">
+                <div className="text-xs font-bold text-gray-450 border border-gray-150 px-4 py-2.5 rounded-lg bg-gray-50 flex items-center gap-2 select-none">
                   <CheckCircle size={14} className="text-emerald-500" /> Attendance Logged For Today
                 </div>
               )}
@@ -389,9 +389,9 @@ export default function AttendancePage() {
           </div>
 
           {/* Filters & Daily log table */}
-          <div className="card">
+          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 shadow-sm p-0">
             <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between flex-wrap gap-3">
-              <h3 className="text-[15px] font-semibold text-gray-900">Attendance Log History</h3>
+              <h3 className="text-[15px] font-bold text-[#0B3D2E]">Attendance Log History</h3>
               <div className="flex items-center gap-2">
                 <select
                   value={selectedMonth}
@@ -405,8 +405,8 @@ export default function AttendancePage() {
                   onChange={e => setSelectedYear(Number(e.target.value))}
                   className="input py-1 px-2.5 text-xs h-9 cursor-pointer w-24"
                 >
-                  <option value={year}>{year}</option>
-                  <option value={year - 1}>{year - 1}</option>
+                  <option value={selectedYear}>{selectedYear}</option>
+                  <option value={selectedYear - 1}>{selectedYear - 1}</option>
                 </select>
               </div>
             </div>
@@ -415,7 +415,7 @@ export default function AttendancePage() {
             <div className="overflow-x-auto w-full">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-50/75 border-b border-gray-100">
+                  <tr className="bg-[#FAF7F2]/60 border-b border-[#E8E2D9]/60">
                     {myColumns.map(col => (
                       <th key={col.key} className="text-left px-5 py-3 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
                         {col.label}
@@ -423,7 +423,7 @@ export default function AttendancePage() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50/50">
+                <tbody className="divide-y divide-[#E8E2D9]/30">
                   {logsLoading ? (
                     [...Array(4)].map((_, rIdx) => (
                       <tr key={rIdx} className="animate-pulse">
@@ -442,7 +442,7 @@ export default function AttendancePage() {
                     personalLogs.map((row, i) => (
                       <tr key={row.id || i} className={`transition-colors ${getRowColor(row.status)}`}>
                         {myColumns.map(col => (
-                          <td key={col.key} className="px-5 py-3 text-gray-800 font-medium whitespace-nowrap">
+                          <td key={col.key} className="px-5 py-3 text-gray-800 font-bold whitespace-nowrap">
                             {col.render ? col.render(row) : row[col.key] ?? "—"}
                           </td>
                         ))}
@@ -460,7 +460,7 @@ export default function AttendancePage() {
         // ── HR DAILY AUDITS TEAM VIEW ──
         <div className="space-y-6 animate-fadeIn">
           {/* Controls row */}
-          <div className="card p-4 flex flex-wrap items-center justify-between gap-4 bg-white">
+          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-4 flex flex-wrap items-center justify-between gap-4 shadow-sm">
             <div className="flex items-center gap-3">
               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Auditing Date</label>
               <input
@@ -472,14 +472,14 @@ export default function AttendancePage() {
             </div>
             <button
               onClick={handleExport}
-              className="btn btn-secondary text-xs font-semibold py-2.5 px-4 rounded-lg flex items-center gap-2 cursor-pointer shadow-sm"
+              className="bg-white hover:bg-slate-50 border border-[#E8E2D9] text-[#E8420A] text-xs font-bold py-2.5 px-4 rounded-lg flex items-center gap-2 cursor-pointer shadow-sm transition-colors"
             >
               <FileSpreadsheet size={14} className="text-emerald-600" /> Export Records
             </button>
           </div>
 
           {/* Team table grid */}
-          <div className="card">
+          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 shadow-sm p-0">
             <Table
               columns={teamColumns}
               data={teamLogs}

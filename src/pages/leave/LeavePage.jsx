@@ -311,7 +311,7 @@ export default function LeavePage() {
             <h2 className="text-[15px] font-bold text-gray-800">Leave Balance Account</h2>
             <button
               onClick={() => setApplyModalOpen(true)}
-              className="btn-primary text-xs font-semibold py-2 px-4 rounded-lg flex items-center gap-1.5 shadow-sm cursor-pointer"
+              className="bg-[#E8420A] hover:bg-[#C73708] text-white text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-1.5 shadow-sm cursor-pointer transition-colors"
             >
               <Plus size={15} /> Apply for Leave
             </button>
@@ -321,12 +321,12 @@ export default function LeavePage() {
             {balances.map(bal => {
               const percent = Math.round((bal.remainingDays / bal.allocatedDays) * 100) || 0;
               return (
-                <div key={bal.id} className="card p-5 flex flex-col justify-between space-y-3 bg-white">
+                <div key={bal.id} className="bg-white rounded-xl border border-[#E8E2D9]/60 p-5 flex flex-col justify-between space-y-3 shadow-sm">
                   <div>
                     <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">{bal.leaveTypeName}</p>
                     <div className="flex items-baseline gap-1 mt-2">
-                      <span className="text-[26px] font-bold text-gray-950 leading-none">{bal.remainingDays}</span>
-                      <span className="text-xs text-gray-400">of {bal.allocatedDays} days allocated</span>
+                      <span className="text-[26px] font-extrabold text-[#0B3D2E] leading-none">{bal.remainingDays}</span>
+                      <span className="text-xs text-gray-450 font-medium">of {bal.allocatedDays} days allocated</span>
                     </div>
                   </div>
                   <ProgressBar percentage={percent} color={percent < 30 ? "red" : (percent < 60 ? "amber" : "emerald")} height="h-2" />
@@ -336,7 +336,7 @@ export default function LeavePage() {
           </div>
 
           {/* Leaves History Table */}
-          <div className="card">
+          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-0 shadow-sm">
             <div className="px-5 py-4 border-b border-gray-100">
               <h3 className="text-[15px] font-semibold text-gray-900">Leave History Ledger</h3>
             </div>
@@ -353,7 +353,7 @@ export default function LeavePage() {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-[15px] font-bold text-gray-800">Leaves Request Approvals</h2>
-            <span className="text-xs font-semibold bg-blue-50 text-brand px-3 py-1 rounded-full border border-blue-100">
+            <span className="text-xs font-bold bg-[#FEF2EE] text-[#E8420A] px-3 py-1 rounded-full border border-[#E8420A]/10 shadow-sm">
               {pendingRequests.length} Requests Pending
             </span>
           </div>
@@ -365,7 +365,7 @@ export default function LeavePage() {
               ))}
             </div>
           ) : pendingRequests.length === 0 ? (
-            <div className="card p-12 text-center text-gray-400 text-xs flex flex-col items-center justify-center space-y-2 bg-white">
+            <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-12 text-center text-gray-400 text-xs flex flex-col items-center justify-center space-y-2 shadow-sm">
               <UserCheck size={32} className="text-emerald-500" />
               <p className="font-semibold text-gray-700">All caught up!</p>
               <p>No team leaves pending administrator approvals.</p>
@@ -373,11 +373,11 @@ export default function LeavePage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {pendingRequests.map(req => (
-                <div key={req.id} className="card p-5 bg-white flex flex-col justify-between space-y-4 border border-gray-100 shadow-card">
+                <div key={req.id} className="bg-white rounded-xl border border-[#E8E2D9]/60 p-5 flex flex-col justify-between space-y-4 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex items-start gap-3">
                     <Avatar name={req.employeeName} size="sm" />
                     <div className="min-w-0">
-                      <p className="font-semibold text-gray-900 truncate leading-none mb-1">{req.employeeName}</p>
+                      <p className="font-bold text-gray-900 truncate leading-none mb-1">{req.employeeName}</p>
                       <Badge label={req.leaveTypeName} />
                     </div>
                   </div>
@@ -389,10 +389,10 @@ export default function LeavePage() {
                     </div>
                     <div className="flex justify-between text-gray-500">
                       <span>Total Days:</span>
-                      <span className="font-bold text-blue-600">{req.totalDays} Day{req.totalDays !== 1 ? "s" : ""}</span>
+                      <span className="font-extrabold text-[#E8420A]">{req.totalDays} Day{req.totalDays !== 1 ? "s" : ""}</span>
                     </div>
                     {req.reason && (
-                      <div className="bg-slate-50 border border-gray-150 rounded-lg p-2 mt-1.5 text-gray-600 max-h-16 overflow-y-auto italic">
+                      <div className="bg-[#FAF7F2]/50 border border-[#E8E2D9]/40 rounded-lg p-2.5 mt-1.5 text-gray-600 max-h-16 overflow-y-auto italic font-medium leading-relaxed">
                         "{req.reason}"
                       </div>
                     )}

@@ -269,11 +269,11 @@ export default function PayrollPage() {
             <div className="max-h-[450px] overflow-y-auto space-y-1 pr-1">
               {employees.map(e => (
                 <button key={e.id} onClick={() => setSelectedEmpId(e.id)}
-                  className={`w-full text-left p-3 rounded-lg text-xs font-semibold transition-all border cursor-pointer
+                  className={`w-full text-left p-3 rounded-lg text-xs font-bold transition-all border cursor-pointer
                     ${selectedEmpId === e.id 
-                      ? "bg-blue-50 text-brand border-brand" 
-                      : "bg-white text-gray-700 border-gray-100 hover:bg-gray-50"}`}>
-                  <p className="truncate font-semibold text-gray-900">{e.fullName}</p>
+                      ? "bg-[#FEF2EE] text-[#E8420A] border-[#E8420A]" 
+                      : "bg-white text-gray-700 border-gray-100 hover:bg-[#FAF7F2]/50"}`}>
+                  <p className="truncate font-bold text-gray-900">{e.fullName}</p>
                   <p className="text-[10px] text-gray-400 mt-1">{e.designation || "No Designation"} · {e.department}</p>
                 </button>
               ))}
@@ -281,15 +281,15 @@ export default function PayrollPage() {
           </div>
 
           {/* Right Side: Setup Structure Form */}
-          <div className="lg:col-span-8 card p-6 bg-white">
-            <h3 className="font-bold text-sm text-gray-950 mb-1">Base Salary Structure Definition</h3>
+          <div className="lg:col-span-8 bg-white rounded-xl border border-[#E8E2D9]/60 p-6 shadow-sm">
+            <h3 className="font-extrabold text-sm text-[#0B3D2E] mb-1">Base Salary Structure Definition</h3>
             <p className="text-xs text-gray-400 mb-5">Define additions and statutory deductions for the selected profile.</p>
 
             <form onSubmit={handleSaveStructure} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Earnings */}
-                <div className="space-y-3 bg-gray-50 p-4 rounded-lg border border-gray-150">
-                  <h4 className="font-bold text-xs text-navy border-b border-gray-200 pb-1.5 mb-2">Earnings (Monthly)</h4>
+                <div className="space-y-3 bg-[#FAF7F2]/30 p-4 rounded-lg border border-[#E8E2D9]/50">
+                  <h4 className="font-bold text-xs text-[#0B3D2E] border-b border-gray-200 pb-1.5 mb-2">Earnings (Monthly)</h4>
                   
                   <div>
                     <label className="block text-[10px] font-semibold text-gray-500 mb-1 uppercase tracking-wider">Basic Salary *</label>
@@ -314,8 +314,8 @@ export default function PayrollPage() {
                 </div>
 
                 {/* Deductions */}
-                <div className="space-y-3 bg-gray-50 p-4 rounded-lg border border-gray-150">
-                  <h4 className="font-bold text-xs text-navy border-b border-gray-200 pb-1.5 mb-2">Deductions (Monthly)</h4>
+                <div className="space-y-3 bg-[#FAF7F2]/30 p-4 rounded-lg border border-[#E8E2D9]/50">
+                  <h4 className="font-bold text-xs text-[#0B3D2E] border-b border-gray-200 pb-1.5 mb-2">Deductions (Monthly)</h4>
 
                   <div>
                     <label className="block text-[10px] font-semibold text-gray-500 mb-1 uppercase tracking-wider">Provident Fund (PF) *</label>
@@ -331,18 +331,18 @@ export default function PayrollPage() {
               </div>
 
               {/* Total calculations block */}
-              <div className="p-4 bg-blue-50/50 border border-blue-100 rounded-lg grid grid-cols-3 gap-4 text-xs font-semibold">
+              <div className="p-4 bg-[#FAF7F2]/70 border border-[#E8E2D9]/60 rounded-lg grid grid-cols-3 gap-4 text-xs font-bold shadow-xs">
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Gross Earnings:</span>
-                  <span className="text-navy text-sm font-bold">{formatCurrency(structureForm.basicSalary + structureForm.hra + structureForm.medicalAllowance + structureForm.otherAllowances)}</span>
+                  <span className="text-gray-400 block mb-0.5 uppercase tracking-wider text-[9px]">Gross Earnings</span>
+                  <span className="text-[#0B3D2E] text-sm font-extrabold">{formatCurrency(structureForm.basicSalary + structureForm.hra + structureForm.medicalAllowance + structureForm.otherAllowances)}</span>
                 </div>
                 <div>
-                  <span className="text-gray-400 block mb-0.5">Total Deductions:</span>
-                  <span className="text-red-600 text-sm font-bold">{formatCurrency(structureForm.providentFund + structureForm.professionalTax)}</span>
+                  <span className="text-gray-400 block mb-0.5 uppercase tracking-wider text-[9px]">Total Deductions</span>
+                  <span className="text-red-655 text-sm font-extrabold">{formatCurrency(structureForm.providentFund + structureForm.professionalTax)}</span>
                 </div>
-                <div className="border-l border-blue-100 pl-4">
-                  <span className="text-gray-400 block mb-0.5">Estimated Net Pay:</span>
-                  <span className="text-emerald-600 text-sm font-extrabold">{formatCurrency((structureForm.basicSalary + structureForm.hra + structureForm.medicalAllowance + structureForm.otherAllowances) - (structureForm.providentFund + structureForm.professionalTax))}</span>
+                <div className="border-l border-[#E8E2D9]/60 pl-4">
+                  <span className="text-[#E8420A] block mb-0.5 uppercase tracking-wider text-[9px]">Estimated Net Pay</span>
+                  <span className="text-emerald-600 text-sm font-black">{formatCurrency((structureForm.basicSalary + structureForm.hra + structureForm.medicalAllowance + structureForm.otherAllowances) - (structureForm.providentFund + structureForm.professionalTax))}</span>
                 </div>
               </div>
 

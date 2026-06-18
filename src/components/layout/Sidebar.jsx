@@ -70,75 +70,78 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-white text-gray-700 select-none">
-      
-      {/* Sidebar Header with Logo */}
-      <div className="py-5 flex flex-col items-center border-b border-gray-150 shrink-0">
+    <div className="flex flex-col h-full bg-[#0A5C36] text-white select-none py-4 justify-between items-center w-full">
+      <div className="flex flex-col items-center gap-6 w-full">
+        {/* Sidebar Header with Logo */}
         <div 
           onClick={() => navigate("/dashboard")}
-          className="w-10 h-10 bg-[#0A5C36] rounded-xl flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform"
+          className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform shrink-0"
         >
-          <span className="text-white font-extrabold text-sm tracking-tight">W</span>
+          <span className="text-[#0A5C36] font-black text-sm">W</span>
         </div>
+
+        {/* Navigation Links */}
+        <nav className="flex flex-col gap-2.5 w-full items-center">
+          {items.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              onClick={() => setMobileOpen && setMobileOpen(false)}
+              className={({ isActive }) =>
+                `w-10 h-10 rounded-lg flex items-center justify-center transition-all relative group active:scale-[0.95]
+                 ${isActive
+                   ? "bg-white/10 text-white border-l-2 border-[#E8420A] rounded-l-none pl-0.5 font-bold"
+                   : "text-white/60 hover:bg-white/5 hover:text-white"}`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+
+                  {/* Floating tooltip */}
+                  <span className="absolute left-full ml-3 px-2 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
+                    {label}
+                    {label === "Leaves" && pendingLeaveCount > 0 && ` (${pendingLeaveCount} pending)`}
+                  </span>
+
+                  {/* Leaves Badge */}
+                  {label === "Leaves" && pendingLeaveCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shrink-0 border border-white">
+                      {pendingLeaveCount}
+                    </span>
+                  )}
+                </>
+              )}
+            </NavLink>
+          ))}
+        </nav>
       </div>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 py-6 flex flex-col items-center gap-3.5 overflow-y-auto shrink-0 w-full px-2">
-        {items.map(({ to, label, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            onClick={() => setMobileOpen && setMobileOpen(false)}
-            className={({ isActive }) =>
-              `w-11 h-11 rounded-xl flex items-center justify-center transition-all relative group active:scale-[0.95]
-               ${isActive
-                 ? "bg-[#0A5C36]/10 text-[#0A5C36] border border-[#0A5C36]/20 font-bold"
-                 : "text-gray-450 hover:bg-slate-50 hover:text-[#0A5C36]"}`
-            }
-          >
-            {({ isActive }) => (
-              <>
-                {/* Left vertical active bar */}
-                {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[#0A5C36] rounded-r-full" />
-                )}
-                
-                <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
-
-                {/* Floating tooltip */}
-                <span className="absolute left-full ml-3 px-2 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
-                  {label}
-                  {label === "Leaves" && pendingLeaveCount > 0 && ` (${pendingLeaveCount} pending)`}
-                </span>
-
-                {/* Leaves Badge */}
-                {label === "Leaves" && pendingLeaveCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shrink-0 border border-white">
-                    {pendingLeaveCount}
-                  </span>
-                )}
-              </>
-            )}
-          </NavLink>
-        ))}
-      </nav>
-
       {/* Footer Profile & Logout */}
-      <div className="py-5 border-t border-gray-150 flex flex-col items-center gap-4 shrink-0 bg-slate-50/50">
+      <div className="flex flex-col items-center gap-4 shrink-0 w-full">
         {/* User initials bubble */}
         <div 
           onClick={() => navigate("/profile")}
           title="My Profile"
-          className="w-9 h-9 rounded-full bg-[#0A5C36] text-white font-extrabold border border-emerald-600/30 flex items-center justify-center text-xs shadow-sm cursor-pointer hover:scale-105 transition-transform"
+          className="w-8.5 h-8.5 rounded-full bg-white/20 text-white font-extrabold flex items-center justify-center text-xs shadow-sm cursor-pointer hover:scale-105 transition-transform overflow-hidden border border-white/10 shrink-0"
         >
-          {(user?.fullName || "U")[0].toUpperCase()}
+          <img 
+            src={user?.employeeId === 5 
+              ? "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80" 
+              : user?.employeeId === 3
+                ? "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&h=100&q=80"
+                : "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&h=100&q=80"
+            }
+            alt="User"
+            className="w-full h-full object-cover"
+          />
         </div>
 
         {/* Logout button */}
         <button
           onClick={handleLogout}
           title="Sign Out"
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-rose-500 hover:bg-rose-50 transition-colors cursor-pointer group relative"
+          className="w-9 h-9 rounded-lg flex items-center justify-center text-white/50 hover:text-rose-400 hover:bg-rose-500/10 cursor-pointer transition-colors group relative"
         >
           <LogOut size={16} />
           <span className="absolute left-full ml-3 px-2 py-1 bg-gray-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
@@ -153,7 +156,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex flex-col w-16 md:w-20 h-screen sticky top-0 shrink-0 z-20 shadow-xs border-r border-gray-200">
+      <aside className="hidden md:flex flex-col w-14 h-screen sticky top-0 shrink-0 z-20 shadow-md border-r border-[#084f2e]">
         {sidebarContent}
       </aside>
 
@@ -166,7 +169,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
             className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-xs transition-opacity"
           />
           {/* Menu Drawer */}
-          <div className="relative flex flex-col w-16 md:w-20 h-full bg-white z-10 animate-slide-in shadow-2xl">
+          <div className="relative flex flex-col w-14 h-full bg-[#0A5C36] z-10 animate-slide-in shadow-2xl">
             {sidebarContent}
           </div>
         </div>

@@ -65,16 +65,25 @@ export default function Layout() {
             </button>
             <div className="h-7 w-px bg-white/10" />
             
-            {/* User Profile initials bubble */}
+            {/* User Profile avatar image */}
             <div className="flex items-center gap-2">
               <div 
                 onClick={() => navigate("/profile")}
-                className="w-8.5 h-8.5 rounded-full bg-white/10 text-white font-extrabold border border-white/20 flex items-center justify-center text-xs shadow-sm cursor-pointer hover:scale-105 transition-transform"
+                className="w-8.5 h-8.5 rounded-full bg-white/10 text-white font-extrabold border border-white/20 flex items-center justify-center text-xs shadow-sm cursor-pointer hover:scale-105 transition-transform overflow-hidden shrink-0"
               >
-                {(user?.fullName || "U")[0].toUpperCase()}
+                <img 
+                  src={user?.employeeId === 5 
+                    ? "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80" 
+                    : user?.employeeId === 3
+                      ? "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&h=100&q=80"
+                      : "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&h=100&q=80"
+                  }
+                  alt="Avatar"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <span className="hidden md:inline text-xs font-bold tracking-tight text-white/90">
-                {user?.fullName?.split(" ")[0]}
+                {user?.fullName?.split(" ")?.[0]}
               </span>
             </div>
           </div>

@@ -293,7 +293,7 @@ export default function HRDashboard() {
                 {(user?.fullName || "HR")[0]}
               </div>
               <span className="hidden md:inline text-xs font-bold tracking-tight text-white/90">
-                {user?.fullName?.split(" ")[0]}
+                {user?.fullName?.split(" ")?.[0]}
               </span>
             </div>
           </div>
@@ -305,7 +305,7 @@ export default function HRDashboard() {
           {/* GREEN BANNER */}
           <div className="bg-[#0A5C36] pb-24 pt-6 px-6 md:px-8 text-white text-left relative z-0 border-t border-white/5">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-              Hello, {user?.fullName?.split(" ")[0] || "HR Manager"}!
+              Hello, {user?.fullName?.split(" ")?.[0] || "HR Manager"}!
             </h1>
             <p className="text-white/70 text-xs mt-1.5 font-semibold">HR Operations Workspace · Manage logs, onboarding & leaves approvals</p>
           </div>
@@ -476,7 +476,7 @@ export default function HRDashboard() {
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-2.5">
                           <div className="w-9 h-9 rounded-full bg-[#0A5C36]/10 text-[#0A5C36] font-extrabold flex items-center justify-center text-xs">
-                            {post.author[0]}
+                            {post.author?.[0]}
                           </div>
                           <div>
                             <h4 className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
@@ -532,7 +532,7 @@ export default function HRDashboard() {
                         <div key={l.id} className="flex items-center justify-between p-2 hover:bg-slate-50 rounded-lg border border-gray-150 transition-colors">
                           <div className="min-w-0 flex items-center gap-2">
                             <div className="w-7 h-7 rounded-full bg-slate-100 text-[#0A5C36] font-bold flex items-center justify-center text-[10px] border border-gray-200">
-                              {l.employeeName[0]}
+                              {l.employeeName?.[0]}
                             </div>
                             <div className="min-w-0">
                               <p className="text-xs font-bold text-gray-800 truncate leading-none mb-1">{l.employeeName}</p>

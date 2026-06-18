@@ -246,17 +246,17 @@ export default function PerformancePage() {
                     <ScoreRing score={rev.score} max={10} size={70} />
                   </div>
                   {/* Card Info Box */}
-                  <div className="flex-1 card p-5 bg-white border border-gray-150 rounded-xl shadow-card">
+                  <div className="flex-1 bg-white rounded-xl border border-[#E8E2D9]/60 p-5 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
                       <div>
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Review Period</p>
-                        <h4 className="text-xs font-semibold text-gray-900 mt-0.5">{rev.period}</h4>
+                        <h4 className="text-xs font-extrabold text-[#0B3D2E] mt-0.5">{rev.period}</h4>
                       </div>
-                      <span className="text-[10px] font-medium text-gray-400 flex items-center gap-1">
-                        Reviewed by <span className="font-semibold text-gray-700">{rev.reviewerName || "Manager"}</span>
+                      <span className="text-[10px] font-medium text-gray-455 flex items-center gap-1">
+                        Reviewed by <span className="font-bold text-gray-800">{rev.reviewerName || "Manager"}</span>
                       </span>
                     </div>
-                    <div className="bg-slate-50 border border-gray-100 rounded-lg p-3 mt-2 text-xs text-gray-600 leading-relaxed italic">
+                    <div className="bg-[#FAF7F2]/50 border border-[#E8E2D9]/40 rounded-lg p-3 mt-2 text-xs text-gray-650 leading-relaxed italic font-medium">
                       "{rev.feedback || "Good job! Keep performing well."}"
                     </div>
                   </div>
@@ -269,15 +269,15 @@ export default function PerformancePage() {
         // ── HR TEAM APPRISAL AUDITS VIEW ──
         <div className="space-y-6">
           {/* Top chart card */}
-          <div className="card p-6 bg-white">
-            <h3 className="text-[15px] font-semibold text-gray-900 mb-4">Department Average Performance Ratings</h3>
+          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-6 shadow-sm">
+            <h3 className="text-xs font-extrabold text-[#0B3D2E] mb-4 uppercase tracking-wider">Department Average Performance Ratings</h3>
             <div className="h-56 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={deptStats} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                   <XAxis dataKey="department" fontSize={10} stroke="#9ca3af" tickLine={false} />
                   <YAxis domain={[0, 10]} fontSize={10} stroke="#9ca3af" tickLine={false} />
-                  <Tooltip contentStyle={{ backgroundColor: "#1E2A4A", border: "none", fontSize: 11, borderRadius: 8 }} labelStyle={{ color: "#fff" }} />
+                  <Tooltip contentStyle={{ backgroundColor: "#0B3D2E", border: "none", fontSize: 11, borderRadius: 8 }} labelStyle={{ color: "#fff" }} />
                   <Bar dataKey="averageScore" radius={[4, 4, 0, 0]} barSize={32}>
                     {deptStats.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={getDeptColor(entry.department)} />
@@ -302,14 +302,14 @@ export default function PerformancePage() {
             </div>
             <button
               onClick={() => setCreateModalOpen(true)}
-              className="btn-primary text-xs font-semibold py-2 px-4 rounded-lg flex items-center gap-1.5 shadow-sm cursor-pointer"
+              className="bg-[#E8420A] hover:bg-[#C73708] text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center gap-1.5 shadow-sm cursor-pointer transition-colors"
             >
               <Plus size={15} /> Create review
             </button>
           </div>
 
           {/* Reviews table */}
-          <div className="card">
+          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 shadow-sm p-0">
             <Table
               columns={hrColumns}
               data={allReviews}

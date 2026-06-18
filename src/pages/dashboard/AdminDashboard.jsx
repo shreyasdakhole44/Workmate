@@ -310,7 +310,7 @@ export default function AdminDashboard() {
                 {(user?.fullName || "AD")[0]}
               </div>
               <span className="hidden md:inline text-xs font-bold tracking-tight text-white/90">
-                {user?.fullName?.split(" ")[0]}
+                {user?.fullName?.split(" ")?.[0]}
               </span>
             </div>
           </div>
@@ -322,7 +322,7 @@ export default function AdminDashboard() {
           {/* GREEN BANNER */}
           <div className="bg-[#0A5C36] pb-24 pt-6 px-6 md:px-8 text-white text-left relative z-0 border-t border-white/5">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-              Hello, {user?.fullName?.split(" ")[0] || "Administrator"}!
+              Hello, {user?.fullName?.split(" ")?.[0] || "Administrator"}!
             </h1>
             <p className="text-white/70 text-xs mt-1.5 font-semibold">Admin Control Console · Review headcount charts, audit configurations, and run salary cycles</p>
           </div>
@@ -489,7 +489,7 @@ export default function AdminDashboard() {
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-2.5">
                           <div className="w-8.5 h-8.5 rounded-full bg-[#0A5C36]/10 text-[#0A5C36] font-bold flex items-center justify-center text-xs">
-                            {post.author[0]}
+                            {post.author?.[0]}
                           </div>
                           <div>
                             <h4 className="text-xs font-bold text-gray-800 flex items-center gap-2">

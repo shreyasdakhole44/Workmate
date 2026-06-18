@@ -159,52 +159,52 @@ export default function OnboardingPage() {
         // EMPLOYEE PERSONAL CHECKLIST VIEW
         <div className="space-y-6">
           {/* Progress Card */}
-          <div className="card p-6 bg-white flex flex-col md:flex-row md:items-center gap-6">
+          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-6 flex flex-col md:flex-row md:items-center gap-6 shadow-sm">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-brand font-bold text-lg">
+              <div className="w-14 h-14 bg-[#FEF2EE] rounded-2xl flex items-center justify-center text-[#E8420A] font-extrabold text-lg shadow-sm border border-[#E8420A]/10">
                 {progress.progressPercent}%
               </div>
               <div>
-                <h3 className="font-bold text-gray-950 text-base">Onboarding Completion</h3>
+                <h3 className="font-extrabold text-[#0B3D2E] text-base">Onboarding Completion</h3>
                 <p className="text-xs text-gray-400 mt-0.5">Finished {progress.completedTasks} of {progress.totalTasks} total tasks</p>
               </div>
             </div>
             
             <div className="flex-1">
-              <div className="w-full bg-gray-150 h-3.5 rounded-full overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-500 to-brand h-full transition-all duration-500" style={{ width: `${progress.progressPercent}%` }} />
+              <div className="w-full bg-gray-150 h-3.5 rounded-full overflow-hidden border border-gray-200/40">
+                <div className="bg-gradient-to-r from-[#0B3D2E] to-[#E8420A] h-full transition-all duration-500" style={{ width: `${progress.progressPercent}%` }} />
               </div>
             </div>
           </div>
 
           {/* Checklist Tasks */}
-          <div className="card p-6">
-            <h3 className="font-bold text-gray-950 text-sm mb-4">Required Action Items</h3>
+          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-6 shadow-sm">
+            <h3 className="font-extrabold text-[#0B3D2E] text-sm mb-4 uppercase tracking-wider">Required Action Items</h3>
             
             {loading ? (
               <div className="text-center py-6 text-xs text-gray-400">Loading checklist items...</div>
             ) : tasks.length === 0 ? (
               <div className="text-center py-6 text-xs text-gray-400">No onboarding tasks registered.</div>
             ) : (
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-[#E8E2D9]/30">
                 {tasks.map(task => {
                   const done = task.status === "COMPLETED";
                   return (
-                    <div key={task.id} className="py-4 flex items-start gap-4 transition-colors hover:bg-gray-50/50 px-2 rounded-lg">
-                      <button onClick={() => toggleTask(task)} className="mt-0.5 cursor-pointer shrink-0 text-gray-300 hover:text-brand transition-colors">
+                    <div key={task.id} className="py-4 flex items-start gap-4 transition-colors hover:bg-[#FAF7F2]/40 px-2 rounded-lg">
+                      <button onClick={() => toggleTask(task)} className="mt-0.5 cursor-pointer shrink-0 text-gray-300 hover:text-[#E8420A] transition-colors">
                         {done ? (
-                          <CheckCircle2 className="text-emerald-500" size={20}/>
+                          <CheckCircle2 className="text-emerald-600" size={20}/>
                         ) : (
                           <Circle size={20}/>
                         )}
                       </button>
                       <div className="min-w-0 flex-1">
-                        <p className={`font-semibold text-xs transition-all ${done ? "line-through text-gray-400" : "text-gray-950"}`}>
+                        <p className={`font-bold text-xs transition-all ${done ? "line-through text-gray-400" : "text-gray-800"}`}>
                           {task.title}
                         </p>
-                        <p className="text-[11px] text-gray-400 mt-1">{task.description}</p>
+                        <p className="text-[11px] text-gray-450 mt-1 leading-relaxed">{task.description}</p>
                         {task.completedAt && (
-                          <p className="text-[9px] text-emerald-600 mt-1 flex items-center gap-1">
+                          <p className="text-[9px] text-emerald-600 mt-1 flex items-center gap-1 font-semibold">
                             <Clock size={10}/> Completed at {new Date(task.completedAt).toLocaleString()}
                           </p>
                         )}
@@ -218,10 +218,10 @@ export default function OnboardingPage() {
         </div>
       ) : (
         // HR DIRECTORY BOARD VIEW
-        <div className="card">
+        <div className="bg-white rounded-xl border border-[#E8E2D9]/60 shadow-sm p-0">
           <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
             <Users size={16} className="text-gray-400"/>
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Active New Hires</span>
+            <span className="text-xs font-extrabold text-[#0B3D2E] uppercase tracking-widest">Active New Hires</span>
           </div>
 
           <Table
@@ -236,35 +236,35 @@ export default function OnboardingPage() {
       {/* MODAL: HR VIEW/EDIT SPECIFIC EMPLOYEE CHECKLIST */}
       <Modal open={empTasksModal} onClose={() => setEmpTasksModal(false)} title={`${selectedEmp?.employeeName} Onboarding Tasks`}>
         <div className="space-y-4">
-          <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg border border-gray-100 text-xs">
-            <span className="font-semibold text-gray-500">Progress Completion:</span>
-            <span className="font-bold text-brand">{selectedEmp?.progressPercent}% ({selectedEmp?.completedTasks}/{selectedEmp?.totalTasks} Tasks)</span>
+          <div className="flex justify-between items-center bg-[#FAF7F2]/50 p-3 rounded-lg border border-[#E8E2D9]/60 text-xs shadow-xs">
+            <span className="font-bold text-gray-500">Progress Completion:</span>
+            <span className="font-extrabold text-[#E8420A]">{selectedEmp?.progressPercent}% ({selectedEmp?.completedTasks}/{selectedEmp?.totalTasks} Tasks)</span>
           </div>
 
-          <div className="divide-y divide-gray-100 max-h-96 overflow-y-auto pr-1">
+          <div className="divide-y divide-[#E8E2D9]/30 max-h-96 overflow-y-auto pr-1">
             {empTasks.map(task => {
               const done = task.status === "COMPLETED";
               return (
                 <div key={task.id} className="py-3.5 flex items-start gap-3.5">
-                  <button onClick={() => toggleEmployeeTaskByHR(task)} className="mt-0.5 cursor-pointer shrink-0 text-gray-300 hover:text-brand">
+                  <button onClick={() => toggleEmployeeTaskByHR(task)} className="mt-0.5 cursor-pointer shrink-0 text-gray-300 hover:text-[#E8420A]">
                     {done ? (
-                      <CheckCircle2 className="text-emerald-500" size={18}/>
+                      <CheckCircle2 className="text-emerald-600" size={18}/>
                     ) : (
                       <Circle size={18}/>
                     )}
                   </button>
                   <div className="flex-1">
-                    <p className={`font-semibold text-xs ${done ? "line-through text-gray-400" : "text-gray-950"}`}>
+                    <p className={`font-bold text-xs ${done ? "line-through text-gray-400" : "text-gray-800"}`}>
                       {task.title}
                     </p>
-                    <p className="text-[11px] text-gray-400 mt-0.5">{task.description}</p>
+                    <p className="text-[11px] text-gray-450 mt-0.5 leading-relaxed">{task.description}</p>
                   </div>
                 </div>
               );
             })}
           </div>
 
-          <div className="flex justify-end pt-4 border-t border-gray-100">
+          <div className="flex justify-end pt-4 border-t border-gray-150">
             <button className="btn btn-white cursor-pointer" onClick={() => setEmpTasksModal(false)}>Close Review</button>
           </div>
         </div>

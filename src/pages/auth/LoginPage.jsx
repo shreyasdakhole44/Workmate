@@ -270,13 +270,19 @@ export default function LoginPage() {
                   role: "HR Manager",
                   email: "hr@workmate.com",
                   pass: "hr123",
-                  colorClass: "bg-blue-50 text-blue-700 hover:bg-blue-100/60 border border-blue-100",
+                  colorClass: "bg-blue-50 text-blue-700 hover:bg-blue-100/60 border border-[#FEF2EE]",
                 },
                 {
                   role: "Employee",
                   email: "emp@workmate.com",
                   pass: "emp123",
                   colorClass: "bg-emerald-50 text-emerald-700 hover:bg-emerald-100/60 border border-emerald-100",
+                },
+                {
+                  role: "Employee (Rohit)",
+                  email: "rohit@workmate.com",
+                  pass: "rohit123",
+                  colorClass: "bg-amber-50 text-amber-700 hover:bg-amber-100/60 border border-amber-100",
                 },
               ].map((d) => (
                 <button

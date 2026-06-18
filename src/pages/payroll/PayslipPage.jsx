@@ -107,18 +107,18 @@ export default function PayslipPage() {
       />
 
       {/* Summary Box */}
-      <div className="card p-5 mb-6 flex flex-col sm:flex-row items-center gap-4 bg-white">
-        <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center shrink-0">
+      <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-5 mb-6 flex flex-col sm:flex-row items-center gap-4 shadow-sm">
+        <div className="w-10 h-10 bg-[#FEF2EE] text-[#E8420A] rounded-lg flex items-center justify-center shrink-0 shadow-sm border border-[#E8420A]/10">
           <Landmark size={20}/>
         </div>
         <div>
-          <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Salary Payout Account</h4>
-          <p className="text-xs text-gray-700 mt-1 font-semibold">Salaries are directly deposited to your verified bank account by the 1st of every month.</p>
+          <h4 className="text-xs font-extrabold text-[#0B3D2E] uppercase tracking-wider">Salary Payout Account</h4>
+          <p className="text-xs text-gray-500 mt-1 font-semibold leading-relaxed">Salaries are directly deposited to your verified bank account by the 1st of every month.</p>
         </div>
       </div>
 
       {/* Payslips Table */}
-      <div className="card">
+      <div className="bg-white rounded-xl border border-[#E8E2D9]/60 shadow-sm p-0">
         <Table
           columns={columns}
           data={payslips}
@@ -132,14 +132,14 @@ export default function PayslipPage() {
         {selectedSlip && (
           <div className="space-y-5">
             {/* Header info */}
-            <div className="bg-gray-50 border border-gray-100 rounded-lg p-3 grid grid-cols-2 gap-4 text-xs text-gray-500">
+            <div className="bg-[#FAF7F2]/50 border border-[#E8E2D9]/40 rounded-lg p-3 grid grid-cols-2 gap-4 text-xs text-gray-500">
               <div>
-                <p>Employee Code</p>
-                <p className="font-semibold text-gray-900 mt-0.5">{selectedSlip.employee?.empCode || "N/A"}</p>
+                <p className="font-bold text-gray-400">Employee Code</p>
+                <p className="font-bold text-[#0B3D2E] mt-0.5">{selectedSlip.employee?.empCode || "N/A"}</p>
               </div>
               <div>
-                <p>Generated At</p>
-                <p className="font-semibold text-gray-900 mt-0.5">{new Date(selectedSlip.generatedAt).toLocaleString()}</p>
+                <p className="font-bold text-gray-400">Generated At</p>
+                <p className="font-bold text-[#0B3D2E] mt-0.5">{new Date(selectedSlip.generatedAt).toLocaleString()}</p>
               </div>
             </div>
 
@@ -147,55 +147,55 @@ export default function PayslipPage() {
             <div className="grid grid-cols-2 gap-6">
               {/* Earnings column */}
               <div>
-                <h4 className="font-bold text-xs text-navy border-b border-gray-150 pb-1.5 mb-2.5">Earnings</h4>
+                <h4 className="font-extrabold text-xs text-[#0B3D2E] border-b border-gray-150 pb-1.5 mb-2.5">Earnings</h4>
                 <div className="space-y-2 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Basic Salary:</span>
-                    <span className="font-semibold text-gray-900">${selectedSlip.basicSalary}</span>
+                  <div className="flex justify-between font-semibold">
+                    <span className="text-gray-450">Basic Salary:</span>
+                    <span className="text-gray-900">${selectedSlip.basicSalary}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">HRA:</span>
-                    <span className="font-semibold text-gray-900">${selectedSlip.hra}</span>
+                  <div className="flex justify-between font-semibold">
+                    <span className="text-gray-455">HRA:</span>
+                    <span className="text-gray-900">${selectedSlip.hra}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Medical Allowance:</span>
-                    <span className="font-semibold text-gray-900">${selectedSlip.medicalAllowance}</span>
+                  <div className="flex justify-between font-semibold">
+                    <span className="text-gray-455">Medical Allowance:</span>
+                    <span className="text-gray-900">${selectedSlip.medicalAllowance}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Other Allowances:</span>
-                    <span className="font-semibold text-gray-900">${selectedSlip.otherAllowances}</span>
+                  <div className="flex justify-between font-semibold">
+                    <span className="text-gray-455">Other Allowances:</span>
+                    <span className="text-gray-900">${selectedSlip.otherAllowances}</span>
                   </div>
-                  <div className="flex justify-between pt-1 border-t border-gray-100 font-bold">
+                  <div className="flex justify-between pt-1.5 border-t border-[#E8E2D9]/60 font-bold text-gray-900">
                     <span>Gross Earnings:</span>
-                    <span className="text-brand">${selectedSlip.grossSalary}</span>
+                    <span className="text-[#0B3D2E]">${selectedSlip.grossSalary}</span>
                   </div>
                 </div>
               </div>
 
               {/* Deductions column */}
               <div>
-                <h4 className="font-bold text-xs text-navy border-b border-gray-150 pb-1.5 mb-2.5">Deductions</h4>
+                <h4 className="font-extrabold text-xs text-[#0B3D2E] border-b border-gray-150 pb-1.5 mb-2.5">Deductions</h4>
                 <div className="space-y-2 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Provident Fund (PF):</span>
-                    <span className="font-semibold text-red-500">${selectedSlip.providentFund}</span>
+                  <div className="flex justify-between font-semibold">
+                    <span className="text-gray-455">Provident Fund (PF):</span>
+                    <span className="text-red-500">${selectedSlip.providentFund}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Professional Tax:</span>
-                    <span className="font-semibold text-red-500">${selectedSlip.professionalTax}</span>
+                  <div className="flex justify-between font-semibold">
+                    <span className="text-gray-455">Professional Tax:</span>
+                    <span className="text-red-500">${selectedSlip.professionalTax}</span>
                   </div>
-                  <div className="flex justify-between pt-1 border-t border-gray-100 font-bold">
+                  <div className="flex justify-between pt-1.5 border-t border-[#E8E2D9]/60 font-bold text-gray-900">
                     <span>Total Deductions:</span>
-                    <span className="text-red-600">${Number(selectedSlip.providentFund) + Number(selectedSlip.professionalTax)}</span>
+                    <span className="text-red-650">${Number(selectedSlip.providentFund) + Number(selectedSlip.professionalTax)}</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Net Salary Row */}
-            <div className="flex items-center justify-between bg-blue-50 border border-blue-100 p-3.5 rounded-lg text-brand font-bold text-sm">
+            <div className="flex items-center justify-between bg-[#FEF2EE] border border-[#E8420A]/20 p-3.5 rounded-lg text-[#E8420A] font-extrabold text-sm shadow-sm">
               <span>NET TAKE-HOME PAYOUT</span>
-              <span className="text-base font-extrabold">${selectedSlip.netSalary}</span>
+              <span className="text-base font-black">${selectedSlip.netSalary}</span>
             </div>
 
             {/* Actions button */}

@@ -305,7 +305,7 @@ export default function EmployeePage() {
       />
 
       {/* Filter Row */}
-      <div className="card p-4 flex flex-col sm:flex-row items-center gap-3 bg-white">
+      <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-4 flex flex-col sm:flex-row items-center gap-3 shadow-sm">
         <div className="relative flex-1 w-full">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
           <input 
@@ -326,7 +326,7 @@ export default function EmployeePage() {
       </div>
 
       {/* Employees Table */}
-      <div className="card">
+      <div className="bg-white rounded-xl border border-[#E8E2D9]/60 shadow-sm p-0">
         <Table
           columns={columns}
           data={employees}
@@ -623,10 +623,10 @@ export default function EmployeePage() {
         {selectedEmp && (
           <div className="space-y-6">
             {/* Upper Profile Box */}
-            <div className="flex flex-col items-center text-center p-6 border border-gray-100 rounded-xl bg-slate-50/50 space-y-3">
+            <div className="flex flex-col items-center text-center p-6 border border-[#E8E2D9]/60 rounded-xl bg-[#FAF7F2]/60 space-y-3">
               <Avatar name={selectedEmp.fullName} size="xl" />
               <div>
-                <h4 className="text-base font-bold text-gray-900 leading-none">{selectedEmp.fullName}</h4>
+                <h4 className="text-base font-extrabold text-[#0B3D2E] leading-none">{selectedEmp.fullName}</h4>
                 <p className="text-xs text-gray-400 mt-1.5">{selectedEmp.designation || "No Designation"} · {selectedEmp.department}</p>
               </div>
               <Badge label={selectedEmp.isActive ? "ACTIVE" : "INACTIVE"} />
@@ -638,44 +638,44 @@ export default function EmployeePage() {
               <div className="grid grid-cols-2 gap-4 text-xs">
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Employee Code</p>
-                  <p className="font-mono text-gray-900 font-semibold">{selectedEmp.empCode || "—"}</p>
+                  <p className="font-mono text-gray-900 font-bold">{selectedEmp.empCode || "—"}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Email Address</p>
-                  <p className="text-gray-900 font-semibold truncate" title={selectedEmp.email}>{selectedEmp.email || "—"}</p>
+                  <p className="text-gray-900 font-bold truncate" title={selectedEmp.email}>{selectedEmp.email || "—"}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Phone Number</p>
-                  <p className="text-gray-900 font-semibold">{selectedEmp.phone || "—"}</p>
+                  <p className="text-gray-900 font-bold">{selectedEmp.phone || "—"}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Security Role</p>
-                  <p className="text-gray-900 font-semibold">{selectedEmp.role || "EMPLOYEE"}</p>
+                  <p className="text-gray-900 font-bold">{selectedEmp.role || "EMPLOYEE"}</p>
                 </div>
               </div>
             </div>
 
-            <div className="w-full h-px bg-gray-100" />
+            <div className="w-full h-px bg-gray-150" />
 
             <div className="space-y-4">
               <h5 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Employment Contract</h5>
               <div className="grid grid-cols-2 gap-4 text-xs">
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Annual Compensation</p>
-                  <p className="text-gray-900 font-bold text-blue-600">{formatCurrency(selectedEmp.salary)}</p>
+                  <p className="text-[#E8420A] font-extrabold text-sm">{formatCurrency(selectedEmp.salary)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Join Date</p>
-                  <p className="text-gray-900 font-semibold">{formatDate(selectedEmp.joinDate)}</p>
+                  <p className="text-gray-900 font-bold">{formatDate(selectedEmp.joinDate)}</p>
                 </div>
                 <div className="space-y-1 col-span-2">
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Reporting Manager</p>
-                  <p className="text-gray-900 font-semibold">{selectedEmp.managerName || "—"}</p>
+                  <p className="text-gray-900 font-bold">{selectedEmp.managerName || "—"}</p>
                 </div>
               </div>
             </div>
 
-            <div className="w-full h-px bg-gray-100 pt-2" />
+            <div className="w-full h-px bg-gray-150 pt-2" />
 
             {/* Quick Actions in Side Panel */}
             <div className="flex gap-2">

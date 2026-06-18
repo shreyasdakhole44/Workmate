@@ -92,7 +92,7 @@ export default function TopNavBar() {
               </div>
               <div className="text-left">
                 <p className="text-[12.5px] font-bold text-gray-900 leading-none">
-                  {user?.fullName || user?.email?.split("@")[0]}
+                  {user?.fullName || user?.email?.split("@")?.[0]}
                 </p>
                 <p className="text-[9px] text-[#1E8F67] font-bold mt-1 uppercase tracking-wider">{ROLE_LABEL[user?.role]}</p>
               </div>
@@ -135,7 +135,7 @@ export default function TopNavBar() {
             </div>
             <div>
               <p className="text-[13px] font-bold text-gray-950">
-                {user?.fullName || user?.email?.split("@")[0]}
+                {user?.fullName || user?.email?.split("@")?.[0]}
               </p>
               <p className="text-[10px] text-gray-400 font-semibold">{ROLE_LABEL[user?.role]}</p>
             </div>

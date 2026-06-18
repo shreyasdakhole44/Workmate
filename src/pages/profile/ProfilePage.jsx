@@ -76,13 +76,13 @@ export default function ProfilePage() {
   };
 
   const infoBox = (Icon, label, value, colorClass = "text-gray-700") => (
-    <div className="flex items-center gap-3.5 p-4 bg-slate-50/50 border border-gray-100 rounded-xl">
-      <div className="w-10 h-10 bg-white border border-gray-100 rounded-lg flex items-center justify-center text-gray-500 shrink-0 shadow-sm">
+    <div className="flex items-center gap-3.5 p-4 bg-[#FAF7F2]/50 border border-[#E8E2D9]/60 rounded-xl hover:shadow-xs transition-shadow">
+      <div className="w-10 h-10 bg-white border border-[#E8E2D9]/40 rounded-lg flex items-center justify-center text-[#E8420A] shrink-0 shadow-sm">
         <Icon size={16} />
       </div>
       <div className="min-w-0">
         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{label}</p>
-        <p className={`text-xs font-semibold mt-0.5 truncate ${colorClass}`}>{value || "—"}</p>
+        <p className={`text-xs font-bold mt-0.5 truncate ${colorClass}`}>{value || "—"}</p>
       </div>
     </div>
   );
@@ -105,29 +105,31 @@ export default function ProfilePage() {
       ) : (
         <div className="space-y-6 animate-fadeIn">
           
-          {/* Navy Gradient Header Box */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1E2A4A] via-[#111827] to-[#1E2A4A] text-white p-6 md:p-8 shadow-md">
+          {/* HROne Deep Forest Green Gradient Header Box */}
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0B3D2E] via-[#0A5C36] to-[#0B3D2E] text-white p-6 md:p-8 shadow-sm border border-[#0B3D2E]/20">
             {/* Ambient glows */}
-            <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-1/3 w-60 h-60 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-1/3 w-60 h-60 bg-[#E8420A]/10 rounded-full blur-2xl pointer-events-none" />
 
             <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex flex-col md:flex-row items-center gap-5 text-center md:text-left">
                 <Avatar name={emp.fullName} size="xl" />
-                <div className="space-y-1">
-                  <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
-                    <h2 className="text-xl font-bold text-white tracking-tight">{emp.fullName}</h2>
-                    <Badge label={user?.role} />
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-center md:justify-start gap-2.5 flex-wrap">
+                    <h2 className="text-xl font-extrabold text-white tracking-tight">{emp.fullName}</h2>
+                    <span className="bg-white/15 text-white border border-white/10 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+                      {user?.role}
+                    </span>
                   </div>
-                  <p className="text-sm text-slate-300 font-medium">{emp.designation || "No Designation Assigned"}</p>
-                  <p className="text-xs text-slate-400 font-mono">Employee ID: {emp.empCode || "—"}</p>
+                  <p className="text-xs text-white/80 font-semibold">{emp.designation || "No Designation Assigned"}</p>
+                  <p className="text-[11px] text-white/50 font-mono tracking-wider">EMPLOYEE CODE: {emp.empCode || "—"}</p>
                 </div>
               </div>
 
-              {/* Edit Trigger Button */}
+              {/* Edit Trigger Button - HROne Orange Red */}
               <button
                 onClick={() => setEditModalOpen(true)}
-                className="btn bg-white/10 hover:bg-white/15 text-white border border-white/10 text-xs font-semibold py-2 px-4 rounded-lg flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer"
+                className="bg-[#E8420A] hover:bg-[#C73708] text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer shadow-sm shadow-[#E8420A]/25"
               >
                 <Pencil size={13} /> Edit Profile
               </button>
@@ -136,8 +138,8 @@ export default function ProfilePage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* SECTION: CONTACT INFORMATION */}
-            <div className="card p-6 bg-white space-y-4">
-              <h3 className="text-[13px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">
+            <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-6 space-y-4 shadow-sm">
+              <h3 className="text-xs font-extrabold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">
                 Contact Information
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -147,8 +149,8 @@ export default function ProfilePage() {
             </div>
 
             {/* SECTION: EMPLOYMENT DETAILS */}
-            <div className="card p-6 bg-white space-y-4">
-              <h3 className="text-[13px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">
+            <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-6 space-y-4 shadow-sm">
+              <h3 className="text-xs font-extrabold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">
                 Employment Details
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -156,7 +158,7 @@ export default function ProfilePage() {
                 {infoBox(Landmark, "Business Department", emp.department)}
                 {infoBox(User, "Reporting Manager", emp.managerName || "Executive Level")}
                 {user?.role === "ADMIN" || user?.role === "HR_MANAGER" ? (
-                  infoBox(CreditCard, "Salary Compensation", formatCurrency(emp.salary), "text-blue-600 font-bold")
+                  infoBox(CreditCard, "Salary Compensation", formatCurrency(emp.salary), "text-[#E8420A] font-extrabold")
                 ) : (
                   infoBox(Shield, "System Permissions Access", "Restricted / Standard Role Access")
                 )}
@@ -165,10 +167,10 @@ export default function ProfilePage() {
           </div>
 
           {emp.managerName && (
-            <div className="bg-slate-50 border border-gray-100 rounded-xl p-4 text-xs">
-              <h4 className="font-bold text-gray-700 mb-1">Corporate Hierarchy Hierarchy</h4>
-              <p className="text-gray-500 leading-relaxed">
-                You report directly to <span className="font-semibold text-gray-950">{emp.managerName}</span>. Any leave requests, timesheets logging, and performance reviews will be routed through this manager for review approvals.
+            <div className="bg-white border border-[#E8E2D9]/60 rounded-xl p-4.5 text-xs shadow-sm">
+              <h4 className="font-extrabold text-[#0B3D2E] mb-1.5 uppercase tracking-wide">Corporate Hierarchy Structure</h4>
+              <p className="text-gray-500 leading-relaxed font-medium">
+                You report directly to <span className="font-bold text-gray-900">{emp.managerName}</span>. Any leave requests, timesheets logging, and performance reviews will be routed through this manager for review approvals.
               </p>
             </div>
           )}
