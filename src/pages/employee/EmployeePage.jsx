@@ -9,13 +9,14 @@ import Badge from "../../components/ui/Badge";
 import Table from "../../components/ui/Table";
 import Pagination from "../../components/ui/Pagination";
 import { Plus, Search, Pencil, Trash2, Eye, Award, X, AlertTriangle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import { formatCurrency, formatDate } from "../../utils/formatters";
 import { DEPARTMENTS } from "../../utils/constants";
 
 export default function EmployeePage() {
   const { isAdmin } = useAuth();
+  const location = useLocation();
   
   // Data States
   const [employees, setEmployees] = useState([]);
@@ -24,7 +25,7 @@ export default function EmployeePage() {
   const [page, setPage] = useState(0);
   
   // Filter States
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(location.state?.search || "");
   const [dept, setDept] = useState("");
   const [loading, setLoading] = useState(true);
   

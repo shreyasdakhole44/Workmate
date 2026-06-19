@@ -71,14 +71,14 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-[#0A5C36] text-white select-none py-4 justify-between items-center w-full">
+    <div className="flex flex-col h-full bg-[#0B3D2E] text-white select-none py-4 justify-between items-center w-full">
       <div className="flex flex-col items-center gap-6 w-full">
         {/* Sidebar Header with Logo */}
         <div 
           onClick={() => navigate("/dashboard")}
           className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform shrink-0"
         >
-          <span className="text-[#0A5C36] font-black text-sm">W</span>
+          <span className="text-[#0B3D2E] font-black text-sm">W</span>
         </div>
 
         {/* Navigation Links */}
@@ -148,7 +148,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex flex-col w-14 h-screen sticky top-0 shrink-0 z-20 shadow-md border-r border-[#084f2e]">
+      <aside className="hidden md:flex flex-col w-16 h-screen sticky top-0 shrink-0 z-20 shadow-md border-r border-[#0B3D2E]/20">
         {sidebarContent}
       </aside>
 
@@ -161,7 +161,7 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
             className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-xs transition-opacity"
           />
           {/* Menu Drawer */}
-          <div className="relative flex flex-col w-14 h-full bg-[#0A5C36] z-10 animate-slide-in shadow-2xl">
+          <div className="relative flex flex-col w-16 h-full bg-[#0B3D2E] z-10 animate-slide-in shadow-2xl">
             {sidebarContent}
           </div>
         </div>

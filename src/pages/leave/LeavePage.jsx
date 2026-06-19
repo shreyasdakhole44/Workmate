@@ -103,8 +103,10 @@ export default function LeavePage() {
     setLoading(true);
     try {
       const res = await leaveAPI.all(allPage, 10, statusFilter);
-      setAllRequests(res.data.data?.content || []);
-      setAllTotal(res.data.data?.totalElements || 0);
+      const dataVal = res.data.data;
+      const requestsList = Array.isArray(dataVal) ? dataVal : (dataVal?.content || []);
+      setAllRequests(requestsList);
+      setAllTotal(Array.isArray(dataVal) ? dataVal.length : (dataVal?.totalElements || 0));
     } catch (e) {
       toast.error("Failed to load leaves ledger");
     } finally {

@@ -436,7 +436,7 @@ export const recruitmentAPI = {
   })),
   updateCandidateStatus:  (id, status, notes="") => api.put(`/recruitment/candidates/${id}/status?status=${status}&notes=${encodeURIComponent(notes)}`),
   scheduleInterview:      d => api.post("/recruitment/interviews", d),
-  submitFeedback:         (id, feedback, rating, result) => api.put(`/interviews/${id}/feedback?feedback=${encodeURIComponent(feedback)}&rating=${rating}&result=${result}`),
+  submitFeedback:         (id, feedback, rating, result) => api.put(`/recruitment/interviews/${id}/feedback?feedback=${encodeURIComponent(feedback)}&rating=${rating}&result=${result}`),
 };
 
 export const onboardingAPI = {

@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import TopBar from "../../components/layout/TopBar";
 import Badge from "../../components/ui/Badge";
 import Table from "../../components/ui/Table";
+import EmptyState from "../../components/ui/EmptyState";
 import Modal from "../../components/ui/Modal";
 import Avatar from "../../components/ui/Avatar";
 import { Briefcase, UserPlus, CalendarDays, ClipboardCheck, Plus, CheckCircle, XCircle } from "lucide-react";
@@ -302,8 +303,8 @@ export default function RecruitmentPage() {
           const active = activeTab === t.id;
           return (
             <button key={t.id} onClick={() => setActiveTab(t.id)}
-              className={`flex items-center gap-2 px-4 py-3 text-xs font-semibold uppercase tracking-wider cursor-pointer border-b-2 transition-colors
-                ${active ? "border-brand text-brand" : "border-transparent text-gray-500 hover:text-gray-950"}`}>
+              className={`flex items-center gap-2 px-4 py-3 text-xs uppercase tracking-wider cursor-pointer border-b-2 transition-all duration-200
+                ${active ? "border-[#E8420A] text-[#E8420A] font-bold" : "border-transparent text-gray-500 hover:text-gray-900 font-semibold"}`}>
               <Icon size={14}/>
               {t.label}
             </button>
@@ -315,19 +316,34 @@ export default function RecruitmentPage() {
 
       {activeTab === "jobs" && (
         <div className="card">
-          <Table
-            columns={jobColumns}
-            data={jobs}
-            loading={loading}
-            emptyMsg="No active job vacancies registered."
-          />
+          {jobs.length === 0 && !loading ? (
+            <div className="p-5">
+              <EmptyState
+                icon={Briefcase}
+                title="No active job openings yet"
+                desc="Post your first job to start building your candidate pipeline."
+                action={
+                  <button onClick={() => setJobModal(true)} className="btn btn-primary flex items-center gap-1.5 cursor-pointer">
+                    <Plus size={16}/> New Job Opening
+                  </button>
+                }
+              />
+            </div>
+          ) : (
+            <Table
+              columns={jobColumns}
+              data={jobs}
+              loading={loading}
+              emptyMsg="No active job vacancies registered."
+            />
+          )}
         </div>
       )}
 
       {activeTab === "candidates" && (
         <div className="space-y-6">
           {/* Job Filter selector */}
-          <div className="card p-4 flex items-center gap-3">
+          <div className="card p-5 flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-xl">
             <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Select Job Vacancy:</label>
             <select className="input max-w-xs cursor-pointer text-xs"
               value={selectedJobId} onChange={e => setSelectedJobId(e.target.value)}>
@@ -339,12 +355,27 @@ export default function RecruitmentPage() {
           </div>
 
           <div className="card">
-            <Table
-              columns={candidateColumns}
-              data={candidates}
-              loading={loading}
-              emptyMsg="Select a job opening to view applicants or no candidates have applied yet."
-            />
+            {candidates.length === 0 && !loading ? (
+              <div className="p-5">
+                <EmptyState
+                  icon={ClipboardCheck}
+                  title="No candidates registered yet"
+                  desc="Select a job opening above or register a new candidate to start tracking your recruitment funnel."
+                  action={
+                    <button onClick={() => setCandidateModal(true)} className="btn btn-primary flex items-center gap-1.5 cursor-pointer">
+                      <UserPlus size={16}/> Register Candidate
+                    </button>
+                  }
+                />
+              </div>
+            ) : (
+              <Table
+                columns={candidateColumns}
+                data={candidates}
+                loading={loading}
+                emptyMsg="Select a job opening to view applicants or no candidates have applied yet."
+              />
+            )}
           </div>
         </div>
       )}

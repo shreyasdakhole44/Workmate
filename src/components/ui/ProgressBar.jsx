@@ -12,7 +12,7 @@ export default function ProgressBar({ percentage = 0, color = "brand", height = 
   }, [percentage]);
 
   const colors = {
-    brand: "bg-brand",
+    brand: "bg-[#E8420A]",
     blue: "bg-blue-600",
     emerald: "bg-emerald-500",
     amber: "bg-amber-500",
@@ -24,8 +24,8 @@ export default function ProgressBar({ percentage = 0, color = "brand", height = 
   return (
     <div className={`w-full bg-gray-100 rounded-full overflow-hidden ${height} shrink-0`}>
       <div
-        className={`h-full rounded-full transition-all duration-700 ease-out ${colorClass}`}
-        style={{ width: `${width}%` }}
+        className={`h-full rounded-full transition-all duration-500 ease-out ${colorClass}`}
+        style={{ width: `${width}%`, minWidth: "4px" }}
       />
     </div>
   );

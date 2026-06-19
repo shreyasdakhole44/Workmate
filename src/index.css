@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -10,11 +10,17 @@
   --color-gray-900: #111827;
   --color-gray-500: #6B7280;
   
-  --font-sans: "Inter", "system-ui", "sans-serif";
+  --font-sans: "Inter", "Roboto", "Segoe UI", "Arial", sans-serif;
   --shadow-card: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 @layer base {
+  html, body {
+    font-family: "Inter", "Roboto", "Segoe UI", "Arial", sans-serif;
+  }
+  * {
+    font-family: inherit;
+  }
   body {
     @apply bg-slate-bg text-gray-900 font-sans antialiased text-[14px];
   }

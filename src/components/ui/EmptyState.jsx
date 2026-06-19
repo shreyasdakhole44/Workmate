@@ -1,14 +1,21 @@
-export default function EmptyState({ icon: Icon, title, desc, action }) {
+export default function EmptyState({ 
+  icon: Icon, 
+  title, 
+  desc, 
+  action, 
+  iconBg = "bg-orange-50", 
+  iconColor = "text-[#E8420A]" 
+}) {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
       {Icon && (
-        <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mb-4 border border-gray-100">
-          <Icon size={26} className="text-gray-400"/>
+        <div className={`w-20 h-20 rounded-full ${iconBg} flex items-center justify-center mx-auto`}>
+          <Icon size={28} className={iconColor}/>
         </div>
       )}
-      <p className="text-base font-medium text-gray-700 mb-1">{title}</p>
-      {desc && <p className="text-sm text-gray-400 mb-4 max-w-xs">{desc}</p>}
-      {action}
+      <h3 className="text-base font-semibold text-gray-750 mt-4">{title}</h3>
+      {desc && <p className="text-sm text-gray-400 mt-1 max-w-md">{desc}</p>}
+      {action && <div className="mt-5">{action}</div>}
     </div>
   );
 }

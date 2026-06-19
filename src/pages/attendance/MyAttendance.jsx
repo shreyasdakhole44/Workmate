@@ -51,8 +51,10 @@ export default function MyAttendance() {
     setLoading(true);
     try {
       const res = await attendanceAPI.logs(empId, "", page, 10);
-      setLogs(res.data.data?.content || []);
-      setTotal(res.data.data?.totalElements || 0);
+      const dataVal = res.data.data;
+      const logsList = Array.isArray(dataVal) ? dataVal : (dataVal?.content || []);
+      setLogs(logsList);
+      setTotal(Array.isArray(dataVal) ? dataVal.length : (dataVal?.totalElements || 0));
     } catch {
       toast.error("Failed to load attendance logs");
     } finally {

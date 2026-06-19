@@ -82,10 +82,10 @@ export default function StatCard({ label, value, sub, icon: Icon, accent = "blue
 
   return (
     <div className="card p-5 flex items-start justify-between bg-white border border-gray-100 rounded-xl shadow-card transition-all duration-300 hover:shadow-md">
-      <div className="space-y-1">
-        <p className="text-[12px] font-medium text-gray-500 uppercase tracking-wider">{label}</p>
-        <p className="text-[24px] font-bold text-gray-900 leading-none">{displayValue}</p>
-        {sub && <p className="text-[11px] font-medium text-gray-400">{sub}</p>}
+      <div className="space-y-1 text-left">
+        <p className="text-sm font-semibold text-gray-700 uppercase tracking-wide">{label}</p>
+        <p className="text-3xl font-bold text-gray-900 leading-none">{displayValue}</p>
+        {sub && <p className="text-xs text-gray-450 font-medium mt-1">{sub}</p>}
       </div>
       {Icon && (
         <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${activeAccent.bg}`}>

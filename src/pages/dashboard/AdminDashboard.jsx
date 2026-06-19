@@ -234,19 +234,19 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="fixed inset-0 z-30 flex bg-[#F0F4F2] overflow-hidden antialiased text-gray-700">
+    <div className="fixed inset-0 z-30 flex bg-gray-50 overflow-hidden antialiased text-gray-700 w-full h-screen">
       
       {/* ==========================================
           LEFT SLIM SIDEBAR (Green, Orange Active)
          ========================================== */}
-      <aside className="w-14 bg-[#0A5C36] border-r border-[#084f2e] flex flex-col justify-between items-center py-5 shrink-0 z-10">
+      <aside className="w-16 bg-[#0B3D2E] border-r border-[#0B3D2E]/20 flex flex-col justify-between items-center py-5 shrink-0 z-10 h-full">
         <div className="flex flex-col items-center gap-6 w-full">
           {/* Logo Mark */}
           <div 
             onClick={() => navigate("/dashboard")}
             className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform shrink-0"
           >
-            <span className="text-[#0A5C36] font-black text-sm">W</span>
+            <span className="text-[#0B3D2E] font-black text-sm">W</span>
           </div>
 
           {/* Navigation Items */}
@@ -297,60 +297,62 @@ export default function AdminDashboard() {
       {/* ==========================================
           RIGHT VIEWPORT CONTAINER
          ========================================== */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative h-full">
         
         {/* TOP BAR */}
-        <header className="h-14 bg-[#0A5C36] text-white px-5 md:px-8 flex items-center justify-between shrink-0 shadow-sm border-b border-white/5 relative z-20">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-[12px] md:text-sm tracking-wider uppercase">TALENTRIX SOLUTION</span>
-          </div>
-
-          <div className="hidden sm:block relative w-80 max-w-md">
-            <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input 
-              type="text" 
-              className="w-full bg-white text-gray-800 placeholder-gray-400 rounded-lg pl-9.5 pr-4 py-1.5 text-xs focus:outline-none shadow-sm focus:ring-1 focus:ring-emerald-300"
-              placeholder="Search for requests, reports, people..."
-            />
-          </div>
-
-          <div className="flex items-center gap-3.5">
-            <button className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer relative" title="Leaves Awaiting Sign-off">
-              <Calendar size={18} />
-              {pending.length > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-[#F05537] rounded-full" />
-              )}
-            </button>
-            <button className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer animate-pulse" title="System Logs">
-              <Activity size={18} />
-            </button>
-            <button className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer" title="Alerts">
-              <Bell size={18} />
-            </button>
-            <div className="h-7 w-px bg-white/10" />
-            
+        <header className="w-full bg-[#0B3D2E] text-white flex-shrink-0 relative z-20 shadow-sm border-b border-white/5">
+          <div className="px-8 py-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Avatar name={user?.fullName || "AD"} size="sm" />
-              <span className="hidden md:inline text-xs font-bold tracking-tight text-white/90">
-                {user?.fullName?.split(" ")?.[0]}
-              </span>
+              <span className="font-extrabold text-[12px] md:text-sm tracking-wider uppercase">TALENTRIX SOLUTION</span>
+            </div>
+
+            <div className="hidden sm:block relative w-80 max-w-md">
+              <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input 
+                type="text" 
+                className="w-full bg-white text-gray-800 placeholder-gray-400 rounded-lg pl-9.5 pr-4 py-1.5 text-xs focus:outline-none shadow-sm focus:ring-1 focus:ring-emerald-300"
+                placeholder="Search for requests, reports, people..."
+              />
+            </div>
+
+            <div className="flex items-center gap-3.5">
+              <button className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer relative" title="Leaves Awaiting Sign-off">
+                <Calendar size={18} />
+                {pending.length > 0 && (
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-[#F05537] rounded-full" />
+                )}
+              </button>
+              <button className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer animate-pulse" title="System Logs">
+                <Activity size={18} />
+              </button>
+              <button className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer" title="Alerts">
+                <Bell size={18} />
+              </button>
+              <div className="h-7 w-px bg-white/10" />
+              
+              <div className="flex items-center gap-2">
+                <Avatar name={user?.fullName || "AD"} size="sm" />
+                <span className="hidden md:inline text-xs font-bold tracking-tight text-white">
+                  {user?.fullName?.split(" ")?.[0]}
+                </span>
+              </div>
             </div>
           </div>
         </header>
 
         {/* CONTENT SCROLL WINDOW */}
-        <div className="flex-1 overflow-y-auto bg-[#F0F4F2] pb-10">
+        <main className="flex-1 overflow-y-auto w-full bg-gray-50 pb-10">
           
           {/* GREEN BANNER */}
-          <div className="bg-[#0A5C36] pb-24 pt-6 px-6 md:px-8 text-white text-left relative z-0 border-t border-white/5">
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+          <div className="bg-[#0B3D2E] pb-24 pt-6 px-8 text-white text-left relative z-0 border-t border-white/5">
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
               Hello, {user?.fullName?.split(" ")?.[0] || "Administrator"}!
             </h1>
             <p className="text-white/70 text-xs mt-1.5 font-semibold">Admin Control Console · Review headcount charts, audit configurations, and run salary cycles</p>
           </div>
 
           {/* PAGE CONTENT CONTAINER */}
-          <div className="px-5 md:px-8 -mt-14 space-y-6 relative z-10 max-w-7xl mx-auto">
+          <div className="px-8 -mt-14 space-y-6 relative z-10 w-full max-w-screen-2xl mx-auto">
             
             {/* FLOATING ACTION TAB BAR */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200/50 p-2 flex flex-wrap items-center justify-between gap-3">
@@ -521,10 +523,10 @@ export default function AdminDashboard() {
                         </div>
                       </div>
 
-                      <p className="text-xs text-gray-650 leading-relaxed font-semibold">{post.content}</p>
+                      <p className="text-xs text-gray-650 leading-relaxed font-normal">{post.content}</p>
 
                       <div className="h-px bg-gray-100" />
-                      <div className="flex items-center gap-4 text-[10px] font-bold text-gray-500">
+                      <div className="flex items-center gap-4 text-[10px] font-semibold text-gray-500">
                         <button onClick={() => handleCheer(post.id)} className={`flex items-center gap-1 py-1 px-2.5 rounded transition-all cursor-pointer ${
                           cheeredState[post.id] ? "bg-blue-50 text-blue-650" : "hover:bg-slate-50"
                         }`}>
@@ -595,7 +597,7 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-        </div>
+        </main>
 
         {/* SPRING AI FLOATING ASSISTANT */}
         <div 

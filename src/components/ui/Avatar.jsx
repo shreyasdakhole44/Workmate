@@ -75,28 +75,26 @@ function getAvatarUrl(name) {
 export default function Avatar({ name = "?", size = "md" }) {
   const [imgError, setImgError] = useState(false);
   
-  if (!name) name = "?";
+  const cleanName = name && name !== "?" ? name.trim() : "";
+  const parts = cleanName.split(" ").filter(Boolean);
+  const firstPart = parts[0] || "";
+  const lastPart = parts.length > 1 ? parts[parts.length - 1] : "";
+  const initials = ((firstPart[0] || "") + (lastPart[0] || "")).toUpperCase();
   
-  const initials = name
-    .split(" ")
-    .filter(Boolean)
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const isNameEmpty = !cleanName || initials.length === 0;
 
-  const firstLetter = initials[0] || "?";
+  const firstLetter = initials[0] || "";
   
-  let colorClass = "bg-blue-50 text-blue-700 border border-blue-100";
+  let colorClass = "bg-blue-100 text-blue-700";
   
   if (/[A-F]/.test(firstLetter)) {
-    colorClass = "bg-blue-50 text-blue-700 border border-blue-100";
+    colorClass = "bg-blue-100 text-blue-700";
   } else if (/[G-L]/.test(firstLetter)) {
-    colorClass = "bg-teal-50 text-teal-700 border border-teal-100";
+    colorClass = "bg-teal-100 text-teal-700";
   } else if (/[M-R]/.test(firstLetter)) {
-    colorClass = "bg-amber-50 text-amber-700 border border-amber-100";
+    colorClass = "bg-amber-100 text-amber-700";
   } else if (/[S-Z]/.test(firstLetter)) {
-    colorClass = "bg-purple-50 text-purple-700 border border-purple-100";
+    colorClass = "bg-purple-100 text-purple-700";
   }
 
   const sizeClasses = {
@@ -109,6 +107,12 @@ export default function Avatar({ name = "?", size = "md" }) {
   const sizeClass = sizeClasses[size] || sizeClasses.md;
   const avatarUrl = getAvatarUrl(name);
 
+  if (isNameEmpty && (!avatarUrl || imgError)) {
+    return (
+      <div className={`${sizeClass} animate-pulse bg-gray-200 rounded-full shrink-0`} />
+    );
+  }
+
   return (
     <div className={`${sizeClass} ${colorClass} rounded-full flex items-center justify-center shrink-0 overflow-hidden`}>
       {avatarUrl && !imgError ? (
@@ -119,7 +123,7 @@ export default function Avatar({ name = "?", size = "md" }) {
           onError={() => setImgError(true)}
         />
       ) : (
-        initials || "?"
+        initials
       )}
     </div>
   );

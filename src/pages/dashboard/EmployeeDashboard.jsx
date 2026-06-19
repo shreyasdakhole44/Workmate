@@ -327,16 +327,16 @@ export default function EmployeeDashboard() {
   const todayStr = `Today: ${new Date().toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric' })}`;
 
   return (
-    <div className="fixed inset-0 z-30 flex bg-gray-50 overflow-hidden font-sans text-gray-700 select-none antialiased text-[14px]">
+    <div className="fixed inset-0 z-30 flex bg-gray-50 overflow-hidden font-sans text-gray-700 select-none antialiased text-[14px] w-full h-screen">
       
       {/* ==========================================
           ZONE A — LEFT SIDEBAR
          ========================================== */}
-      <aside className="w-14 bg-[#0A5C36] flex flex-col justify-between items-center py-4 shrink-0 z-20 shadow-lg border-r border-[#084f2e]">
+      <aside className="w-16 bg-[#0B3D2E] flex flex-col justify-between items-center py-4 shrink-0 z-20 shadow-lg border-r border-[#0B3D2E]/20 h-full">
         <div className="flex flex-col items-center gap-8 w-full">
           {/* Logo Circle */}
           <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform">
-            <span className="text-[#0A5C36] font-black text-sm">W</span>
+            <span className="text-[#0B3D2E] font-black text-sm">W</span>
           </div>
 
           {/* Icons Stack */}
@@ -383,9 +383,9 @@ export default function EmployeeDashboard() {
       {/* ==========================================
           ZONE B — TOP BAR
          ========================================== */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden h-full">
         
-        <header className="h-14 bg-[#0B3D2E] border-b border-[#0A5C36] px-5 flex items-center justify-between shrink-0 relative z-15 shadow-sm text-white">
+        <header className="h-14 bg-[#0B3D2E] border-b border-white/5 px-5 flex items-center justify-between shrink-0 relative z-15 shadow-sm text-white">
           <div className="flex items-center gap-2">
             <span className="font-extrabold text-white text-[14px] tracking-widest uppercase">Talentrix Solution</span>
           </div>

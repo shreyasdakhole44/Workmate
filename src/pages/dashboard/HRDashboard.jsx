@@ -3,10 +3,12 @@ import { employeeAPI, leaveAPI, attendanceAPI, onboardingAPI, recruitmentAPI } f
 import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import Avatar from "../../components/ui/Avatar";
+import Badge from "../../components/ui/Badge";
 import { 
   Users, Calendar, Clock, ArrowRight, CheckCircle, XCircle, ClipboardCheck, 
   Activity, ChevronDown, Search, Lightbulb, Bell, LogOut, Award, FileText, 
-  Heart, MessageSquare, Download, Sparkles, Send, LayoutDashboard, DollarSign, UserCircle, Plus, Smile, Star
+  Heart, MessageSquare, Download, Sparkles, Send, LayoutDashboard, DollarSign, UserCircle, Plus, Smile, Star,
+  UserCheck, Briefcase
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -49,9 +51,12 @@ export default function HRDashboard() {
   const [onboardings, setOnboardings] = useState([]);
   const [activeJobsCount, setActiveJobsCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   
   // Custom Feed & Interaction States
   const [cheeredState, setCheeredState] = useState({});
+  const [celebratedState, setCelebratedState] = useState({});
+  const [supportedState, setSupportedState] = useState({});
   const [feedPosts, setFeedPosts] = useState([
     {
       id: 1,
@@ -106,6 +111,25 @@ export default function HRDashboard() {
   const [aiTyping, setAiTyping] = useState(false);
 
   const todayStr = new Date().toISOString().split("T")[0];
+
+  const filteredPending = pending.filter(l => 
+    !searchQuery || 
+    l.employeeName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    l.leaveTypeName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    l.reason?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredOnboardings = onboardings.filter(emp => 
+    !searchQuery || 
+    emp.employeeName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    emp.empCode?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    emp.department?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredLogs = todayLogs.filter(l => {
+    const name = l.employeeName || l.employee?.fullName || (l.employee ? `${l.employee.firstName} ${l.employee.lastName}` : "") || "Employee";
+    return !searchQuery || name.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   useEffect(() => {
     load();
@@ -164,6 +188,14 @@ export default function HRDashboard() {
     }));
   };
 
+  const handleCelebrated = (postId) => {
+    setCelebratedState(prev => ({ ...prev, [postId]: !prev[postId] }));
+  };
+
+  const handleSupported = (postId) => {
+    setSupportedState(prev => ({ ...prev, [postId]: !prev[postId] }));
+  };
+
   const submitPost = (e) => {
     e.preventDefault();
     if (!postText.trim()) return;
@@ -217,19 +249,19 @@ export default function HRDashboard() {
   const newCandidatesCount = 4; // Mock recruitment pipeline
 
   return (
-    <div className="fixed inset-0 z-30 flex bg-[#F0F4F2] overflow-hidden antialiased text-gray-700">
+    <div className="fixed inset-0 z-30 flex bg-gray-50 overflow-hidden antialiased text-gray-700 w-full h-screen">
       
       {/* ==========================================
           LEFT SLIM SIDEBAR (Green, Orange Active)
          ========================================== */}
-      <aside className="w-14 bg-[#0A5C36] border-r border-[#084f2e] flex flex-col justify-between items-center py-5 shrink-0 z-10">
+      <aside className="w-16 bg-[#0B3D2E] border-r border-[#0B3D2E]/20 flex flex-col justify-between items-center py-5 shrink-0 z-10 h-full">
         <div className="flex flex-col items-center gap-6 w-full">
           {/* Logo Mark */}
           <div 
             onClick={() => navigate("/dashboard")}
             className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform shrink-0"
           >
-            <span className="text-[#0A5C36] font-black text-sm">W</span>
+            <span className="text-[#0B3D2E] font-black text-sm">W</span>
           </div>
 
           {/* Navigation Items */}
@@ -280,60 +312,84 @@ export default function HRDashboard() {
       {/* ==========================================
           RIGHT VIEWPORT CONTAINER
          ========================================== */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative h-full">
         
         {/* TOP BAR */}
-        <header className="h-14 bg-[#0A5C36] text-white px-5 md:px-8 flex items-center justify-between shrink-0 shadow-sm border-b border-white/5 relative z-20">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-[12px] md:text-sm tracking-wider uppercase">TALENTRIX SOLUTION</span>
-          </div>
-
-          <div className="hidden sm:block relative w-80 max-w-md">
-            <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input 
-              type="text" 
-              className="w-full bg-white text-gray-800 placeholder-gray-400 rounded-lg pl-9.5 pr-4 py-1.5 text-xs focus:outline-none shadow-sm focus:ring-1 focus:ring-emerald-300"
-              placeholder="Search for requests, reports, people..."
-            />
-          </div>
-
-          <div className="flex items-center gap-3.5">
-            <button className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer relative" title="Pending Leaves">
-              <Calendar size={18} />
-              {pending.length > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-[#F05537] rounded-full" />
-              )}
-            </button>
-            <button className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer animate-pulse" title="Spring AI Operations">
-              <Sparkles size={18} />
-            </button>
-            <button className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer relative" title="System Alerts">
-              <Bell size={18} />
-            </button>
-            <div className="h-7 w-px bg-white/10" />
-            
+        <header className="w-full bg-[#0B3D2E] text-white flex-shrink-0 relative z-20 shadow-sm border-b border-white/5">
+          <div className="px-8 py-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Avatar name={user?.fullName || "HR"} size="sm" />
-              <span className="hidden md:inline text-xs font-bold tracking-tight text-white/90">
-                {user?.fullName?.split(" ")?.[0]}
-              </span>
+              <span className="font-extrabold text-[12px] md:text-sm tracking-wider uppercase">TALENTRIX SOLUTION</span>
+            </div>
+
+            <div className="hidden sm:block relative w-80 max-w-md">
+              <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input 
+                type="text" 
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === "Enter" && searchQuery.trim()) {
+                    navigate("/employees", { state: { search: searchQuery } });
+                  }
+                }}
+                className="w-full bg-white text-gray-800 placeholder-gray-400 rounded-lg pl-9.5 pr-4 py-1.5 text-xs focus:outline-none shadow-sm focus:ring-1 focus:ring-emerald-300"
+                placeholder="Search for requests, reports, people..."
+              />
+            </div>
+
+            <div className="flex items-center gap-3.5">
+              <button 
+                onClick={() => navigate("/leave")} 
+                className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer relative" 
+                title="Pending Leaves"
+              >
+                <Calendar size={18} />
+                {pending.length > 0 && (
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-[#F05537] rounded-full" />
+                )}
+              </button>
+              <button 
+                onClick={() => setAiDrawerOpen(!aiDrawerOpen)} 
+                className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer animate-pulse" 
+                title="Spring AI Operations"
+              >
+                <Sparkles size={18} />
+              </button>
+              <button 
+                onClick={() => toast.success("All systems operational. No new alerts.")} 
+                className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer relative" 
+                title="System Alerts"
+              >
+                <Bell size={18} />
+              </button>
+              <div className="h-7 w-px bg-white/10" />
+              
+              <div 
+                onClick={() => navigate("/profile")}
+                className="flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
+              >
+                <Avatar name={user?.fullName || "HR"} size="sm" />
+                <span className="hidden md:inline text-xs font-bold tracking-tight text-white">
+                  {user?.fullName?.split(" ")?.[0]}
+                </span>
+              </div>
             </div>
           </div>
         </header>
 
         {/* CONTENT SCROLL WINDOW */}
-        <div className="flex-1 overflow-y-auto bg-[#F0F4F2] pb-10">
+        <main className="flex-1 overflow-y-auto w-full bg-gray-50 pb-10">
           
           {/* GREEN BANNER */}
-          <div className="bg-[#0A5C36] pb-24 pt-6 px-6 md:px-8 text-white text-left relative z-0 border-t border-white/5">
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+          <div className="bg-[#0B3D2E] pb-24 pt-6 px-8 text-white text-left relative z-0 border-t border-white/5">
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
               Hello, {user?.fullName?.split(" ")?.[0] || "HR Manager"}!
             </h1>
             <p className="text-white/70 text-xs mt-1.5 font-semibold">HR Operations Workspace · Manage logs, onboarding & leaves approvals</p>
           </div>
 
           {/* PAGE CONTENT CONTAINER */}
-          <div className="px-5 md:px-8 -mt-14 space-y-6 relative z-10 max-w-7xl mx-auto">
+          <div className="px-8 -mt-14 space-y-6 relative z-10 w-full max-w-screen-2xl mx-auto">
             
             {/* FLOATING ACTION TAB BAR */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200/50 p-2 flex flex-wrap items-center justify-between gap-3">
@@ -364,60 +420,109 @@ export default function HRDashboard() {
                 </button>
               </div>
               <div className="h-6 w-px bg-gray-200 hidden md:block" />
-              <div className="text-[11px] font-bold text-[#0A5C36] bg-[#0A5C36]/5 rounded-lg px-3.5 py-1.5 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 bg-[#0A5C36] rounded-full animate-ping" />
+              <div className="text-[11px] font-bold text-[#0B3D2E] bg-[#0B3D2E]/5 rounded-lg px-3.5 py-1.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 bg-[#0B3D2E] rounded-full animate-ping" />
                 HR Operations Console
               </div>
             </div>
-
             {/* STATS TILES */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-white rounded-xl shadow-xs border border-gray-200/50 p-4 text-left">
-                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Total Employees</p>
-                <span className="text-lg md:text-2xl font-black text-[#1E2A4A] block mt-1">{empTotal ?? "—"}</span>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-6 w-full">
+              {/* Total Employees */}
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 text-left flex flex-col justify-between min-h-[120px] transition-all hover:shadow-md w-full">
+                <div className="flex justify-between items-start w-full">
+                  <div className="space-y-1">
+                    <p className="text-sm font-semibold text-gray-700 uppercase tracking-wide">TOTAL EMPLOYEES</p>
+                    <span className="text-3xl font-bold text-gray-900 leading-none block">{empTotal ?? "—"}</span>
+                  </div>
+                  <div className="w-9 h-9 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+                    <Users size={18} />
+                  </div>
+                </div>
+                <p className="text-xs text-emerald-600 font-semibold mt-1">↑ 2 this week</p>
               </div>
-              <div className="bg-white rounded-xl shadow-xs border border-gray-200/50 p-4 text-left">
-                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Pending Leaves</p>
-                <span className="text-lg md:text-2xl font-black text-rose-600 block mt-1">{pending.length}</span>
+
+              {/* Pending Leaves */}
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 text-left flex flex-col justify-between min-h-[120px] transition-all hover:shadow-md w-full">
+                <div className="flex justify-between items-start w-full">
+                  <div className="space-y-1">
+                    <p className="text-sm font-semibold text-gray-700 uppercase tracking-wide">PENDING LEAVES</p>
+                    <span className="text-3xl font-bold text-rose-600 leading-none block">{pending.length}</span>
+                  </div>
+                  <div className="w-9 h-9 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+                    <Calendar size={18} />
+                  </div>
+                </div>
+                <p className="text-xs text-gray-300 font-semibold mt-1">—</p>
               </div>
-              <div className="bg-white rounded-xl shadow-xs border border-gray-200/50 p-4 text-left">
-                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Present Today</p>
-                <span className="text-lg md:text-2xl font-black text-emerald-600 block mt-1">{presentToday}</span>
+
+              {/* Present Today */}
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 text-left flex flex-col justify-between min-h-[120px] transition-all hover:shadow-md w-full">
+                <div className="flex justify-between items-start w-full">
+                  <div className="space-y-1">
+                    <p className="text-sm font-semibold text-gray-700 uppercase tracking-wide">PRESENT TODAY</p>
+                    <span className="text-3xl font-bold text-emerald-600 leading-none block">{presentToday}</span>
+                  </div>
+                  <div className="w-9 h-9 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                    <UserCheck size={18} />
+                  </div>
+                </div>
+                <p className="text-xs text-gray-300 font-semibold mt-1">—</p>
               </div>
-              <div className="bg-white rounded-xl shadow-xs border border-gray-200/50 p-4 text-left">
-                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Active Jobs</p>
-                <span className="text-lg md:text-2xl font-black text-indigo-650 block mt-1">{activeJobsCount}</span>
+
+              {/* Active Jobs */}
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 text-left flex flex-col justify-between min-h-[120px] transition-all hover:shadow-md w-full">
+                <div className="flex justify-between items-start w-full">
+                  <div className="space-y-1">
+                    <p className="text-sm font-semibold text-gray-700 uppercase tracking-wide">ACTIVE JOBS</p>
+                    <span className="text-3xl font-bold text-gray-900 leading-none block">{activeJobsCount}</span>
+                  </div>
+                  <div className="w-9 h-9 rounded-full bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
+                    <Briefcase size={18} />
+                  </div>
+                </div>
+                <p className="text-xs text-gray-300 font-semibold mt-1">—</p>
               </div>
             </div>
 
             {/* THREE COLUMNS GRID */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 w-full items-start">
               
               {/* LEFT COLUMN */}
-              <div className="lg:col-span-4 space-y-6">
+              <div className="lg:col-span-3 space-y-6">
                 
                 {/* 1. LEAVE APPROVAL QUEUE */}
-                <CollapsibleCard title="Leave Approval Queue" count={pending.length}>
+                <CollapsibleCard title="Leave Approval Queue" count={filteredPending.length}>
                   {loading ? (
                     <div className="space-y-2 animate-pulse">
                       <div className="h-10 bg-slate-100 rounded" />
                       <div className="h-10 bg-slate-100 rounded" />
                     </div>
-                  ) : pending.length === 0 ? (
+                  ) : filteredPending.length === 0 ? (
                     <div className="text-center py-6 text-xs text-gray-450 flex flex-col items-center gap-1.5">
                       <CheckCircle size={22} className="text-emerald-500" />
                       <span>All caught up! No pending leave requests.</span>
                     </div>
                   ) : (
                     <div className="space-y-3.5">
-                      {pending.slice(0, 4).map(l => (
-                        <div key={l.id} className="p-3 border border-gray-150 rounded-xl bg-slate-50/50 flex flex-col gap-2.5 text-left shadow-2xs">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="text-xs font-bold text-gray-800">{l.employeeName}</h4>
-                              <p className="text-[10px] text-gray-400 font-semibold mt-0.5">{l.leaveTypeName} · {l.totalDays} Day{l.totalDays !== 1 ? "s" : ""}</p>
+                      {filteredPending.slice(0, 4).map(l => (
+                        <div key={l.id} className="p-4 border border-gray-100 rounded-xl bg-white flex flex-col gap-3 text-left shadow-sm hover:shadow-md transition-all">
+                          <div className="flex items-start gap-3">
+                            <Avatar name={l.employeeName} size="sm" />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <h4 className="text-xs font-bold text-gray-850 truncate">{l.employeeName}</h4>
+                                  <p className="text-[10px] text-gray-400 font-semibold mt-1 flex items-center gap-1.5">
+                                    <span className={`w-1.5 h-1.5 rounded-full inline-block ${
+                                      l.leaveTypeName === "Sick Leave" ? "bg-red-500" :
+                                      l.leaveTypeName === "Casual Leave" ? "bg-amber-500" : "bg-blue-500"
+                                    }`} />
+                                    {l.leaveTypeName} · {l.totalDays} Day{l.totalDays !== 1 ? "s" : ""}
+                                  </p>
+                                </div>
+                                <span className="text-[9px] text-gray-400 font-bold whitespace-nowrap">{l.fromDate} to {l.toDate}</span>
+                              </div>
                             </div>
-                            <span className="text-[9px] text-gray-400 font-bold">{l.fromDate} to {l.toDate}</span>
                           </div>
                           
                           <div className="flex gap-2">
@@ -439,92 +544,143 @@ export default function HRDashboard() {
                     </div>
                   )}
                 </CollapsibleCard>
-
-                {/* 2. NEW EMPLOYEE ONBOARDING PROGRESS */}
-                <CollapsibleCard title="Onboarding Progress" count={onboardings.length}>
-                  {loading ? (
-                    <div className="space-y-2 animate-pulse">
-                      <div className="h-8 bg-slate-100 rounded" />
-                    </div>
-                  ) : onboardings.length === 0 ? (
-                    <p className="text-[10px] text-gray-400">No active onboardings.</p>
-                  ) : (
-                    <div className="space-y-3.5 text-left">
-                      {onboardings.slice(0, 4).map(emp => (
-                        <div key={emp.employeeId} className="border border-gray-150 rounded-xl p-3 bg-slate-50/50 space-y-2">
-                          <div className="flex justify-between items-center">
-                            <div>
-                              <h5 className="text-xs font-bold text-gray-800">{emp.employeeName}</h5>
-                              <p className="text-[9px] text-gray-400 font-semibold mt-0.5">{emp.empCode} · {emp.department}</p>
-                            </div>
-                            <span className="text-[10px] text-blue-650 font-bold bg-blue-50 px-2 py-0.5 rounded-full">{emp.progressPercent}%</span>
-                          </div>
-                          <div className="w-full bg-slate-150 h-1.5 rounded-full overflow-hidden">
-                            <div className="bg-blue-600 h-full rounded-full" style={{ width: `${emp.progressPercent}%` }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+ 
+                 {/* 2. NEW EMPLOYEE ONBOARDING PROGRESS */}
+                 <CollapsibleCard title="Onboarding Progress" count={filteredOnboardings.length}>
+                   {loading ? (
+                     <div className="space-y-2 animate-pulse">
+                       <div className="h-8 bg-slate-100 rounded" />
+                     </div>
+                   ) : filteredOnboardings.length === 0 ? (
+                     <p className="text-[10px] text-gray-405">No active onboardings.</p>
+                   ) : (
+                     <div className="space-y-3.5 text-left">
+                       {filteredOnboardings.slice(0, 4).map(emp => (
+                         <div key={emp.employeeId} className="border border-gray-100 rounded-xl p-4 bg-white shadow-sm space-y-2.5">
+                           <div className="flex justify-between items-center">
+                             <div>
+                               <h5 className="text-xs font-bold text-gray-800">{emp.employeeName}</h5>
+                               <p className="text-[9px] text-gray-400 font-semibold mt-0.5">{emp.empCode} · {emp.department}</p>
+                             </div>
+                             <span className="text-[10px] text-[#E8420A] font-bold bg-[#FEF2EE] px-2 py-0.5 rounded-full">{emp.progressPercent}%</span>
+                           </div>
+                           <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+                             <div className="bg-[#E8420A] h-full rounded-full transition-all duration-500" style={{ width: `${emp.progressPercent}%`, minWidth: "4px" }} />
+                           </div>
+                         </div>
+                       ))}
+                     </div>
                   )}
                 </CollapsibleCard>
-
+                
                 {/* 3. QUICK LINKS SHORTCUTS */}
-                <div className="bg-white rounded-xl shadow-xs border border-gray-200/60 p-4 space-y-3">
-                  <h4 className="text-[10px] font-extrabold text-gray-450 uppercase tracking-widest text-left">System Shortcuts</h4>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link to="/attendance" className="p-2 border border-gray-150 rounded-lg hover:bg-slate-50 text-center block">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 space-y-3">
+                  <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide text-left">System Shortcuts</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <Link to="/attendance" className="p-3 border border-gray-100 rounded-xl bg-white hover:bg-gray-50 text-center block shadow-xs transition-all hover:shadow-sm">
                       <Clock size={15} className="mx-auto text-emerald-500 mb-1" />
-                      <span className="text-[10px] font-bold text-gray-700">Attendance</span>
+                      <span className="text-[11px] font-bold text-gray-700">Attendance</span>
                     </Link>
-                    <Link to="/leave" className="p-2 border border-gray-150 rounded-lg hover:bg-slate-50 text-center block">
+                    <Link to="/leave" className="p-3 border border-gray-100 rounded-xl bg-white hover:bg-gray-50 text-center block shadow-xs transition-all hover:shadow-sm">
                       <Calendar size={15} className="mx-auto text-blue-500 mb-1" />
-                      <span className="text-[10px] font-bold text-gray-700">Leave Logs</span>
+                      <span className="text-[11px] font-bold text-gray-700">Leave Logs</span>
+                    </Link>
+                    <Link to="/payroll" className="p-3 border border-gray-100 rounded-xl bg-white hover:bg-gray-50 text-center block shadow-xs transition-all hover:shadow-sm">
+                      <DollarSign size={15} className="mx-auto text-[#E8420A] mb-1" />
+                      <span className="text-[11px] font-bold text-gray-700">Payroll</span>
+                    </Link>
+                    <Link to="/employees" className="p-3 border border-gray-100 rounded-xl bg-white hover:bg-gray-50 text-center block shadow-xs transition-all hover:shadow-sm">
+                      <FileText size={15} className="mx-auto text-purple-500 mb-1" />
+                      <span className="text-[11px] font-bold text-gray-700">Reports</span>
                     </Link>
                   </div>
                 </div>
               </div>
 
               {/* CENTER COLUMN: FEED */}
-              <div className="lg:col-span-5 space-y-6">
+              <div className="lg:col-span-6 space-y-6">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-[11px] font-extrabold text-gray-800 uppercase tracking-wider">HR Board Announcements</h3>
-                  <span className="bg-[#0A5C36]/5 text-[#0A5C36] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#0A5C36]/10">Broadcast Enabled</span>
+                  <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">HR Board Announcements</h3>
+                  <span className="bg-[#0B3D2E]/5 text-[#0B3D2E] text-[10px] font-bold px-2.5 py-1 rounded-full border border-[#0B3D2E]/10">Broadcast Enabled</span>
                 </div>
 
                 {/* Posts List */}
                 <div className="space-y-4">
-                  {feedPosts.map((post) => (
-                    <div key={post.id} className="bg-white border border-gray-200/60 rounded-xl p-5 shadow-xs text-left space-y-3.5">
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-2.5">
-                          <Avatar name={post.author} size="sm" />
-                          <div>
-                            <h4 className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
-                              {post.author}
-                              <span className="text-[8px] font-black uppercase px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100">{post.tag}</span>
-                            </h4>
-                            <p className="text-[9px] text-gray-400 font-semibold mt-0.5">{post.role} · {post.time}</p>
+                  {feedPosts.map((post) => {
+                    const tagUpper = post.tag?.toUpperCase() || "";
+                    let borderLeftClass = "border-l-4 border-gray-300";
+                    let tagBadgeColor = "blue";
+                    
+                    if (tagUpper === "ALERT" || tagUpper === "ANNOUNCEMENT") {
+                      borderLeftClass = "border-l-4 border-orange-400";
+                      tagBadgeColor = "orange";
+                    } else if (tagUpper === "SOCIAL") {
+                      borderLeftClass = "border-l-4 border-blue-400";
+                      tagBadgeColor = "blue";
+                    } else if (tagUpper === "WELLNESS") {
+                      borderLeftClass = "border-l-4 border-emerald-400";
+                      tagBadgeColor = "emerald";
+                    } else if (tagUpper === "FINANCE") {
+                      borderLeftClass = "border-l-4 border-amber-400";
+                      tagBadgeColor = "amber";
+                    }
+                    
+                    return (
+                      <div key={post.id} className={`bg-white border-y border-r border-gray-100 ${borderLeftClass} rounded-xl p-6 shadow-sm hover:shadow-md transition-all text-left space-y-3.5`}>
+                        <div className="flex justify-between items-start">
+                          <div className="flex items-center gap-2.5">
+                            <Avatar name={post.author} size="sm" />
+                            <div>
+                              <h4 className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                                {post.author}
+                                <Badge label={post.tag} color={tagBadgeColor} />
+                              </h4>
+                              <p className="text-[9px] text-gray-400 font-semibold mt-0.5">{post.role} · {post.time}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <p className="text-xs text-gray-650 leading-relaxed font-semibold">{post.content}</p>
+                        <p className="text-xs text-gray-655 leading-relaxed font-normal">{post.content}</p>
 
-                      <div className="h-px bg-gray-100" />
-                      
-                      <div className="flex items-center gap-4 text-[11px] font-bold text-gray-500">
-                        <button 
-                          onClick={() => handleCheer(post.id)}
-                          className={`flex items-center gap-1.5 py-1 px-2.5 rounded transition-all cursor-pointer ${
-                            cheeredState[post.id] ? "bg-blue-50 text-blue-600" : "hover:bg-slate-50 text-gray-550"
-                          }`}
-                        >
-                          <Heart size={13} fill={cheeredState[post.id] ? "currentColor" : "none"} />
-                          <span>Like ({post.likes})</span>
-                        </button>
+                        <div className="h-px bg-gray-100" />
+                        
+                        <div className="flex items-center gap-3 text-[11px] font-semibold text-gray-500">
+                          {/* Like Button */}
+                          <button 
+                            onClick={() => handleCheer(post.id)}
+                            className={`flex items-center gap-1.5 py-1.5 px-3 rounded-lg transition-all cursor-pointer ${
+                              cheeredState[post.id] ? "bg-red-50 text-red-650" : "hover:bg-slate-50 text-gray-555"
+                            }`}
+                          >
+                            <Heart size={13} fill={cheeredState[post.id] ? "currentColor" : "none"} className={cheeredState[post.id] ? "text-red-500" : ""} />
+                            <span>Love ({post.likes})</span>
+                          </button>
+
+                          {/* Cheer Button */}
+                          <button 
+                            onClick={() => handleCelebrated(post.id)}
+                            className={`flex items-center gap-1.5 py-1.5 px-3 rounded-lg transition-all cursor-pointer ${
+                              celebratedState[post.id] ? "bg-amber-50 text-amber-650" : "hover:bg-slate-50 text-gray-555"
+                            }`}
+                          >
+                            <span>🎉</span>
+                            <span>Cheer ({Math.floor(post.likes / 2) + (celebratedState[post.id] ? 1 : 0)})</span>
+                          </button>
+
+                          {/* Support Button */}
+                          <button 
+                            onClick={() => handleSupported(post.id)}
+                            className={`flex items-center gap-1.5 py-1.5 px-3 rounded-lg transition-all cursor-pointer ${
+                              supportedState[post.id] ? "bg-blue-50 text-blue-650" : "hover:bg-slate-50 text-gray-555"
+                            }`}
+                          >
+                            <span>💡</span>
+                            <span>Insight ({Math.floor(post.likes / 3) + (supportedState[post.id] ? 1 : 0)})</span>
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
@@ -532,55 +688,58 @@ export default function HRDashboard() {
               <div className="lg:col-span-3 space-y-6">
                 
                 {/* TODAY'S ATTENDANCE SUMMARY */}
-                <div className="bg-white rounded-xl shadow-xs border border-gray-200/60 p-5 text-left space-y-4">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 text-left space-y-4">
                   <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-                    <h3 className="text-[11px] font-black text-gray-800 uppercase tracking-wider">Today's Logs</h3>
-                    <Link to="/attendance" className="text-[9px] font-bold text-[#0A5C36] hover:underline">Full Log</Link>
+                    <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Today's Logs</h3>
+                    <Link to="/attendance" className="text-[10px] font-bold text-[#0B3D2E] hover:underline">Full Log</Link>
                   </div>
 
                   {loading ? (
                     <div className="space-y-2 animate-pulse">
                       <div className="h-6 bg-slate-100 rounded" />
                     </div>
-                  ) : todayLogs.length === 0 ? (
+                  ) : filteredLogs.length === 0 ? (
                     <div className="text-center py-6 text-xs text-gray-400">
                       No logs submitted today.
                     </div>
                   ) : (
                     <div className="space-y-3.5 max-h-72 overflow-y-auto pr-1">
-                      {todayLogs.map(l => (
-                        <div key={l.id} className="flex items-center justify-between p-2 hover:bg-slate-50 rounded-lg border border-gray-150 transition-colors">
-                          <div className="min-w-0 flex items-center gap-2">
-                            <Avatar name={l.employeeName} size="sm" />
-                            <div className="min-w-0">
-                              <p className="text-xs font-bold text-gray-800 truncate leading-none mb-1">{l.employeeName}</p>
-                              <p className="text-[9px] text-gray-400 font-semibold">In: {l.checkInTime}</p>
+                      {filteredLogs.map(l => {
+                        const empName = l.employeeName || l.employee?.fullName || (l.employee ? `${l.employee.firstName} ${l.employee.lastName}` : "") || "Employee";
+                        return (
+                          <div key={l.id} className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-xl border border-gray-100 transition-all bg-white shadow-xs">
+                            <div className="min-w-0 flex items-center gap-2.5">
+                              <Avatar name={empName} size="sm" />
+                              <div className="min-w-0">
+                                <p className="text-xs font-bold text-gray-805 truncate leading-none mb-1 text-left">{empName}</p>
+                                <p className="text-[10px] text-gray-400 font-semibold text-left">In: {l.checkInTime}</p>
+                              </div>
                             </div>
+                            <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full uppercase border ${
+                              l.status === "PRESENT" ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-blue-50 text-blue-700 border-blue-100"
+                            }`}>
+                              {l.status}
+                            </span>
                           </div>
-                          <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded uppercase ${
-                            l.status === "PRESENT" ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-blue-50 text-blue-600 border border-blue-100"
-                          }`}>
-                            {l.status}
-                          </span>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
 
                 {/* MY TEAM LEGEND STATUS */}
-                <div className="bg-white rounded-xl shadow-xs border border-gray-200/60 p-5 text-left space-y-3">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 text-left space-y-3">
                   <h4 className="text-[11px] font-black text-gray-850 uppercase tracking-wider pb-1.5 border-b border-gray-100">Live Team Ratios</h4>
                   <div className="space-y-2.5 text-[10px] font-semibold text-gray-500">
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center bg-gray-50 rounded-lg px-3 py-2">
                       <span>Headcount Active</span>
                       <span className="font-bold text-gray-800">{empTotal} Employees</span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center bg-gray-50 rounded-lg px-3 py-2">
                       <span>Attending Today</span>
                       <span className="font-bold text-emerald-600">{presentToday} Present</span>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex justify-between items-center bg-gray-50 rounded-lg px-3 py-2">
                       <span>Review Pendings</span>
                       <span className="font-bold text-rose-500">{pending.length} Leaves</span>
                     </div>
@@ -589,7 +748,7 @@ export default function HRDashboard() {
               </div>
             </div>
           </div>
-        </div>
+        </main>
 
         {/* SPRING AI FLOATING ASSISTANT */}
         <div 

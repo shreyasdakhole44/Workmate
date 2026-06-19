@@ -67,8 +67,10 @@ export default function TeamPerformance() {
     setLoading(true);
     try {
       const res = await performanceAPI.all(page, 10);
-      setReviews(res.data.data?.content || []);
-      setTotal(res.data.data?.totalElements || 0);
+      const dataVal = res.data.data;
+      const reviewsList = Array.isArray(dataVal) ? dataVal : (dataVal?.content || []);
+      setReviews(reviewsList);
+      setTotal(Array.isArray(dataVal) ? dataVal.length : (dataVal?.totalElements || 0));
     } catch {
       toast.error("Failed to load reviews");
     } finally {
@@ -121,11 +123,9 @@ export default function TeamPerformance() {
     try {
       await performanceAPI.create({
         employeeId: Number(form.employeeId),
-        reviewerId: user?.userId,
-        score: Number(form.score),
-        comments: form.comments,
         reviewPeriod: form.reviewPeriod,
-        reviewDate: new Date().toISOString().split("T")[0]
+        score: Number(form.score),
+        feedbackText: form.comments
       });
       toast.success("Performance appraisal review created!");
       setModal(false);

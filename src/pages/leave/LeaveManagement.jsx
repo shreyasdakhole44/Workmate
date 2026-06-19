@@ -40,8 +40,10 @@ export default function LeaveManagement() {
     setLoading(true);
     try {
       const res = await leaveAPI.all(page, 10, status);
-      setRequests(res.data.data?.content || []);
-      setTotal(res.data.data?.totalElements || 0);
+      const dataVal = res.data.data;
+      const requestsList = Array.isArray(dataVal) ? dataVal : (dataVal?.content || []);
+      setRequests(requestsList);
+      setTotal(Array.isArray(dataVal) ? dataVal.length : (dataVal?.totalElements || 0));
     } catch {
       toast.error("Failed to load leave requests");
     } finally {

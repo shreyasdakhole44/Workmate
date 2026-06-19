@@ -6,7 +6,7 @@ import Badge from "../../components/ui/Badge";
 import Table from "../../components/ui/Table";
 import Modal from "../../components/ui/Modal";
 import Avatar from "../../components/ui/Avatar";
-import { CheckCircle2, Circle, Clock, CheckSquare, Users } from "lucide-react";
+import { CheckCircle2, Circle, Clock, CheckSquare, Users, ClipboardCheck } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function OnboardingPage() {
@@ -122,8 +122,8 @@ export default function OnboardingPage() {
             <span className="text-gray-500">{r.completedTasks}/{r.totalTasks} Tasks</span>
             <span className="text-brand">{r.progressPercent}%</span>
           </div>
-          <div className="w-full bg-gray-150 h-2 rounded-full overflow-hidden">
-            <div className="bg-brand h-full transition-all duration-300" style={{ width: `${r.progressPercent}%` }} />
+          <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+            <div className="bg-[#E8420A] h-full transition-all duration-500 rounded-full" style={{ width: `${r.progressPercent}%`, minWidth: "4px" }} />
           </div>
         </div>
       )
@@ -132,8 +132,13 @@ export default function OnboardingPage() {
       key: "status",
       label: "Status Badge",
       render: r => {
-        const done = r.progressPercent === 100;
-        return <Badge label={done ? "COMPLETED" : "IN PROGRESS"} color={done ? "emerald" : "blue"} />;
+        if (r.progressPercent === 100) {
+          return <Badge label="COMPLETED" />;
+        } else if (r.progressPercent === 0) {
+          return <Badge label="NOT STARTED" color="gray" />;
+        } else {
+          return <Badge label="IN PROGRESS" />;
+        }
       }
     },
     {
@@ -141,8 +146,8 @@ export default function OnboardingPage() {
       label: "Audit",
       render: r => (
         <button onClick={() => handleViewEmployeeTasks(r)}
-          className="btn btn-white btn-xs cursor-pointer py-1 px-2.5 text-xs flex items-center gap-1">
-          <CheckSquare size={13}/> Review Checklist
+          className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer">
+          <ClipboardCheck size={14} className="text-gray-400" /> Review Checklist
         </button>
       )
     }
@@ -159,20 +164,20 @@ export default function OnboardingPage() {
         // EMPLOYEE PERSONAL CHECKLIST VIEW
         <div className="space-y-6">
           {/* Progress Card */}
-          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-6 flex flex-col md:flex-row md:items-center gap-6 shadow-sm">
+          <div className="bg-white rounded-xl border border-gray-100 p-5 flex flex-col md:flex-row md:items-center gap-6 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 bg-[#FEF2EE] rounded-2xl flex items-center justify-center text-[#E8420A] font-extrabold text-lg shadow-sm border border-[#E8420A]/10">
                 {progress.progressPercent}%
               </div>
-              <div>
+              <div className="space-y-1">
                 <h3 className="font-extrabold text-[#0B3D2E] text-base">Onboarding Completion</h3>
                 <p className="text-xs text-gray-400 mt-0.5">Finished {progress.completedTasks} of {progress.totalTasks} total tasks</p>
               </div>
             </div>
             
             <div className="flex-1">
-              <div className="w-full bg-gray-150 h-3.5 rounded-full overflow-hidden border border-gray-200/40">
-                <div className="bg-gradient-to-r from-[#0B3D2E] to-[#E8420A] h-full transition-all duration-500" style={{ width: `${progress.progressPercent}%` }} />
+              <div className="w-full bg-gray-100 h-3.5 rounded-full overflow-hidden border border-gray-200/40">
+                <div className="bg-gradient-to-r from-[#0B3D2E] to-[#E8420A] h-full transition-all duration-500" style={{ width: `${progress.progressPercent}%`, minWidth: "4px" }} />
               </div>
             </div>
           </div>

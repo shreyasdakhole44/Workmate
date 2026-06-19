@@ -6,11 +6,12 @@ import StatCard from "../../components/ui/StatCard";
 import ScoreRing from "../../components/ui/ScoreRing";
 import Badge from "../../components/ui/Badge";
 import Table from "../../components/ui/Table";
+import EmptyState from "../../components/ui/EmptyState";
 import Modal from "../../components/ui/Modal";
 import Spinner from "../../components/ui/Spinner";
 import { 
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, 
-  Tooltip, Cell, CartesianGrid 
+  Tooltip, Cell, CartesianGrid, LabelList 
 } from "recharts";
 import { 
   Star, Clipboard, MessageSquare, Award, Plus, 
@@ -87,7 +88,8 @@ export default function PerformancePage() {
       ]);
       setDeptStats(deptRes.data.data || []);
       
-      const reviewsList = allRes.data.data?.content || [];
+      const dataVal = allRes.data.data;
+      const reviewsList = Array.isArray(dataVal) ? dataVal : (dataVal?.content || []);
       // Apply local filtering by employee name if employeeFilter is specified
       const filteredReviews = employeeFilter 
         ? reviewsList.filter(r => r.employeeName?.toLowerCase().includes(employeeFilter.toLowerCase())) 
@@ -113,10 +115,9 @@ export default function PerformancePage() {
     try {
       await performanceAPI.create({
         employeeId: Number(newReview.employeeId),
-        period: newReview.period,
+        reviewPeriod: newReview.period,
         score: Number(newReview.score),
-        feedback: newReview.feedback,
-        reviewerId: user.employeeId || user.userId
+        feedbackText: newReview.feedback
       });
       toast.success("Performance appraisal review submitted successfully!");
       setCreateModalOpen(false);
@@ -194,20 +195,20 @@ export default function PerformancePage() {
         <div className="flex border-b border-gray-200">
           <button
             onClick={() => setActiveTab("team")}
-            className={`py-3 px-6 text-xs font-semibold uppercase tracking-wider border-b-2 cursor-pointer transition-all ${
+            className={`py-3 px-6 text-xs uppercase tracking-wider border-b-2 cursor-pointer transition-all duration-200 ${
               activeTab === "team" 
-                ? "border-brand text-brand" 
-                : "border-transparent text-gray-400 hover:text-gray-600"
+                ? "border-[#E8420A] text-[#E8420A] font-bold" 
+                : "border-transparent text-gray-500 hover:text-gray-900 font-semibold"
             }`}
           >
             Team Audit appraisals
           </button>
           <button
             onClick={() => setActiveTab("my")}
-            className={`py-3 px-6 text-xs font-semibold uppercase tracking-wider border-b-2 cursor-pointer transition-all ${
+            className={`py-3 px-6 text-xs uppercase tracking-wider border-b-2 cursor-pointer transition-all duration-200 ${
               activeTab === "my" 
-                ? "border-brand text-brand" 
-                : "border-transparent text-gray-400 hover:text-gray-600"
+                ? "border-[#E8420A] text-[#E8420A] font-bold" 
+                : "border-transparent text-gray-500 hover:text-gray-900 font-semibold"
             }`}
           >
             My Performance Review
@@ -246,7 +247,7 @@ export default function PerformancePage() {
                     <ScoreRing score={rev.score} max={10} size={70} />
                   </div>
                   {/* Card Info Box */}
-                  <div className="flex-1 bg-white rounded-xl border border-[#E8E2D9]/60 p-5 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex-1 bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
                       <div>
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Review Period</p>
@@ -256,7 +257,7 @@ export default function PerformancePage() {
                         Reviewed by <span className="font-bold text-gray-800">{rev.reviewerName || "Manager"}</span>
                       </span>
                     </div>
-                    <div className="bg-[#FAF7F2]/50 border border-[#E8E2D9]/40 rounded-lg p-3 mt-2 text-xs text-gray-650 leading-relaxed italic font-medium">
+                    <div className="bg-[#FAF7F2]/50 border border-[#E8E2D9]/40 rounded-lg p-3 mt-2 text-xs text-gray-655 leading-relaxed italic font-medium">
                       "{rev.feedback || "Good job! Keep performing well."}"
                     </div>
                   </div>
@@ -269,16 +270,17 @@ export default function PerformancePage() {
         // ── HR TEAM APPRISAL AUDITS VIEW ──
         <div className="space-y-6">
           {/* Top chart card */}
-          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 p-6 shadow-sm">
-            <h3 className="text-xs font-extrabold text-[#0B3D2E] mb-4 uppercase tracking-wider">Department Average Performance Ratings</h3>
+          <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Department Average Performance Ratings</h3>
             <div className="h-56 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={deptStats} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                  <XAxis dataKey="department" fontSize={10} stroke="#9ca3af" tickLine={false} />
-                  <YAxis domain={[0, 10]} fontSize={10} stroke="#9ca3af" tickLine={false} />
+                <BarChart data={deptStats} margin={{ top: 18, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                  <XAxis dataKey="department" fontSize={10} stroke="#9ca3af" tickLine={false} tick={{ fill: '#6B7280', fontSize: 11, fontWeight: 500 }} />
+                  <YAxis domain={[0, 10]} ticks={[0, 2, 4, 6, 8, 10]} fontSize={10} stroke="#9ca3af" tickLine={false} />
                   <Tooltip contentStyle={{ backgroundColor: "#0B3D2E", border: "none", fontSize: 11, borderRadius: 8 }} labelStyle={{ color: "#fff" }} />
-                  <Bar dataKey="averageScore" radius={[4, 4, 0, 0]} barSize={32}>
+                  <Bar dataKey="averageScore" radius={[6, 6, 0, 0]} barSize={32}>
+                    <LabelList dataKey="averageScore" position="top" style={{ fill: '#374151', fontSize: 10, fontWeight: 'bold' }} />
                     {deptStats.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={getDeptColor(entry.department)} />
                     ))}
@@ -309,14 +311,32 @@ export default function PerformancePage() {
           </div>
 
           {/* Reviews table */}
-          <div className="bg-white rounded-xl border border-[#E8E2D9]/60 shadow-sm p-0">
-            <Table
-              columns={hrColumns}
-              data={allReviews}
-              loading={loading}
-              emptyMsg="No review files submitted."
-            />
-          </div>
+          {allReviews.length === 0 && !loading ? (
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+              <EmptyState
+                icon={Star}
+                title="No reviews yet this cycle"
+                desc="Submit a performance review for team members to track feedback."
+                action={
+                  <button
+                    onClick={() => setCreateModalOpen(true)}
+                    className="bg-[#E8420A] hover:bg-[#C73708] text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center gap-1.5 shadow-sm cursor-pointer transition-colors"
+                  >
+                    <Plus size={15} /> Create Review
+                  </button>
+                }
+              />
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-0">
+              <Table
+                columns={hrColumns}
+                data={allReviews}
+                loading={loading}
+                emptyMsg="No review files submitted."
+              />
+            </div>
+          )}
         </div>
       )}
 
