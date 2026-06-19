@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { employeeAPI, leaveAPI, attendanceAPI, onboardingAPI } from "../../api/endpoints";
 import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import Avatar from "../../components/ui/Avatar";
 import { 
   Users, Calendar, Clock, ArrowRight, CheckCircle, XCircle, Briefcase, ClipboardCheck, 
   DollarSign, Activity, UserPlus, ChevronDown, Search, Lightbulb, Bell, LogOut, Award, 
@@ -73,6 +74,26 @@ export default function AdminDashboard() {
       likes: 42,
       comments: 8,
       tag: "Promotion Log"
+    },
+    {
+      id: 3,
+      author: "WorkMate Admin Console",
+      role: "Security Audit",
+      time: "1d ago",
+      content: "SSL Certificates for api.workmate.com have been renewed successfully. Automated vulnerability scanning and penetration test completed with zero critical vulnerabilities reported.",
+      likes: 12,
+      comments: 1,
+      tag: "Security"
+    },
+    {
+      id: 4,
+      author: "WorkMate Admin Console",
+      role: "Database Scheduler",
+      time: "2d ago",
+      content: "Automated full database backup completed successfully. Archive compressed and stored on AWS S3 Glacier storage class for compliance and disaster recovery plans.",
+      likes: 9,
+      comments: 0,
+      tag: "Backups"
     }
   ]);
   const [postText, setPostText] = useState("");
@@ -98,8 +119,8 @@ export default function AdminDashboard() {
       const [empRes, pendRes, todayRes, onboardRes] = await Promise.all([
         employeeAPI.getAll(0, 1),
         leaveAPI.pending(),
-        attendanceAPI.byDate(todayStr).catch(() => ({ data: { data: [] } })),
-        onboardingAPI.getAllProgress().catch(() => ({ data: { data: [] } }))
+        attendanceAPI.byDate(todayStr),
+        onboardingAPI.getAllProgress()
       ]);
       setEmpTotal(empRes.data.data?.totalElements ?? 0);
       setPending(pendRes.data.data || []);
@@ -216,15 +237,20 @@ export default function AdminDashboard() {
     <div className="fixed inset-0 z-30 flex bg-[#F0F4F2] overflow-hidden antialiased text-gray-700">
       
       {/* ==========================================
-          LEFT SLIM SIDEBAR (White, Green Active)
+          LEFT SLIM SIDEBAR (Green, Orange Active)
          ========================================== */}
-      <aside className="w-16 md:w-20 bg-white border-r border-gray-200 flex flex-col justify-between items-center py-5 shrink-0 z-10">
+      <aside className="w-14 bg-[#0A5C36] border-r border-[#084f2e] flex flex-col justify-between items-center py-5 shrink-0 z-10">
         <div className="flex flex-col items-center gap-6 w-full">
-          <div className="w-10 h-10 bg-[#0A5C36] rounded-xl flex items-center justify-center shadow-md">
-            <span className="text-white font-extrabold text-sm tracking-tight">W</span>
+          {/* Logo Mark */}
+          <div 
+            onClick={() => navigate("/dashboard")}
+            className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform shrink-0"
+          >
+            <span className="text-[#0A5C36] font-black text-sm">W</span>
           </div>
 
-          <div className="flex flex-col items-center gap-3 w-full px-2">
+          {/* Navigation Items */}
+          <div className="flex flex-col items-center gap-3 w-full">
             {[
               { to: "/dashboard", icon: LayoutDashboard, active: true, label: "Home" },
               { to: "/employees", icon: Users, label: "Employees" },
@@ -240,17 +266,14 @@ export default function AdminDashboard() {
                 key={idx}
                 onClick={() => navigate(item.to)}
                 title={item.label}
-                className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer relative group ${
+                className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all cursor-pointer relative group active:scale-[0.95] ${
                   item.active 
-                    ? "bg-[#0A5C36]/10 text-[#0A5C36] border border-[#0A5C36]/20 font-bold" 
-                    : "text-gray-450 hover:bg-slate-50 hover:text-[#0A5C36]"
+                    ? "bg-white/10 text-white border-l-2 border-[#E8420A] rounded-l-none pl-0.5 font-bold" 
+                    : "text-white/60 hover:bg-white/5 hover:text-white"
                 }`}
               >
-                {item.active && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[#0A5C36] rounded-r-full" />
-                )}
                 <item.icon size={18} strokeWidth={item.active ? 2.5 : 2} />
-                <span className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
+                <span className="absolute left-full ml-3 px-2 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
                   {item.label}
                 </span>
               </button>
@@ -258,13 +281,14 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* Sign Out Button */}
         <button 
           onClick={() => { logout(); navigate("/login"); }}
           title="Sign Out"
-          className="w-11 h-11 rounded-xl flex items-center justify-center text-rose-500 hover:bg-rose-50 transition-colors cursor-pointer group relative"
+          className="w-9 h-9 rounded-lg flex items-center justify-center text-white/50 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer group relative"
         >
-          <LogOut size={18} />
-          <span className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
+          <LogOut size={16} />
+          <span className="absolute left-full ml-3 px-2 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
             Sign Out
           </span>
         </button>
@@ -306,9 +330,7 @@ export default function AdminDashboard() {
             <div className="h-7 w-px bg-white/10" />
             
             <div className="flex items-center gap-2">
-              <div className="w-8.5 h-8.5 rounded-full bg-white/10 text-white font-extrabold border border-white/20 flex items-center justify-center text-xs shadow-sm">
-                {(user?.fullName || "AD")[0]}
-              </div>
+              <Avatar name={user?.fullName || "AD"} size="sm" />
               <span className="hidden md:inline text-xs font-bold tracking-tight text-white/90">
                 {user?.fullName?.split(" ")?.[0]}
               </span>
@@ -488,9 +510,7 @@ export default function AdminDashboard() {
                     <div key={post.id} className="bg-white border border-gray-200/60 rounded-xl p-5 shadow-xs text-left space-y-3">
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8.5 h-8.5 rounded-full bg-[#0A5C36]/10 text-[#0A5C36] font-bold flex items-center justify-center text-xs">
-                            {post.author?.[0]}
-                          </div>
+                          <Avatar name={post.author} size="sm" />
                           <div>
                             <h4 className="text-xs font-bold text-gray-800 flex items-center gap-2">
                               {post.author}

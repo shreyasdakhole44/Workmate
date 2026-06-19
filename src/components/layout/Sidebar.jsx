@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import Avatar from "../ui/Avatar";
 import { leaveAPI } from "../../api/endpoints";
 import {
   LayoutDashboard, Users, Clock, Calendar, Star,
@@ -123,18 +124,9 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
         <div 
           onClick={() => navigate("/profile")}
           title="My Profile"
-          className="w-8.5 h-8.5 rounded-full bg-white/20 text-white font-extrabold flex items-center justify-center text-xs shadow-sm cursor-pointer hover:scale-105 transition-transform overflow-hidden border border-white/10 shrink-0"
+          className="cursor-pointer hover:scale-105 transition-transform"
         >
-          <img 
-            src={user?.employeeId === 5 
-              ? "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80" 
-              : user?.employeeId === 3
-                ? "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&h=100&q=80"
-                : "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&h=100&q=80"
-            }
-            alt="User"
-            className="w-full h-full object-cover"
-          />
+          <Avatar name={user?.fullName} size="sm" />
         </div>
 
         {/* Logout button */}

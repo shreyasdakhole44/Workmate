@@ -11,6 +11,7 @@ import {
   UserCircle, LogOut, CalendarDays, FileText, HelpCircle, Check
 } from "lucide-react";
 import toast from "react-hot-toast";
+import Avatar from "../../components/ui/Avatar";
 
 export default function EmployeeDashboard() {
   const { user, logout } = useAuth();
@@ -416,18 +417,9 @@ export default function EmployeeDashboard() {
             <div className="flex items-center gap-2 border-l border-white/10 pl-4">
               <div 
                 onClick={() => navigate("/profile")}
-                className="w-7 h-7 rounded-full bg-white/20 text-white font-extrabold flex items-center justify-center text-xs shadow-sm cursor-pointer hover:bg-white/30 transition-all overflow-hidden border border-white/10 shrink-0"
+                className="cursor-pointer hover:scale-105 transition-transform shrink-0"
               >
-                <img 
-                  src={user?.employeeId === 5 
-                    ? "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80" 
-                    : user?.employeeId === 3
-                      ? "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&h=100&q=80"
-                      : "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&h=100&q=80"
-                  }
-                  alt="Avatar"
-                  className="w-full h-full object-cover"
-                />
+                <Avatar name={user?.fullName} size="sm" />
               </div>
               <span className="text-xs font-bold text-white tracking-wide">
                 {user?.fullName || "Employee"}
@@ -514,9 +506,7 @@ export default function EmployeeDashboard() {
                 <div className="p-4 pt-3 text-left space-y-3">
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full overflow-hidden border border-blue-100 shrink-0">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80" alt="Kamal Hassan" className="w-full h-full object-cover" />
-                      </div>
+                      <Avatar name="Kamal Hassan" size="sm" />
                       <div>
                         <p className="font-extrabold text-gray-800 leading-tight">Kamal Hassan</p>
                         <p className="text-[10px] text-gray-400 font-bold mt-0.5">🍰 Birthday today</p>
@@ -537,9 +527,7 @@ export default function EmployeeDashboard() {
                   
                   <div className="flex items-center justify-between text-xs border-t border-gray-100 pt-2.5">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full overflow-hidden border border-emerald-100 shrink-0">
-                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=80&h=80&q=80" alt="Aarav Mehta" className="w-full h-full object-cover" />
-                      </div>
+                      <Avatar name="Aarav Mehta" size="sm" />
                       <div>
                         <p className="font-extrabold text-gray-800 leading-tight">Aarav Mehta</p>
                         <p className="text-[10px] text-gray-400 font-bold mt-0.5">💼 1 year Work Anniversary</p>
@@ -560,9 +548,7 @@ export default function EmployeeDashboard() {
 
                   <div className="flex items-center justify-between text-xs border-t border-gray-100 pt-2.5">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full overflow-hidden border border-amber-100 shrink-0">
-                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&h=80&q=80" alt="Kunal Bansal" className="w-full h-full object-cover" />
-                      </div>
+                      <Avatar name="Kunal Bansal" size="sm" />
                       <div>
                         <p className="font-extrabold text-gray-800 leading-tight">Kunal Bansal</p>
                         <p className="text-[10px] text-gray-400 font-bold mt-0.5">💍 Wedding Anniversary</p>
@@ -682,19 +668,7 @@ export default function EmployeeDashboard() {
                     {/* Author details */}
                     <div className="flex justify-between items-start">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full overflow-hidden border border-gray-150 flex items-center justify-center text-xs shadow-xs uppercase font-extrabold text-white bg-teal-650 shrink-0">
-                          {post.author === "Pranav Goyal" ? (
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&h=100&q=80" alt="Pranav Goyal" className="w-full h-full object-cover" />
-                          ) : post.author === "Rajesh Nigam" ? (
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&h=100&q=80" alt="Rajesh Nigam" className="w-full h-full object-cover" />
-                          ) : post.author === "Shreyas Prakash Dakhole" || post.author === "Shreyas Dakhole" ? (
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&h=100&q=80" alt="Shreyas Dakhole" className="w-full h-full object-cover" />
-                          ) : user?.fullName === post.author || post.author === "Rohit Sharma" ? (
-                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80" alt="Rohit Sharma" className="w-full h-full object-cover" />
-                          ) : (
-                            <span>{post.author.split(" ").map(w => w[0]).join("")}</span>
-                          )}
-                        </div>
+                        <Avatar name={post.author} size="md" />
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-xs font-extrabold text-gray-950">{post.author}</span>
@@ -794,19 +768,19 @@ export default function EmployeeDashboard() {
                   {/* Row of Avatar Bubbles */}
                   <div className="flex gap-2 flex-wrap">
                     {[
-                      { name: "Varun Khanna", initials: "VK", border: "border-emerald-500", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80" },
-                      { name: "Rajesh Nigam", initials: "RN", border: "border-purple-500", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&h=80&q=80" },
-                      { name: "Amit Sharma", initials: "AS", border: "border-pink-500", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&h=80&q=80" },
-                      { name: "Shreyas Prakash", initials: "SP", border: "border-emerald-500", img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=80&h=80&q=80" },
-                      { name: "Kamal Hassan", initials: "KH", border: "border-gray-300", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=80&h=80&q=80" },
-                      { name: "Aarav Mehta", initials: "AM", border: "border-pink-500", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=80&h=80&q=80" }
+                      { name: "Varun Khanna", border: "border-emerald-500" },
+                      { name: "Rajesh Nigam", border: "border-purple-500" },
+                      { name: "Amit Sharma", border: "border-pink-500" },
+                      { name: "Shreyas Prakash", border: "border-emerald-500" },
+                      { name: "Kamal Hassan", border: "border-gray-300" },
+                      { name: "Aarav Mehta", border: "border-pink-500" }
                     ].map((m, idx) => (
                       <div 
                         key={idx} 
-                        className={`w-9 h-9 rounded-full overflow-hidden border-2 ${m.border} shadow-xs shrink-0 cursor-pointer`}
+                        className={`rounded-full border-2 ${m.border} shadow-xs shrink-0 cursor-pointer hover:scale-105 transition-transform`}
                         title={`Name: ${m.name} | Status: ${m.border === "border-emerald-500" ? "Checked-In" : m.border === "border-purple-500" ? "Leave" : m.border === "border-pink-500" ? "WFH" : "Not Checked-In"}`}
                       >
-                        <img src={m.img} alt={m.name} className="w-full h-full object-cover" />
+                        <Avatar name={m.name} size="sm" />
                       </div>
                     ))}
                   </div>

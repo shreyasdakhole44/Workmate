@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import Sidebar from "./Sidebar";
+import Avatar from "../ui/Avatar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { 
@@ -69,18 +70,9 @@ export default function Layout() {
             <div className="flex items-center gap-2">
               <div 
                 onClick={() => navigate("/profile")}
-                className="w-8.5 h-8.5 rounded-full bg-white/10 text-white font-extrabold border border-white/20 flex items-center justify-center text-xs shadow-sm cursor-pointer hover:scale-105 transition-transform overflow-hidden shrink-0"
+                className="cursor-pointer hover:scale-105 transition-transform"
               >
-                <img 
-                  src={user?.employeeId === 5 
-                    ? "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80" 
-                    : user?.employeeId === 3
-                      ? "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&h=100&q=80"
-                      : "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=100&h=100&q=80"
-                  }
-                  alt="Avatar"
-                  className="w-full h-full object-cover"
-                />
+                <Avatar name={user?.fullName} size="sm" />
               </div>
               <span className="hidden md:inline text-xs font-bold tracking-tight text-white/90">
                 {user?.fullName?.split(" ")?.[0]}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { employeeAPI, leaveAPI, attendanceAPI, onboardingAPI } from "../../api/endpoints";
+import { employeeAPI, leaveAPI, attendanceAPI, onboardingAPI, recruitmentAPI } from "../../api/endpoints";
 import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import Avatar from "../../components/ui/Avatar";
 import { 
   Users, Calendar, Clock, ArrowRight, CheckCircle, XCircle, ClipboardCheck, 
   Activity, ChevronDown, Search, Lightbulb, Bell, LogOut, Award, FileText, 
@@ -46,6 +47,7 @@ export default function HRDashboard() {
   const [pending, setPending] = useState([]);
   const [todayLogs, setTodayLogs] = useState([]);
   const [onboardings, setOnboardings] = useState([]);
+  const [activeJobsCount, setActiveJobsCount] = useState(0);
   const [loading, setLoading] = useState(true);
   
   // Custom Feed & Interaction States
@@ -70,6 +72,26 @@ export default function HRDashboard() {
       likes: 24,
       comments: 6,
       tag: "Social"
+    },
+    {
+      id: 3,
+      author: "Sarah Jenkins",
+      role: "HR Director",
+      time: "2d ago",
+      content: "Reminder: The monthly wellness program starts this Friday. Please register on the wellness channel. We will have interactive yoga sessions and health checkup camps.",
+      likes: 31,
+      comments: 4,
+      tag: "Wellness"
+    },
+    {
+      id: 4,
+      author: "Amit Sharma",
+      role: "Finance Manager",
+      time: "3d ago",
+      content: "Investment declaration window for tax savings is open. Please upload your investment proofs (80C, 80D, etc.) in the Payroll Hub before the end of the month to avoid extra TDS deductions.",
+      likes: 18,
+      comments: 9,
+      tag: "Finance"
     }
   ]);
   const [postText, setPostText] = useState("");
@@ -92,16 +114,18 @@ export default function HRDashboard() {
   const load = async () => {
     setLoading(true);
     try {
-      const [empRes, pendRes, todayRes, onboardRes] = await Promise.all([
+      const [empRes, pendRes, todayRes, onboardRes, jobsRes] = await Promise.all([
         employeeAPI.getAll(0, 1),
         leaveAPI.pending(),
-        attendanceAPI.byDate(todayStr).catch(() => ({ data: { data: [] } })),
-        onboardingAPI.getAllProgress().catch(() => ({ data: { data: [] } }))
+        attendanceAPI.byDate(todayStr),
+        onboardingAPI.getAllProgress(),
+        recruitmentAPI.getActiveJobs().catch(() => ({ data: { data: [] } }))
       ]);
       setEmpTotal(empRes.data.data?.totalElements ?? 0);
       setPending(pendRes.data.data || []);
       setTodayLogs(todayRes.data.data || []);
       setOnboardings(onboardRes.data.data || []);
+      setActiveJobsCount(jobsRes.data.data?.length ?? 0);
     } catch (e) {
       toast.error("Failed to load HR dashboard console");
     } finally {
@@ -196,17 +220,20 @@ export default function HRDashboard() {
     <div className="fixed inset-0 z-30 flex bg-[#F0F4F2] overflow-hidden antialiased text-gray-700">
       
       {/* ==========================================
-          LEFT SLIM SIDEBAR (White, Green Active)
+          LEFT SLIM SIDEBAR (Green, Orange Active)
          ========================================== */}
-      <aside className="w-16 md:w-20 bg-white border-r border-gray-200 flex flex-col justify-between items-center py-5 shrink-0 z-10">
+      <aside className="w-14 bg-[#0A5C36] border-r border-[#084f2e] flex flex-col justify-between items-center py-5 shrink-0 z-10">
         <div className="flex flex-col items-center gap-6 w-full">
           {/* Logo Mark */}
-          <div className="w-10 h-10 bg-[#0A5C36] rounded-xl flex items-center justify-center shadow-md">
-            <span className="text-white font-extrabold text-sm tracking-tight">W</span>
+          <div 
+            onClick={() => navigate("/dashboard")}
+            className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform shrink-0"
+          >
+            <span className="text-[#0A5C36] font-black text-sm">W</span>
           </div>
 
           {/* Navigation Items */}
-          <div className="flex flex-col items-center gap-3 w-full px-2">
+          <div className="flex flex-col items-center gap-3 w-full">
             {[
               { to: "/dashboard", icon: LayoutDashboard, active: true, label: "Home" },
               { to: "/employees", icon: Users, label: "Employees" },
@@ -222,17 +249,14 @@ export default function HRDashboard() {
                 key={idx}
                 onClick={() => navigate(item.to)}
                 title={item.label}
-                className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer relative group ${
+                className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all cursor-pointer relative group active:scale-[0.95] ${
                   item.active 
-                    ? "bg-[#0A5C36]/10 text-[#0A5C36] border border-[#0A5C36]/20 font-bold" 
-                    : "text-gray-450 hover:bg-slate-50 hover:text-[#0A5C36]"
+                    ? "bg-white/10 text-white border-l-2 border-[#E8420A] rounded-l-none pl-0.5 font-bold" 
+                    : "text-white/60 hover:bg-white/5 hover:text-white"
                 }`}
               >
-                {item.active && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[#0A5C36] rounded-r-full" />
-                )}
                 <item.icon size={18} strokeWidth={item.active ? 2.5 : 2} />
-                <span className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
+                <span className="absolute left-full ml-3 px-2 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
                   {item.label}
                 </span>
               </button>
@@ -244,10 +268,10 @@ export default function HRDashboard() {
         <button 
           onClick={() => { logout(); navigate("/login"); }}
           title="Sign Out"
-          className="w-11 h-11 rounded-xl flex items-center justify-center text-rose-500 hover:bg-rose-50 transition-colors cursor-pointer group relative"
+          className="w-9 h-9 rounded-lg flex items-center justify-center text-white/50 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer group relative"
         >
-          <LogOut size={18} />
-          <span className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
+          <LogOut size={16} />
+          <span className="absolute left-full ml-3 px-2 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
             Sign Out
           </span>
         </button>
@@ -289,9 +313,7 @@ export default function HRDashboard() {
             <div className="h-7 w-px bg-white/10" />
             
             <div className="flex items-center gap-2">
-              <div className="w-8.5 h-8.5 rounded-full bg-white/10 text-white font-extrabold border border-white/20 flex items-center justify-center text-xs shadow-sm">
-                {(user?.fullName || "HR")[0]}
-              </div>
+              <Avatar name={user?.fullName || "HR"} size="sm" />
               <span className="hidden md:inline text-xs font-bold tracking-tight text-white/90">
                 {user?.fullName?.split(" ")?.[0]}
               </span>
@@ -364,7 +386,7 @@ export default function HRDashboard() {
               </div>
               <div className="bg-white rounded-xl shadow-xs border border-gray-200/50 p-4 text-left">
                 <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Active Jobs</p>
-                <span className="text-lg md:text-2xl font-black text-indigo-650 block mt-1">{newCandidatesCount}</span>
+                <span className="text-lg md:text-2xl font-black text-indigo-650 block mt-1">{activeJobsCount}</span>
               </div>
             </div>
 
@@ -475,9 +497,7 @@ export default function HRDashboard() {
                     <div key={post.id} className="bg-white border border-gray-200/60 rounded-xl p-5 shadow-xs text-left space-y-3.5">
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-9 h-9 rounded-full bg-[#0A5C36]/10 text-[#0A5C36] font-extrabold flex items-center justify-center text-xs">
-                            {post.author?.[0]}
-                          </div>
+                          <Avatar name={post.author} size="sm" />
                           <div>
                             <h4 className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
                               {post.author}
@@ -531,9 +551,7 @@ export default function HRDashboard() {
                       {todayLogs.map(l => (
                         <div key={l.id} className="flex items-center justify-between p-2 hover:bg-slate-50 rounded-lg border border-gray-150 transition-colors">
                           <div className="min-w-0 flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-full bg-slate-100 text-[#0A5C36] font-bold flex items-center justify-center text-[10px] border border-gray-200">
-                              {l.employeeName?.[0]}
-                            </div>
+                            <Avatar name={l.employeeName} size="sm" />
                             <div className="min-w-0">
                               <p className="text-xs font-bold text-gray-800 truncate leading-none mb-1">{l.employeeName}</p>
                               <p className="text-[9px] text-gray-400 font-semibold">In: {l.checkInTime}</p>
