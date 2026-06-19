@@ -86,8 +86,8 @@ export default function MyPerformance() {
                 <h3 className="font-semibold text-gray-900 text-sm mb-1">Performance Rating Trend</h3>
                 <p className="text-xs text-gray-400 mb-4">Historical progression of your appraisal scores</p>
               </div>
-              <div className="h-64 w-full">
-                <ResponsiveContainer width="100%" height="100%">
+              <div className="h-64 w-full relative">
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                   <LineChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9"/>
                     <XAxis dataKey="period" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false}/>

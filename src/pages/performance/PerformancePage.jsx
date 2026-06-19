@@ -272,8 +272,8 @@ export default function PerformancePage() {
           {/* Top chart card */}
           <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
             <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Department Average Performance Ratings</h3>
-            <div className="h-56 w-full">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="h-56 w-full relative">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={deptStats} margin={{ top: 18, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                   <XAxis dataKey="department" fontSize={10} stroke="#9ca3af" tickLine={false} tick={{ fill: '#6B7280', fontSize: 11, fontWeight: 500 }} />

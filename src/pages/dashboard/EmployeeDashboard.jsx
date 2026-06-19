@@ -327,114 +327,9 @@ export default function EmployeeDashboard() {
   const todayStr = `Today: ${new Date().toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric' })}`;
 
   return (
-    <div className="fixed inset-0 z-30 flex bg-gray-50 overflow-hidden font-sans text-gray-700 select-none antialiased text-[14px] w-full h-screen">
-      
-      {/* ==========================================
-          ZONE A — LEFT SIDEBAR
-         ========================================== */}
-      <aside className="w-16 bg-[#0B3D2E] flex flex-col justify-between items-center py-4 shrink-0 z-20 shadow-lg border-r border-[#0B3D2E]/20 h-full">
-        <div className="flex flex-col items-center gap-8 w-full">
-          {/* Logo Circle */}
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform">
-            <span className="text-[#0B3D2E] font-black text-sm">W</span>
-          </div>
-
-          {/* Icons Stack */}
-          <div className="flex flex-col gap-3 w-full items-center">
-            {[
-              { icon: LayoutDashboard, active: true, route: "/dashboard", label: "Dashboard" },
-              { icon: Clock, route: "/attendance", label: "Attendance" },
-              { icon: CalendarDays, route: "/leave", label: "Leave" },
-              { icon: Star, route: "/performance", label: "Performance" },
-              { icon: ClipboardCheck, route: "/onboarding", label: "Onboarding" },
-              { icon: DollarSign, route: "/payroll", label: "Payroll" },
-              { icon: UserCircle, route: "/profile", label: "Profile" }
-            ].map((item, idx) => (
-              <button 
-                key={idx}
-                onClick={() => navigate(item.route)}
-                className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
-                  item.active 
-                    ? "bg-white/10 text-white border-l-2 border-[#E8420A] rounded-l-none pl-1" 
-                    : "text-white/60 hover:bg-white/5 hover:text-white"
-                }`}
-                title={item.label}
-              >
-                <item.icon size={18} />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom Logout */}
-        <button 
-          onClick={() => {
-            logout();
-            navigate("/");
-            toast.success("Logged out successfully");
-          }}
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-white/50 hover:text-rose-400 hover:bg-rose-500/10 cursor-pointer transition-colors"
-          title="Sign Out"
-        >
-          <LogOut size={18} />
-        </button>
-      </aside>
-
-      {/* ==========================================
-          ZONE B — TOP BAR
-         ========================================== */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden h-full">
-        
-        <header className="h-14 bg-[#0B3D2E] border-b border-white/5 px-5 flex items-center justify-between shrink-0 relative z-15 shadow-sm text-white">
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-white text-[14px] tracking-widest uppercase">Talentrix Solution</span>
-          </div>
-
-          {/* Search Box */}
-          <div className="relative w-[500px] max-w-full">
-            <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input 
-              type="text" 
-              className="w-full bg-white placeholder-gray-400 rounded-lg pl-9.5 pr-4 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-[#E8420A]/20 text-gray-800 h-9 transition-all font-bold"
-              placeholder="Search for requests, reports, people..."
-            />
-          </div>
-
-          {/* Action icon badges */}
-          <div className="flex items-center gap-4 text-white/80">
-            <button className="hover:text-white transition-colors cursor-pointer relative" title="Requests">
-              <ClipboardCheck size={18} />
-            </button>
-            <button className="hover:text-white transition-colors cursor-pointer" title="Help / Info">
-              <HelpCircle size={18} />
-            </button>
-            <button className="hover:text-white transition-colors cursor-pointer relative" title="Notifications">
-              <Bell size={18} />
-              <span className="absolute -top-1 -right-1 bg-[#E8420A] text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center border border-[#0B3D2E]">1</span>
-            </button>
-            
-            {/* User Profile Avatar with Name */}
-            <div className="flex items-center gap-2 border-l border-white/10 pl-4">
-              <div 
-                onClick={() => navigate("/profile")}
-                className="cursor-pointer hover:scale-105 transition-transform shrink-0"
-              >
-                <Avatar name={user?.fullName} size="sm" />
-              </div>
-              <span className="text-xs font-bold text-white tracking-wide">
-                {user?.fullName || "Employee"}
-              </span>
-            </div>
-          </div>
-        </header>
-
-        {/* ==========================================
-            ZONE C — MAIN CONTENT
-           ========================================== */}
-        <main className="flex-1 flex overflow-hidden">
-          
-          {/* COLUMN 1: LEFT WIDGETS */}
-          <section className="w-[280px] shrink-0 border-r border-[#F0F0F0] bg-white p-4 overflow-y-auto space-y-4 text-left">
+    <div className="w-full flex h-[calc(100vh-3.5rem)] overflow-hidden">
+      {/* COLUMN 1: LEFT WIDGETS */}
+      <section className="w-[280px] shrink-0 border-r border-[#F0F0F0] bg-white p-4 overflow-y-auto space-y-4 text-left">
             
             {/* Shift Punching Card */}
             <div className="bg-white rounded-xl border border-gray-150 p-4 shadow-xs space-y-3">
@@ -881,9 +776,6 @@ export default function EmployeeDashboard() {
             </div>
 
           </section>
-
-        </main>
-      </div>
 
       {/* Floating AI chatbot Assistant Button */}
       <div className="fixed bottom-6 right-6 z-45">

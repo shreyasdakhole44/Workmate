@@ -6,6 +6,7 @@ import Badge from "../../components/ui/Badge";
 import Table from "../../components/ui/Table";
 import Modal from "../../components/ui/Modal";
 import Avatar from "../../components/ui/Avatar";
+import DeleteConfirmDialog from "../admin/EmployeeManagement/DeleteConfirmDialog";
 import { Plus, Award, Star, Sparkles, Calendar, Trash2 } from "lucide-react";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell } from "recharts";
 import toast from "react-hot-toast";
@@ -50,6 +51,7 @@ export default function TeamPerformance() {
   const [modal,      setModal]      = useState(false);
   const [creating,   setCreating]   = useState(false);
   const [aiLoading,  setAiLoading]  = useState(false);
+  const [selectedReviewForDelete, setSelectedReviewForDelete] = useState(null);
 
   const [form, setForm] = useState({
     employeeId: "",
@@ -139,7 +141,6 @@ export default function TeamPerformance() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this performance review history?")) return;
     try {
       await performanceAPI.delete(id);
       toast.success("Review history deleted");
@@ -173,7 +174,11 @@ export default function TeamPerformance() {
       key: "actions",
       label: "Actions",
       render: r => (
-        <button onClick={() => handleDelete(r.id)} className="p-1 text-red-500 hover:bg-red-50 rounded cursor-pointer transition-colors" title="Delete Review">
+        <button 
+          onClick={() => setSelectedReviewForDelete(r)} 
+          className="p-1 text-red-500 hover:bg-red-50 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity" 
+          title="Delete Review"
+        >
           <Trash2 size={15}/>
         </button>
       )
@@ -185,6 +190,7 @@ export default function TeamPerformance() {
       <TopBar
         title="Team Performance Evaluations"
         subtitle="Appraise employees and view department metrics"
+        isSharedView={true}
         action={
           <button onClick={openAppraiseModal} className="btn-primary flex items-center gap-2 cursor-pointer">
             <Plus size={16}/> Create Review Evaluation
@@ -199,8 +205,8 @@ export default function TeamPerformance() {
             <h3 className="font-semibold text-gray-900 text-sm mb-1">Department Performance Metrics</h3>
             <p className="text-xs text-gray-400 mb-4">Average appraisal rating scores classified by department</p>
           </div>
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-64 w-full relative">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={deptStats} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false}/>
                 <XAxis dataKey="department" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false}/>
@@ -291,6 +297,18 @@ export default function TeamPerformance() {
             </button>
           </div>
         </form>
+      </Modal>
+
+      {/* DELETE CONFIRM MODAL */}
+      <Modal open={selectedReviewForDelete !== null} onClose={() => setSelectedReviewForDelete(null)} title="Confirm Deactivation" size="md">
+        <DeleteConfirmDialog 
+          employee={{ fullName: selectedReviewForDelete ? `Review Evaluation for ${selectedReviewForDelete.employeeName}` : "" }}
+          onConfirm={() => {
+            handleDelete(selectedReviewForDelete.id);
+            setSelectedReviewForDelete(null);
+          }}
+          onCancel={() => setSelectedReviewForDelete(null)}
+        />
       </Modal>
     </div>
   );

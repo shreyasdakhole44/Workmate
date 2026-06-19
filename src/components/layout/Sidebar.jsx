@@ -5,25 +5,27 @@ import Avatar from "../ui/Avatar";
 import { leaveAPI } from "../../api/endpoints";
 import {
   LayoutDashboard, Users, Clock, Calendar, Star,
-  LogOut, Briefcase, UserCircle, ClipboardCheck, DollarSign, X
+  LogOut, Briefcase, UserCircle, ClipboardCheck, DollarSign, X, Shield, Activity
 } from "lucide-react";
 
 const NAV = {
   ADMIN: [
     { to: "/dashboard", label: "Home", icon: LayoutDashboard },
     { to: "/employees", label: "Employees", icon: Users },
+    { to: "/user-management", label: "Users", icon: Shield },
     { to: "/recruitment", label: "Recruitment", icon: Briefcase },
     { to: "/onboarding", label: "Onboarding", icon: ClipboardCheck },
     { to: "/attendance", label: "Attendance", icon: Clock },
     { to: "/leave", label: "Leaves", icon: Calendar },
     { to: "/performance", label: "Performance", icon: Star },
     { to: "/payroll", label: "Payroll", icon: DollarSign },
+    { to: "/reports", label: "Reports", icon: Activity },
     { to: "/profile", label: "Profile", icon: UserCircle },
   ],
   HR_MANAGER: [
     { to: "/dashboard", label: "Home", icon: LayoutDashboard },
     { to: "/employees", label: "Employees", icon: Users },
-    { to: "/recruitment", label: "Recruitment", icon: Briefcase },
+    { to: "/recruitment", label: "Recruitment", icon: ClipboardCheck },
     { to: "/onboarding", label: "Onboarding", icon: ClipboardCheck },
     { to: "/attendance", label: "Attendance", icon: Clock },
     { to: "/leave", label: "Leaves", icon: Calendar },

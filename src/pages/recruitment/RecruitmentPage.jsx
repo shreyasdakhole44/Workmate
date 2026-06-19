@@ -281,6 +281,7 @@ export default function RecruitmentPage() {
       <TopBar
         title="Recruitment & Pipeline Tracker"
         subtitle="Manage job openings, review candidate resumes, and coordinate interviews"
+        isSharedView={true}
         action={
           <div className="flex gap-2">
             <button onClick={() => setJobModal(true)} className="btn btn-primary flex items-center gap-1.5 cursor-pointer">

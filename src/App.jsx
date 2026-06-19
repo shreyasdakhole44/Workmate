@@ -4,14 +4,16 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/auth/LoginPage";
 import LandingPage from "./pages/LandingPage";
 import DashboardRouter from "./pages/dashboard/DashboardRouter";
-import EmployeePage from "./pages/employee/EmployeePage";
+import EmployeePage from "./pages/admin/EmployeeManagement/EmployeePage";
 import AttendancePage from "./pages/attendance/AttendancePage";
 import LeavePage from "./pages/leave/LeavePage";
 import PerformancePage from "./pages/performance/PerformancePage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import RecruitmentPage from "./pages/recruitment/RecruitmentPage";
 import OnboardingPage from "./pages/onboarding/OnboardingPage";
-import PayrollPage from "./pages/payroll/PayrollPage";
+import SalaryStructurePage from "./pages/admin/Payroll/SalaryStructurePage";
+import UserManagementPage from "./pages/admin/UserManagement/UserManagementPage";
+import OrgReportsPage from "./pages/admin/Reports/OrgReportsPage";
 import PayslipPage from "./pages/payslip/PayslipPage";
 import Layout from "./components/layout/Layout";
 
@@ -71,7 +73,23 @@ const router = createBrowserRouter([
         path: "payroll",
         element: (
           <ProtectedRoute roles={["ADMIN", "HR_MANAGER"]}>
-            <PayrollPage />
+            <SalaryStructurePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "user-management",
+        element: (
+          <ProtectedRoute roles={["ADMIN"]}>
+            <UserManagementPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "reports",
+        element: (
+          <ProtectedRoute roles={["ADMIN", "HR_MANAGER"]}>
+            <OrgReportsPage />
           </ProtectedRoute>
         ),
       },

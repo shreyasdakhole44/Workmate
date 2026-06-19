@@ -158,6 +158,7 @@ export default function OnboardingPage() {
       <TopBar
         title={isEmployee ? "My Onboarding Checklist" : "Onboarding Audit Hub"}
         subtitle={isEmployee ? "Complete your setup tasks to get fully settled into your new role" : "Audit progress meters and checklists for all active new hires"}
+        isSharedView={true}
       />
 
       {isEmployee ? (

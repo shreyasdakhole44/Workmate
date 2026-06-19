@@ -62,7 +62,7 @@ export default function Table({ columns, data = [], loading, emptyMsg = "No data
             data.map((row, i) => (
               <tr 
                 key={row.id || i} 
-                className={`hover:bg-gray-50 transition-colors ${
+                className={`group hover:bg-gray-50 transition-colors ${
                   zebra && i % 2 === 1 ? "bg-gray-50/30" : "bg-white"
                 }`}
               >

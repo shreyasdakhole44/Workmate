@@ -1,7 +1,7 @@
 import api from "./axios";
 
 // Local Mock Database fallback when backend endpoints return 500 or are offline
-const mockEmployees = [
+let mockEmployees = [
   {
     id: 1,
     userId: 1,
@@ -113,7 +113,19 @@ export const authAPI = {
     }
     throw new Error("Invalid credentials");
   }),
-  register: d => api.post("/auth/register", d),
+  register: d => api.post("/auth/register", d).catch(() => {
+    const mockId = Math.floor(Math.random() * 1000) + 10;
+    return {
+      data: {
+        data: {
+          token: `mock-token-${mockId}`,
+          email: d.email,
+          role: d.role,
+          userId: mockId
+        }
+      }
+    };
+  }),
   me:       () => api.get("/auth/me"),
 };
 
@@ -162,9 +174,55 @@ export const employeeAPI = {
   getSummaries:()  => api.get("/employees/summaries").catch(() => ({
     data: { data: mockEmployees }
   })),
-  create:      d   => api.post("/employees", d),
-  update:      (id,d) => api.put(`/employees/${id}`, d),
-  delete:      id  => api.delete(`/employees/${id}`),
+  create:      d   => api.post("/employees", d).catch(() => {
+    const newId = mockEmployees.length > 0 ? Math.max(...mockEmployees.map(e => e.id)) + 1 : 1;
+    const newEmp = {
+      id: newId,
+      userId: d.userId || (newId + 10),
+      employeeId: newId,
+      empCode: `EMP${String(newId).padStart(3, "0")}`,
+      firstName: d.firstName,
+      lastName: d.lastName,
+      fullName: `${d.firstName} ${d.lastName}`,
+      email: d.email || `${d.firstName.toLowerCase()}@workmate.com`,
+      role: d.role || "EMPLOYEE",
+      department: d.department,
+      designation: d.designation || "Software Developer",
+      phone: d.phone || "+91 99999 88888",
+      salary: Number(d.salary) || 500000,
+      joinDate: d.joinDate || new Date().toISOString().split("T")[0],
+      isActive: true,
+      managerName: d.managerId ? (mockEmployees.find(e => e.id === Number(d.managerId))?.fullName || "Sarah Jenkins") : "None"
+    };
+    mockEmployees.push(newEmp);
+    return { data: { data: newEmp } };
+  }),
+  update:      (id,d) => api.put(`/employees/${id}`, d).catch(() => {
+    const match = mockEmployees.find(e => e.id === Number(id));
+    if (match) {
+      match.firstName = d.firstName;
+      match.lastName = d.lastName;
+      match.fullName = `${d.firstName} ${d.lastName}`;
+      match.department = d.department;
+      match.designation = d.designation;
+      match.phone = d.phone;
+      match.joinDate = d.joinDate;
+      match.salary = Number(d.salary) || 0;
+      if (d.managerId) {
+        const mgr = mockEmployees.find(e => e.id === Number(d.managerId));
+        match.managerName = mgr ? mgr.fullName : "None";
+      }
+      return { data: { data: match } };
+    }
+    return { data: { data: {} } };
+  }),
+  delete:      id  => api.delete(`/employees/${id}`).catch(() => {
+    const match = mockEmployees.find(e => e.id === Number(id));
+    if (match) {
+      match.isActive = false;
+    }
+    return { data: { data: {} } };
+  }),
 };
 
 export const attendanceAPI = {
@@ -354,8 +412,28 @@ export const leaveAPI = {
   }),
 };
 
+let mockReviews = [
+  { id: 201, employeeId: 3, employeeName: "Shreyas Prakash Dakhole", period: "Q1 2026", score: 8.5, feedback: "Demonstrated excellent execution on UI components rebuilds. Very productive and responsive.", reviewerName: "Sarah Jenkins" },
+  { id: 202, employeeId: 4, employeeName: "John Doe", period: "Q1 2026", score: 7.0, feedback: "Showing good improvement, should focus more on writing modular CSS templates.", reviewerName: "Sarah Jenkins" }
+];
+
 export const performanceAPI = {
-  create:     d    => api.post("/performance/reviews", d),
+  create:     d    => api.post("/performance/reviews", d).then(res => {
+    return res;
+  }).catch(() => {
+    const emp = mockEmployees.find(e => e.id === Number(d.employeeId)) || mockEmployees[2];
+    const newRev = {
+      id: Math.floor(Math.random() * 1000) + 300,
+      employeeId: Number(d.employeeId),
+      employeeName: emp.fullName,
+      period: d.reviewPeriod,
+      score: Number(d.score),
+      feedback: d.feedbackText || d.comments || "",
+      reviewerName: "Sarah Jenkins"
+    };
+    mockReviews.unshift(newRev);
+    return { data: { data: newRev } };
+  }),
   update:     (id,d)=> Promise.resolve({ data: { data: {} } }),
   byEmployee: id   => {
     return api.get(`/performance/employee/${id}`).catch(() => {
@@ -398,33 +476,52 @@ export const performanceAPI = {
     }
   }),
   all:        (p=0,s=10) => api.get("/performance/reviews").catch(() => {
-    const reviews = [
-      { id: 201, employeeId: 3, employeeName: "Shreyas Prakash Dakhole", period: "Q1 2026", score: 8.5, feedback: "Demonstrated excellent execution on UI components rebuilds. Very productive and responsive.", reviewerName: "Sarah Jenkins" },
-      { id: 202, employeeId: 4, employeeName: "John Doe", period: "Q1 2026", score: 7.0, feedback: "Showing good improvement, should focus more on writing modular CSS templates.", reviewerName: "Sarah Jenkins" }
-    ];
     return {
       data: {
         data: {
-          content: reviews.slice(p*s, (p+1)*s),
-          totalElements: reviews.length
+          content: mockReviews.slice(p*s, (p+1)*s),
+          totalElements: mockReviews.length
         }
       }
     };
   }),
-  delete:     id   => Promise.resolve({ data: { data: {} } }),
+  delete:     id   => api.delete(`/performance/reviews/${id}`).catch(() => {
+    mockReviews = mockReviews.filter(r => r.id !== Number(id));
+    return { data: { data: {} } };
+  }),
 };
 
+let mockJobs = [
+  { id: 1, title: "React Developer", department: "IT", openings: 2, candidatesCount: 2, status: "ACTIVE", deadline: "2026-07-01" },
+  { id: 2, title: "HR Generalist", department: "HR", openings: 1, candidatesCount: 1, status: "ACTIVE", deadline: "2026-06-30" }
+];
+
 export const recruitmentAPI = {
-  createJob:              d => api.post("/recruitment/jobs", d),
+  createJob:              d => api.post("/recruitment/jobs", d).then(res => {
+    return res;
+  }).catch(() => {
+    const newJob = {
+      id: Math.floor(Math.random() * 1000) + 10,
+      title: d.title,
+      department: d.department,
+      openings: Number(d.openings) || 1,
+      candidatesCount: 0,
+      status: "ACTIVE",
+      deadline: d.deadline || "2026-12-31"
+    };
+    mockJobs.push(newJob);
+    return { data: { data: newJob } };
+  }),
   getActiveJobs:          () => api.get("/recruitment/jobs").catch(() => ({
     data: {
-      data: [
-        { id: 1, title: "React Developer", department: "IT", openings: 2, candidatesCount: 2, status: "ACTIVE", deadline: "2026-07-01" },
-        { id: 2, title: "HR Generalist", department: "HR", openings: 1, candidatesCount: 1, status: "ACTIVE", deadline: "2026-06-30" }
-      ]
+      data: mockJobs
     }
   })),
-  closeJob:               id => api.put(`/recruitment/jobs/${id}/close`),
+  closeJob:               id => api.put(`/recruitment/jobs/${id}/close`).catch(() => {
+    const match = mockJobs.find(j => j.id === Number(id));
+    if (match) match.status = "CLOSED";
+    return { data: { data: {} } };
+  }),
   addCandidate:           d => api.post("/recruitment/candidates", d),
   getCandidates:          jobId => api.get(`/recruitment/jobs/${jobId}/candidates`).catch(() => ({
     data: {

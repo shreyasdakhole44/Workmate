@@ -267,6 +267,7 @@ export default function LeavePage() {
       <TopBar
         title="Leave Center"
         subtitle="Submit time-off requests, check balances, and manage department reviews"
+        isSharedView={true}
       />
 
       {/* Tabs */}

@@ -285,6 +285,7 @@ export default function AttendancePage() {
       <TopBar
         title="Attendance Center"
         subtitle="Log shift attendance, check-in, and audit daily logs history"
+        isSharedView={true}
       />
 
       {/* Tabs Switcher for HR/Admins */}
