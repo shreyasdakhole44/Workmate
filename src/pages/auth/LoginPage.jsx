@@ -29,12 +29,11 @@ function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navLinks = [
-    { label: "HR Software",    hasDropdown: true },
-    { label: "Pricing",        hasDropdown: false, href: "/#pricing" },
-    { label: "AI for HR",      hasDropdown: true },
+    { label: "Features",       hasDropdown: false, href: "/#features" },
     { label: "Modules",        hasDropdown: false, href: "/#modules" },
-    { label: "HR Resources",   hasDropdown: true },
-    { label: "About",          hasDropdown: false, href: "/#about" },
+    { label: "Why WorkMate",   hasDropdown: false, href: "/#why-workmate" },
+    { label: "Role Portals",   hasDropdown: false, href: "/#portals" },
+    { label: "Testimonials",   hasDropdown: false, href: "/#testimonials" },
   ];
 
   return (
@@ -64,8 +63,7 @@ function Navbar() {
 
         {/* CTA buttons */}
         <div className="hidden lg:flex items-center gap-3">
-          <Link to="#"
-            onClick={(e) => { e.preventDefault(); toast.success("Self-signup is disabled. Please contact your system administrator."); }}
+          <Link to="/signup"
             style={{ backgroundColor: C.primary }}
             className="inline-flex items-center gap-2 text-sm font-semibold
                        text-white px-5 py-2.5 rounded-lg hover:opacity-90
@@ -93,8 +91,7 @@ function Navbar() {
             </a>
           ))}
           <div className="pt-3 border-t border-white/10 flex flex-col gap-3">
-            <Link to="#"
-              onClick={(e) => { e.preventDefault(); toast.success("Self-signup is disabled. Please contact your system administrator."); }}
+            <Link to="/signup"
               style={{ backgroundColor: C.primary }}
               className="text-sm font-semibold text-white text-center
                          py-3 rounded-lg">
@@ -213,7 +210,7 @@ export default function LoginPage() {
 
       {/* Responsive Split Layout */}
       <div className="relative z-10 flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           
           {/* LEFT COLUMN: Welcome badge, copy, and role cards */}
           <div className="text-left">
@@ -382,12 +379,11 @@ export default function LoginPage() {
               {/* CTA link to Get Started */}
               <div className="text-center text-sm">
                 <span className="text-gray-500">Don't have an account? </span>
-                <a href="#" 
-                   onClick={(e) => { e.preventDefault(); toast.success("Contact your administrator."); }}
+                <Link to="/signup" 
                    style={{ color: C.primary }} 
                    className="font-semibold hover:underline">
                   Get started →
-                </a>
+                </Link>
               </div>
 
               {/* Terms & Privacy policies links */}

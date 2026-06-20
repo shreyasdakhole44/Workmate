@@ -17,6 +17,29 @@ import {
   TrendingUp, Award, BarChart2, UserCheck, Globe,
   MessageSquare, PhoneCall, Mail, Sparkles, ShieldCheck
 } from "lucide-react";
+import toast from "react-hot-toast";
+
+// Local SVG icons since brand icons are not in current lucide-react build
+const LinkedinIcon = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+const TwitterIcon = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+  </svg>
+);
+
+const GithubIcon = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+    <path d="M9 18c-4.51 2-5-2-7-2" />
+  </svg>
+);
 
 // ─── Colour tokens (matching HROne closely) ─────────────────────────────────
 // HROne uses: dark-green navbar, warm-cream body, bold orange-red CTAs
@@ -74,22 +97,7 @@ function FeatureCheck({ children }) {
   );
 }
 
-// ─── SECTION 1: Announcement bar ────────────────────────────────────────────
-function AnnouncementBar() {
-  return (
-    <div style={{ backgroundColor: "#1a4d35" }}
-         className="py-2 px-4 text-center text-sm text-white/90 flex
-                    items-center justify-center gap-3">
-      <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-      <span>
-        <strong>Case Study:</strong> How growing teams automate HR with WorkMate —
-        <a href="#features" className="underline underline-offset-2 ml-1 hover:text-white">
-          See how it works →
-        </a>
-      </span>
-    </div>
-  );
-}
+// ─── SECTION 1: Announcement bar (REMOVED) ──────────────────────────────────
 
 // ─── SECTION 2: Navbar ───────────────────────────────────────────────────────
 function Navbar() {
@@ -103,12 +111,11 @@ function Navbar() {
   }, []);
 
   const navLinks = [
-    { label: "HR Software",    hasDropdown: true },
-    { label: "Pricing",        hasDropdown: false, href: "#pricing" },
-    { label: "AI for HR",      hasDropdown: true },
+    { label: "Features",       hasDropdown: false, href: "#features" },
     { label: "Modules",        hasDropdown: false, href: "#modules" },
-    { label: "HR Resources",   hasDropdown: true },
-    { label: "About",          hasDropdown: false, href: "#about" },
+    { label: "Why WorkMate",   hasDropdown: false, href: "#why-workmate" },
+    { label: "Role Portals",   hasDropdown: false, href: "#portals" },
+    { label: "Testimonials",   hasDropdown: false, href: "#testimonials" },
   ];
 
   return (
@@ -147,7 +154,7 @@ function Navbar() {
                        transition-colors px-2">
             Login
           </Link>
-          <Link to="/login"
+          <Link to="/signup"
             style={{ backgroundColor: C.primary }}
             className="inline-flex items-center gap-2 text-sm font-semibold
                        text-white px-5 py-2.5 rounded-lg hover:opacity-90
@@ -179,7 +186,7 @@ function Navbar() {
               className="text-sm font-medium text-white/80 text-center py-2">
               Login
             </Link>
-            <Link to="/login"
+            <Link to="/signup"
               style={{ backgroundColor: C.primary }}
               className="text-sm font-semibold text-white text-center
                          py-3 rounded-lg">
@@ -426,42 +433,7 @@ function Hero() {
   );
 }
 
-// ─── SECTION 4: Stats ticker ─────────────────────────────────────────────────
-function StatsTicker() {
-  const stats = [
-    { val: "500+",    label: "Employees Managed" },
-    { val: "35+",     label: "Core Workflows" },
-    { val: "3",       label: "Role-Based Portals" },
-    { val: "7",       label: "Core Modules" },
-    { val: "99.9%",   label: "Uptime SLA" },
-    { val: "AI-Powered", label: "HR Assistance" },
-    { val: "Enterprise", label: "Security Layer" },
-    { val: "PDF",     label: "Payslip Export" },
-  ];
-
-  return (
-    <section style={{ backgroundColor: "#0B3D2E", borderTop: "1px solid #ffffff18" }}
-             className="py-10 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <p className="text-center text-xs font-semibold uppercase tracking-widest
-                      mb-8 text-white/40">
-          What WorkMate delivers
-        </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-px"
-             style={{ backgroundColor: "#ffffff18" }}>
-          {stats.slice(0, 8).map(({ val, label }) => (
-            <div key={val}
-                 className="flex flex-col items-center justify-center py-8 px-4 text-center"
-                 style={{ backgroundColor: "#0B3D2E" }}>
-              <span className="text-3xl font-black text-white mb-1">{val}</span>
-              <span className="text-xs text-white/50 font-medium">{label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+// ─── SECTION 4: Stats ticker (REMOVED) ───────────────────────────────────────
 
 // ─── SECTION 5: Features grid ────────────────────────────────────────────────
 function Features() {
@@ -965,7 +937,7 @@ function Modules() {
 // ─── SECTION 8: Why WorkMate ────────────────────────────────────────────────
 function WhyWorkMate() {
   return (
-    <section style={{ backgroundColor: C.darkBg }} className="py-20">
+    <section id="why-workmate" style={{ backgroundColor: C.darkBg }} className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
           <p className="text-xs font-semibold uppercase tracking-widest mb-4 text-white/40">
@@ -1055,7 +1027,7 @@ function Testimonials() {
   ];
 
   return (
-    <section style={{ backgroundColor: C.sectionBg }} className="py-20">
+    <section id="testimonials" style={{ backgroundColor: C.sectionBg }} className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-14">
           <Badge>TESTIMONIALS</Badge>
@@ -1126,7 +1098,7 @@ function FinalCTA() {
           and AI — in one platform your entire team will actually use.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/login"
+          <Link to="/signup"
             style={{ backgroundColor: C.primary }}
             className="inline-flex items-center justify-center gap-2 px-8 py-4
                        rounded-xl text-white font-bold text-base hover:opacity-90
@@ -1162,7 +1134,7 @@ function Footer() {
     },
     {
       heading: "Resources",
-      links: ["Documentation", "API Reference", "Swagger UI", "GitHub", "Status"],
+      links: ["Help Center", "Customer Guides", "Webinars", "Community", "Security & Trust"],
     },
   ];
 
@@ -1170,8 +1142,26 @@ function Footer() {
     <footer style={{ backgroundColor: "#060E09" }}
             className="border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+        {/* Newsletter / Contact strip */}
+        <div className="border-b border-white/5 pb-10 mb-10 flex flex-wrap items-center justify-between gap-6">
+          <div>
+            <p className="text-white font-semibold text-lg">
+              Stay updated on WorkMate
+            </p>
+            <p className="text-white/40 text-sm mt-1">
+              Product updates, HR tips, and release notes — no spam.
+            </p>
+          </div>
+          <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); toast.success("Subscribed successfully!"); }}>
+            <input type="email" placeholder="you@company.com" 
+              className="h-11 px-4 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-white/30 outline-none focus:border-[#E8420A]/50 w-64" />
+            <button type="submit" className="h-11 px-5 bg-[#E8420A] text-white rounded-lg text-sm font-semibold hover:bg-[#C73708] transition-colors">
+              Subscribe
+            </button>
+          </form>
+        </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand column */}
           <div>
             <div className="flex items-center gap-2.5 mb-4">
@@ -1185,6 +1175,15 @@ function Footer() {
               A Human Resource Management System built by Talentrix Solution.
               Designed to make HR human again.
             </p>
+            {/* Social Icons */}
+            <div className="flex gap-3 mt-5">
+              {[LinkedinIcon, TwitterIcon, GithubIcon].map((Icon, i) => (
+                <a key={i} href="#" 
+                   className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-colors">
+                  <Icon className="w-[15px] h-[15px] text-white/60" />
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Nav columns */}
@@ -1197,7 +1196,7 @@ function Footer() {
                 {links.map(link => (
                   <li key={link}>
                     <a href="#"
-                       className="text-sm text-white/40 hover:text-white/80 transition-colors">
+                       className="text-white/50 text-sm hover:text-white transition-colors duration-150">
                       {link}
                     </a>
                   </li>
@@ -1207,14 +1206,16 @@ function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col
-                        sm:flex-row justify-between items-center gap-4">
-          <p className="text-white/25 text-sm">
+        {/* Upgraded Copyright and Legal Links Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-white/5 mt-16">
+          <p className="text-white/30 text-sm">
             © 2025 WorkMate by Talentrix Solution. All rights reserved.
           </p>
-          <p className="text-white/25 text-sm">
-            Built for modern, growing HR teams.
-          </p>
+          <div className="flex gap-6">
+            <a href="#" className="text-white/30 text-sm hover:text-white/60 transition-colors">Privacy Policy</a>
+            <a href="#" className="text-white/30 text-sm hover:text-white/60 transition-colors">Terms of Service</a>
+            <a href="#" className="text-white/30 text-sm hover:text-white/60 transition-colors">Cookie Policy</a>
+          </div>
         </div>
       </div>
     </footer>
@@ -1228,10 +1229,8 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <AnnouncementBar />
       <Navbar />
       <Hero />
-      <StatsTicker />
       <Features />
       <Modules />
       <WhyWorkMate />

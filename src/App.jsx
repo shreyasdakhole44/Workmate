@@ -2,6 +2,7 @@ import React from "react";
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/auth/LoginPage";
+import SignupPage from "./pages/auth/SignupPage";
 import LandingPage from "./pages/LandingPage";
 import DashboardRouter from "./pages/dashboard/DashboardRouter";
 import EmployeePage from "./pages/admin/EmployeeManagement/EmployeePage";
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/signup",
+    element: <SignupPage />,
   },
   {
     element: (
