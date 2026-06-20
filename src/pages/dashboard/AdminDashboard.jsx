@@ -314,47 +314,12 @@ export default function AdminDashboard() {
             </div>
 
             {/* THREE COLUMNS GRID */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr_320px] gap-5 items-stretch">
               
               {/* LEFT COLUMN */}
-              <div className="lg:col-span-4 space-y-6">
+              <div className="flex flex-col gap-4 h-full">
                 
-                {/* 1. SYSTEM COMMAND SHORTCUTS */}
-                <div className="bg-white rounded-xl shadow-xs border border-gray-200/60 p-5 text-left space-y-4">
-                  <h4 className="text-[11px] font-black text-gray-800 uppercase tracking-wider pb-2 border-b border-gray-100">System Actions</h4>
-                  
-                  <div className="grid grid-cols-1 gap-3">
-                    <Link to="/employees" className="flex items-center gap-3 p-3 rounded-xl border bg-blue-50 border-blue-100 hover:shadow-md hover:border-gray-200 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group text-xs font-semibold text-gray-700">
-                      <div className="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0">
-                        <UserPlus size={16} />
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900">Add New Employee</p>
-                        <p className="text-[10px] text-gray-500">Register profile & details</p>
-                      </div>
-                    </Link>
-                    <Link to="/recruitment" className="flex items-center gap-3 p-3 rounded-xl border bg-white border-gray-100 hover:shadow-md hover:border-gray-200 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group text-xs font-semibold text-gray-700">
-                      <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-                        <Briefcase size={16} />
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900">Recruitment Pipeline</p>
-                        <p className="text-[10px] text-gray-500">Manage candidate reviews</p>
-                      </div>
-                    </Link>
-                    <Link to="/payroll" className="flex items-center gap-3 p-3 rounded-xl border bg-white border-gray-100 hover:shadow-md hover:border-gray-200 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group text-xs font-semibold text-gray-700">
-                      <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                        <DollarSign size={16} />
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900">Payroll Settings</p>
-                        <p className="text-[10px] text-gray-500">Distribute monthly PDF slips</p>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 2. LEAVE APPROVAL QUEUE */}
+                {/* 1. LEAVE APPROVAL QUEUE */}
                 <CollapsibleCard title="Leave Approval Queue" count={pending.length}>
                   {loading ? (
                     <div className="space-y-2 animate-pulse">
@@ -389,10 +354,89 @@ export default function AdminDashboard() {
                     </div>
                   )}
                 </CollapsibleCard>
+
+                {/* 2. ONBOARDING PROGRESS */}
+                <CollapsibleCard title="Onboarding Progress" count={onboardings.length}>
+                  {loading ? (
+                    <div className="space-y-2 animate-pulse">
+                      <div className="h-10 bg-slate-100 rounded" />
+                    </div>
+                  ) : onboardings.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-6 text-center w-full">
+                      <p className="text-xs text-gray-400">No active onboardings right now.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3.5 text-left">
+                      {onboardings.slice(0, 3).map(emp => (
+                        <div key={emp.employeeId} className="border border-gray-100 rounded-xl p-3 bg-slate-50/30 shadow-2xs space-y-2">
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <h5 className="text-xs font-bold text-gray-800">{emp.employeeName}</h5>
+                              <p className="text-[9px] text-gray-400 font-semibold mt-0.5">{emp.empCode} · {emp.department}</p>
+                            </div>
+                            <span className="text-[9px] text-[#0A5C36] font-bold bg-[#0A5C36]/5 px-2 py-0.5 rounded-full">{emp.progressPercent}%</span>
+                          </div>
+                          <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-[#0A5C36] h-full rounded-full transition-all duration-500" style={{ width: `${emp.progressPercent}%`, minWidth: "4px" }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CollapsibleCard>
+
+                {/* 3. SYSTEM SHORTCUTS */}
+                <div className="bg-white rounded-xl border border-gray-100 p-5 text-left">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">System Shortcuts</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link to="/attendance" className="bg-gray-50 hover:bg-gray-100 rounded-lg p-3 text-center transition-colors flex flex-col items-center justify-center">
+                      <Clock size={16} className="text-emerald-600 mb-1" />
+                      <span className="text-xs font-bold text-gray-700">Attendance</span>
+                    </Link>
+                    <Link to="/leave" className="bg-gray-50 hover:bg-gray-100 rounded-lg p-3 text-center transition-colors flex flex-col items-center justify-center">
+                      <Calendar size={16} className="text-blue-600 mb-1" />
+                      <span className="text-xs font-bold text-gray-700">Leave Logs</span>
+                    </Link>
+                    <Link to="/payroll" className="bg-gray-50 hover:bg-gray-100 rounded-lg p-3 text-center transition-colors flex flex-col items-center justify-center">
+                      <DollarSign size={16} className="text-amber-600 mb-1" />
+                      <span className="text-xs font-bold text-gray-700">Payroll</span>
+                    </Link>
+                    <Link to="/reports" className="bg-gray-50 hover:bg-gray-100 rounded-lg p-3 text-center transition-colors flex flex-col items-center justify-center">
+                      <ClipboardCheck size={16} className="text-purple-600 mb-1" />
+                      <span className="text-xs font-bold text-gray-700">Reports</span>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* 4. THIS WEEK AT A GLANCE (last card, flex-1) */}
+                <div className="flex-1 bg-white rounded-xl border border-gray-100 p-5 text-left flex flex-col justify-between">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">This Week</p>
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">New hires</span>
+                        <span className="font-semibold text-gray-900">2</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Leaves approved</span>
+                        <span className="font-semibold text-emerald-600">5</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Payslips generated</span>
+                        <span className="font-semibold text-gray-900">6</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Open positions</span>
+                        <span className="font-semibold text-purple-600">5</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
               {/* CENTER COLUMN: CHART & FEED */}
-              <div className="lg:col-span-5 space-y-6">
+              <div className="flex flex-col gap-4">
                 
                 {/* HEADCOUNT CHART */}
                 <div className="bg-white rounded-xl shadow-xs border border-gray-200/60 p-5 text-left">
@@ -429,7 +473,7 @@ export default function AdminDashboard() {
                         </div>
                       </div>
 
-                      <p className="text-xs text-gray-650 leading-relaxed font-normal">{post.content}</p>
+                      <p className="text-xs text-gray-655 leading-relaxed font-normal">{post.content}</p>
 
                       <div className="h-px bg-gray-100" />
                       <div className="flex items-center gap-4 text-[10px] font-semibold text-gray-500">
@@ -445,10 +489,10 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* RIGHT COLUMN: RECENT ACTIVITIES */}
-              <div className="lg:col-span-3 space-y-6">
+              {/* RIGHT COLUMN */}
+              <div className="flex flex-col gap-4 h-full">
                 
-                {/* RECENT ACTIVITIES (HROne Timeline) */}
+                {/* SYSTEM ACTIVITY */}
                 <div className="bg-white rounded-xl shadow-xs border border-gray-200/60 p-5 text-left space-y-4">
                   <h3 className="text-[11px] font-black text-gray-800 uppercase tracking-wider pb-2 border-b border-gray-100">System Activity</h3>
                   
@@ -473,7 +517,7 @@ export default function AdminDashboard() {
 
                 {/* RUNTIME ENVIRONMENT STATS */}
                 <div className="bg-white rounded-xl shadow-xs border border-gray-200/60 p-5 text-left space-y-3">
-                  <h4 className="text-[11px] font-black text-gray-850 uppercase tracking-wider pb-2 border-b border-gray-100">System Environment</h4>
+                  <h4 className="text-[11px] font-black text-gray-855 uppercase tracking-wider pb-2 border-b border-gray-100">System Environment</h4>
                   <div className="space-y-2 text-[9px] font-extrabold text-gray-500 uppercase tracking-wider">
                     <div className="flex justify-between">
                       <span>Server Engine</span>
@@ -491,11 +535,53 @@ export default function AdminDashboard() {
                       <span>AI Model</span>
                       <span className="text-purple-650">Spring AI Client</span>
                     </div>
+                  </div>
+                </div>
+
+                {/* SYSTEM HEALTH */}
+                <div className="bg-white rounded-xl border border-gray-100 p-5 text-left">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">System Health</p>
+                  <div className="space-y-2.5">
+                    {[
+                      { label: "API Uptime", value: "99.98%", status: "good" },
+                      { label: "DB Response Time", value: "12ms", status: "good" },
+                      { label: "Last Backup", value: "2 hours ago", status: "good" },
+                      { label: "SSL Certificate", value: "Valid · 87 days left", status: "good" },
+                    ].map(item => (
+                      <div key={item.label} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                          <span className="text-sm text-gray-600">{item.label}</span>
+                        </div>
+                        <span className="text-sm font-medium text-gray-900">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* STORAGE & BACKUPS (last card, flex-1) */}
+                <div className="flex-1 bg-white rounded-xl border border-gray-100 p-5 text-left flex flex-col justify-between">
+                  <div>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Storage &amp; Backups</p>
+                    <div className="mb-3">
+                      <div className="flex justify-between text-xs text-gray-500 mb-1.5">
+                        <span>Database storage used</span>
+                        <span className="font-semibold text-gray-700">2.4 GB / 10 GB</span>
+                      </div>
+                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-teal-600 rounded-full" style={{width: '24%'}} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pt-3 border-t border-gray-50 flex items-center justify-between">
+                    <span className="text-xs text-gray-400">Next scheduled backup</span>
+                    <span className="text-xs font-medium text-gray-700">Tonight, 2:00 AM</span>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
 
       {/* SPRING AI FLOATING ASSISTANT */}
       <div 

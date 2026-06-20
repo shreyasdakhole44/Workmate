@@ -13,6 +13,7 @@ export default function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const isDashboard = location.pathname === "/dashboard";
 
@@ -49,6 +50,13 @@ export default function Layout() {
               <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
               <input 
                 type="text" 
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === "Enter" && searchQuery.trim()) {
+                    navigate("/employees", { state: { search: searchQuery } });
+                  }
+                }}
                 className="w-full bg-white text-gray-800 placeholder-gray-400 rounded-lg pl-9.5 pr-4 py-1.5 text-xs focus:outline-none shadow-sm focus:ring-1 focus:ring-emerald-300"
                 placeholder="Search for requests, reports, people..."
               />
