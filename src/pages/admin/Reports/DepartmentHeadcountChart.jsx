@@ -28,7 +28,8 @@ export default function DepartmentHeadcountChart({ data }) {
             ))}
           </Pie>
           <Tooltip 
-            contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #E2E8F0" }}
+            contentStyle={{ backgroundColor: "#0E2D21", border: "none", fontSize: 11, borderRadius: 8, color: "#fff" }}
+            itemStyle={{ color: "#fff" }}
           />
           <Legend 
             verticalAlign="bottom" 

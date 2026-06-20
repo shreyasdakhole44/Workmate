@@ -10,7 +10,8 @@ import { CheckCircle2, Circle, Clock, CheckSquare, Users, ClipboardCheck } from 
 import toast from "react-hot-toast";
 
 export default function OnboardingPage() {
-  const { user, isEmployee } = useAuth();
+  const { user } = useAuth();
+  const isEmployee = user?.role === "EMPLOYEE";
 
   const [loading, setLoading] = useState(true);
   const [tasks, setTasks] = useState([]);

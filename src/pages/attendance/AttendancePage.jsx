@@ -187,9 +187,40 @@ export default function AttendancePage() {
   };
 
   const handleExport = () => {
-    toast("Excel export functionality is coming soon!", {
-      icon: "📊",
-    });
+    if (teamLogs.length === 0) {
+      toast.error("No attendance logs available to export.");
+      return;
+    }
+    
+    // Headers for the CSV
+    const headers = ["Employee Name", "Employee Code", "Check In Time", "Check Out Time", "Working Hours", "Status"];
+    
+    // Rows mapping
+    const rows = teamLogs.map(log => [
+      log.employeeName || "",
+      log.empCode || "",
+      log.checkInTime || "",
+      log.checkOutTime || "",
+      log.workingHours || "0",
+      log.status || ""
+    ]);
+    
+    // Convert to CSV string with double quotes for safety
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(e => e.map(val => `"${String(val).replace(/"/g, '""')}"`).join(","))
+    ].join("\n");
+    
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Attendance_Report_${teamDate}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Attendance report exported successfully as CSV/Excel!");
   };
 
   // Row color codes based on logs

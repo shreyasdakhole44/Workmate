@@ -153,7 +153,7 @@ export default function PerformancePage() {
           </div>
           <div>
             <p className="font-semibold text-gray-950 leading-none mb-1">{r.employeeName}</p>
-            <p className="text-[10px] text-gray-400">Review Period: {r.period}</p>
+            <p className="text-[10px] text-gray-400">Review Period: {r.reviewPeriod || r.period}</p>
           </div>
         </div>
       )
@@ -172,7 +172,7 @@ export default function PerformancePage() {
     {
       key: "feedback",
       label: "Appraiser Feedback",
-      render: r => <span className="text-gray-500 text-xs truncate max-w-xs block" title={r.feedback}>{r.feedback || "—"}</span>
+      render: r => <span className="text-gray-500 text-xs truncate max-w-xs block" title={r.feedbackText || r.feedback}>{r.feedbackText || r.feedback || "—"}</span>
     },
     {
       key: "reviewerName",
@@ -251,14 +251,14 @@ export default function PerformancePage() {
                     <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
                       <div>
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Review Period</p>
-                        <h4 className="text-xs font-extrabold text-[#0B3D2E] mt-0.5">{rev.period}</h4>
+                        <h4 className="text-xs font-extrabold text-[#0B3D2E] mt-0.5">{rev.reviewPeriod || rev.period}</h4>
                       </div>
                       <span className="text-[10px] font-medium text-gray-455 flex items-center gap-1">
                         Reviewed by <span className="font-bold text-gray-800">{rev.reviewerName || "Manager"}</span>
                       </span>
                     </div>
                     <div className="bg-[#FAF7F2]/50 border border-[#E8E2D9]/40 rounded-lg p-3 mt-2 text-xs text-gray-655 leading-relaxed italic font-medium">
-                      "{rev.feedback || "Good job! Keep performing well."}"
+                      "{rev.feedbackText || rev.feedback || "Good job! Keep performing well."}"
                     </div>
                   </div>
                 </div>

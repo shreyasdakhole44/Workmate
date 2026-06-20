@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 export default function PromotionHistoryPage() {
   const [employees, setEmployees] = useState([]);
-  const [selectedEmpId, setSelectedEmpId] = useState("");
+  const [selectedEmpId, setSelectedEmpId] = useState("all");
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -15,11 +15,7 @@ export default function PromotionHistoryPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedEmpId) {
-      loadHistory(selectedEmpId);
-    } else {
-      setHistory([]);
-    }
+    loadHistory(selectedEmpId);
   }, [selectedEmpId]);
 
   const loadEmployees = async () => {
@@ -27,9 +23,6 @@ export default function PromotionHistoryPage() {
       const res = await employeeAPI.getSummaries();
       const list = res.data.data || [];
       setEmployees(list);
-      if (list.length > 0) {
-        setSelectedEmpId(list[0].id);
-      }
     } catch {
       toast.error("Failed to load employee list");
     }
@@ -59,7 +52,7 @@ export default function PromotionHistoryPage() {
               onChange={e => setSelectedEmpId(e.target.value)}
               className="h-10 border border-gray-200 rounded-lg px-3.5 pr-10 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all outline-none w-full text-xs cursor-pointer bg-white appearance-none"
             >
-              <option value="">Choose Employee...</option>
+              <option value="all">All Employees</option>
               {employees.map(e => (
                 <option key={e.id} value={e.id}>{e.fullName} ({e.empCode})</option>
               ))}
@@ -69,7 +62,7 @@ export default function PromotionHistoryPage() {
         </div>
         <div className="h-12 w-px bg-gray-100 hidden sm:block" />
         <div className="text-xs text-gray-450 font-medium">
-          Select an employee to retrieve their historical appraisal modifications, role transitions, and wage adjustments audit logs.
+          Select "All Employees" or a specific profile to retrieve historical appraisal modifications, role transitions, and wage adjustments audit logs.
         </div>
       </div>
 
@@ -87,7 +80,7 @@ export default function PromotionHistoryPage() {
         ) : history.length === 0 ? (
           <div className="text-center py-10 flex flex-col items-center justify-center gap-2 text-gray-400 text-xs">
             <TrendingUp size={24} className="text-gray-300 mb-1" />
-            <span>No career appraisal history logs found for this employee.</span>
+            <span>No career appraisal history logs found.</span>
           </div>
         ) : (
           <div className="pl-4 py-2">
@@ -100,6 +93,11 @@ export default function PromotionHistoryPage() {
                   
                   <div className="space-y-1.5">
                     <p className="text-sm font-semibold text-gray-900 leading-snug">
+                      {selectedEmpId === "all" && (
+                        <span className="text-blue-700 font-extrabold mr-1.5">
+                          {item.employee?.fullName || item.employeeName || "Employee"}:
+                        </span>
+                      )}
                       Promoted to <span className="text-[#0B3D2E] font-bold">{item.newDesignation}</span>
                     </p>
                     <p className="text-xs text-gray-500 leading-relaxed font-normal">

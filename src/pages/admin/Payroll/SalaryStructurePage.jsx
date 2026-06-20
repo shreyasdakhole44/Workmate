@@ -49,11 +49,11 @@ export default function SalaryStructurePage() {
   const loadDirectory = async () => {
     setLoading(true);
     try {
-      const res = await employeeAPI.getSummaries();
-      const list = res.data.data || [];
+      const res = await employeeAPI.getAll(0, 1000);
+      const list = res.data.data?.content || res.data.data || [];
       setEmployees(list);
       if (list.length > 0) {
-        setGenForm(f => ({ ...f, employeeId: list[0].id }));
+        setGenForm(f => ({ ...f, employeeId: f.employeeId || list[0].id }));
       }
     } catch {
       toast.error("Failed to load employee directory");

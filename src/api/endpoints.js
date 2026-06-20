@@ -94,6 +94,54 @@ let mockEmployees = [
   }
 ];
 
+// Local Mock database for salary, payslips, and promotions
+let mockSalaryStructures = {};
+let mockPayslips = [];
+let mockPromotions = [];
+
+// Initialize default structures, payslips, and promotions for mock employees
+mockEmployees.forEach(emp => {
+  const basic = emp.id === 5 ? 70000 : 60000;
+  const hra = emp.id === 5 ? 28000 : 24000;
+  const other = emp.id === 5 ? 12000 : 10000;
+  const pf = emp.id === 5 ? 8400 : 7200;
+  
+  mockSalaryStructures[emp.id] = {
+    basicSalary: basic,
+    hra: hra,
+    medicalAllowance: 5000,
+    otherAllowances: other,
+    specialAllowance: 0,
+    conveyanceAllowance: 1600,
+    performanceBonus: 0,
+    providentFund: pf,
+    professionalTax: 200,
+    incomeTax: 0,
+    esi: 0
+  };
+
+  const gross = basic + hra + 5000 + other + 1600;
+  const net = gross - pf - 200;
+  mockPayslips.push(
+    { id: 300 + emp.id * 10 + 1, employeeId: emp.id, month: 5, year: 2026, basicSalary: basic, hra: hra, medicalAllowance: 5000, otherAllowances: other, specialAllowance: 0, conveyanceAllowance: 1600, performanceBonus: 0, providentFund: pf, professionalTax: 200, incomeTax: 0, esi: 0, grossSalary: gross, netSalary: net, status: "PAID", generatedAt: "2026-05-31" },
+    { id: 300 + emp.id * 10 + 2, employeeId: emp.id, month: 4, year: 2026, basicSalary: basic, hra: hra, medicalAllowance: 5000, otherAllowances: other, specialAllowance: 0, conveyanceAllowance: 1600, performanceBonus: 0, providentFund: pf, professionalTax: 200, incomeTax: 0, esi: 0, grossSalary: gross, netSalary: net, status: "PAID", generatedAt: "2026-04-30" },
+    { id: 300 + emp.id * 10 + 3, employeeId: emp.id, month: 3, year: 2026, basicSalary: basic, hra: hra, medicalAllowance: 5000, otherAllowances: other, specialAllowance: 0, conveyanceAllowance: 1600, performanceBonus: 0, providentFund: pf, professionalTax: 200, incomeTax: 0, esi: 0, grossSalary: gross, netSalary: net, status: "PAID", generatedAt: "2026-03-31" }
+  );
+
+  mockPromotions.push({
+    id: 400 + emp.id,
+    employeeId: emp.id,
+    promotionDate: "2026-06-10",
+    previousRole: emp.role,
+    newRole: emp.role,
+    previousDesignation: emp.id === 5 ? "Senior Frontend Engineer" : "Software Engineer",
+    newDesignation: emp.designation,
+    previousSalary: emp.salary * 0.8,
+    newSalary: emp.salary,
+    notes: "Initial mapping from system import."
+  });
+});
+
 export const authAPI = {
   login:    d => api.post("/auth/login", d).catch(() => {
     const match = mockEmployees.find(e => e.email === d.email);
@@ -208,6 +256,7 @@ export const employeeAPI = {
       match.phone = d.phone;
       match.joinDate = d.joinDate;
       match.salary = Number(d.salary) || 0;
+      match.role = d.role;
       if (d.managerId) {
         const mgr = mockEmployees.find(e => e.id === Number(d.managerId));
         match.managerName = mgr ? mgr.fullName : "None";
@@ -413,8 +462,11 @@ export const leaveAPI = {
 };
 
 let mockReviews = [
-  { id: 201, employeeId: 3, employeeName: "Shreyas Prakash Dakhole", period: "Q1 2026", score: 8.5, feedback: "Demonstrated excellent execution on UI components rebuilds. Very productive and responsive.", reviewerName: "Sarah Jenkins" },
-  { id: 202, employeeId: 4, employeeName: "John Doe", period: "Q1 2026", score: 7.0, feedback: "Showing good improvement, should focus more on writing modular CSS templates.", reviewerName: "Sarah Jenkins" }
+  { id: 201, employeeId: 3, employeeName: "Shreyas Prakash Dakhole", period: "Q1 2026", reviewPeriod: "Q1 2026", score: 8.5, feedback: "Demonstrated excellent execution on UI components rebuilds. Very productive and responsive.", feedbackText: "Demonstrated excellent execution on UI components rebuilds. Very productive and responsive.", reviewerName: "Sarah Jenkins" },
+  { id: 202, employeeId: 4, employeeName: "John Doe", period: "Q1 2026", reviewPeriod: "Q1 2026", score: 7.0, feedback: "Showing good improvement, should focus more on writing modular CSS templates.", feedbackText: "Showing good improvement, should focus more on writing modular CSS templates.", reviewerName: "Sarah Jenkins" },
+  { id: 203, employeeId: 5, employeeName: "Rohit Sharma", period: "Q1 2026", reviewPeriod: "Q1 2026", score: 9.2, feedback: "Excellent coordination with IT leads. Completed several major refactoring tasks ahead of schedule.", feedbackText: "Excellent coordination with IT leads. Completed several major refactoring tasks ahead of schedule.", reviewerName: "Admin User" },
+  { id: 204, employeeId: 1, employeeName: "Admin User", period: "Q1 2026", reviewPeriod: "Q1 2026", score: 9.5, feedback: "Outstanding management of platform services. Successfully coordinated system-wide architecture renewals.", feedbackText: "Outstanding management of platform services. Successfully coordinated system-wide architecture renewals.", reviewerName: "Sarah Jenkins" },
+  { id: 205, employeeId: 2, employeeName: "Sarah Jenkins", period: "Q1 2026", reviewPeriod: "Q1 2026", score: 9.0, feedback: "Sarah has shown exceptional capabilities in recruiting and streamlining onboarding checklists.", feedbackText: "Sarah has shown exceptional capabilities in recruiting and streamlining onboarding checklists.", reviewerName: "Admin User" }
 ];
 
 export const performanceAPI = {
@@ -427,8 +479,10 @@ export const performanceAPI = {
       employeeId: Number(d.employeeId),
       employeeName: emp.fullName,
       period: d.reviewPeriod,
+      reviewPeriod: d.reviewPeriod,
       score: Number(d.score),
       feedback: d.feedbackText || d.comments || "",
+      feedbackText: d.feedbackText || d.comments || "",
       reviewerName: "Sarah Jenkins"
     };
     mockReviews.unshift(newRev);
@@ -437,16 +491,26 @@ export const performanceAPI = {
   update:     (id,d)=> Promise.resolve({ data: { data: {} } }),
   byEmployee: id   => {
     return api.get(`/performance/employee/${id}`).catch(() => {
-      const score = Number(id) === 5 ? 9.2 : 8.5;
-      const feedback = Number(id) === 5
-        ? "Rohit has shown exceptional frontend engineering skills. Successfully delivered complex dashboard layouts and coordinated closely with the product team."
-        : "Demonstrated excellent execution on UI components rebuilds. Very productive and responsive.";
+      let data = [];
+      if (Number(id) === 1) {
+        data = [
+          { id: 211, period: "Q1 2026", score: 9.5, feedback: "Outstanding management of platform services. Successfully coordinated system-wide architecture renewals and optimized security controls.", reviewerName: "Sarah Jenkins" },
+          { id: 212, period: "Annual 2025", score: 9.2, feedback: "Exceptional administrative performance. Exhibited great leadership in resolving scaling issues.", reviewerName: "Board of Directors" }
+        ];
+      } else if (Number(id) === 5) {
+        data = [
+          { id: 201, period: "Q1 2026", score: 9.2, feedback: "Rohit has shown exceptional frontend engineering skills. Successfully delivered complex dashboard layouts and coordinated closely with the product team.", reviewerName: "Sarah Jenkins" },
+          { id: 202, period: "Annual 2025", score: 8.8, feedback: "Solid technical knowledge. Great team player and very reliable.", reviewerName: "Admin User" }
+        ];
+      } else {
+        data = [
+          { id: 201, period: "Q1 2026", score: 8.5, feedback: "Demonstrated excellent execution on UI components rebuilds. Very productive and responsive.", reviewerName: "Sarah Jenkins" },
+          { id: 202, period: "Annual 2025", score: 8.8, feedback: "Solid technical knowledge. Great team player and very reliable.", reviewerName: "Admin User" }
+        ];
+      }
       return {
         data: {
-          data: [
-            { id: 201, period: "Q1 2026", score: score, feedback: feedback, reviewerName: "Sarah Jenkins" },
-            { id: 202, period: "Annual 2025", score: 8.8, feedback: "Solid technical knowledge. Great team player and very reliable.", reviewerName: "Admin User" }
-          ]
+          data: data
         }
       };
     });
@@ -565,64 +629,105 @@ export const onboardingAPI = {
 };
 
 export const payrollAPI = {
-  saveSalaryStructure:  (employeeId, d) => api.post(`/payroll/salary-structure/${employeeId}`, d),
-  getSalaryStructure:   employeeId => api.get(`/payroll/salary-structure/${employeeId}`).catch(() => {
-    const basic = Number(employeeId) === 5 ? 70000 : 60000;
-    const hra = Number(employeeId) === 5 ? 28000 : 24000;
-    const other = Number(employeeId) === 5 ? 12000 : 10000;
-    const pf = Number(employeeId) === 5 ? 8400 : 7200;
-    return {
-      data: {
-        data: {
-          basicSalary: basic,
-          hra: hra,
-          medicalAllowance: 5000,
-          otherAllowances: other,
-          providentFund: pf,
-          professionalTax: 200
-        }
-      }
+  saveSalaryStructure:  (employeeId, d) => api.post(`/payroll/salary-structure/${employeeId}`, d).catch(() => {
+    mockSalaryStructures[Number(employeeId)] = {
+      basicSalary: Number(d.basicSalary),
+      hra: Number(d.hra),
+      medicalAllowance: Number(d.medicalAllowance || 0),
+      otherAllowances: Number(d.otherAllowances),
+      specialAllowance: Number(d.specialAllowance || 0),
+      conveyanceAllowance: Number(d.conveyanceAllowance || 0),
+      performanceBonus: Number(d.performanceBonus || 0),
+      providentFund: Number(d.providentFund),
+      professionalTax: Number(d.professionalTax),
+      incomeTax: Number(d.incomeTax || 0),
+      esi: Number(d.esi || 0)
     };
+    const emp = mockEmployees.find(e => e.id === Number(employeeId));
+    if (emp) {
+      const gross = d.basicSalary + d.hra + (d.medicalAllowance || 0) + d.otherAllowances + (d.specialAllowance || 0) + (d.conveyanceAllowance || 0) + (d.performanceBonus || 0);
+      const deductions = d.providentFund + d.professionalTax + (d.incomeTax || 0) + (d.esi || 0);
+      emp.salary = gross - deductions;
+    }
+    return { data: { data: mockSalaryStructures[Number(employeeId)] } };
   }),
-  generatePayslip:      (employeeId, year, month) => api.post(`/payroll/payslips/generate?employeeId=${employeeId}&year=${year}&month=${month}`).catch(() => ({ data: { data: { success: true } } })),
+  getSalaryStructure:   employeeId => api.get(`/payroll/salary-structure/${employeeId}`).catch(() => {
+    const struct = mockSalaryStructures[Number(employeeId)] || {
+      basicSalary: 60000,
+      hra: 24000,
+      medicalAllowance: 5000,
+      otherAllowances: 10000,
+      specialAllowance: 0,
+      conveyanceAllowance: 1600,
+      performanceBonus: 0,
+      providentFund: 7200,
+      professionalTax: 200,
+      incomeTax: 0,
+      esi: 0
+    };
+    return { data: { data: struct } };
+  }),
+  generatePayslip:      (employeeId, year, month) => api.post(`/payroll/payslips/generate?employeeId=${employeeId}&year=${year}&month=${month}`).then(res => {
+    return res;
+  }).catch(() => {
+    const struct = mockSalaryStructures[Number(employeeId)] || {
+      basicSalary: 60000,
+      hra: 24000,
+      medicalAllowance: 5000,
+      otherAllowances: 10000,
+      specialAllowance: 0,
+      conveyanceAllowance: 1600,
+      performanceBonus: 0,
+      providentFund: 7200,
+      professionalTax: 200,
+      incomeTax: 0,
+      esi: 0
+    };
+    const gross = struct.basicSalary + struct.hra + struct.medicalAllowance + struct.otherAllowances + struct.specialAllowance + struct.conveyanceAllowance + struct.performanceBonus;
+    const deductions = struct.providentFund + struct.professionalTax + struct.incomeTax + struct.esi;
+    const net = gross - deductions;
+
+    mockPayslips = mockPayslips.filter(p => !(p.employeeId === Number(employeeId) && p.year === Number(year) && p.month === Number(month)));
+
+    const newPayslip = {
+      id: Math.floor(Math.random() * 1000) + 3000,
+      employeeId: Number(employeeId),
+      year: Number(year),
+      month: Number(month),
+      basicSalary: struct.basicSalary,
+      hra: struct.hra,
+      medicalAllowance: struct.medicalAllowance,
+      otherAllowances: struct.otherAllowances,
+      specialAllowance: struct.specialAllowance,
+      conveyanceAllowance: struct.conveyanceAllowance,
+      performanceBonus: struct.performanceBonus,
+      providentFund: struct.providentFund,
+      professionalTax: struct.professionalTax,
+      incomeTax: struct.incomeTax,
+      esi: struct.esi,
+      grossSalary: gross,
+      netSalary: net,
+      status: "PAID",
+      generatedAt: new Date().toISOString().split("T")[0]
+    };
+    mockPayslips.unshift(newPayslip);
+    return { data: { data: newPayslip } };
+  }),
   getMyPayslips:        () => api.get("/payroll/payslips/my-payslips").catch(() => {
     const userRaw = localStorage.getItem("wm_user");
     const empId = userRaw ? JSON.parse(userRaw)?.employeeId : 3;
-    const basic = Number(empId) === 5 ? 70000 : 60000;
-    const hra = Number(empId) === 5 ? 28000 : 24000;
-    const other = Number(empId) === 5 ? 12000 : 10000;
-    const pf = Number(empId) === 5 ? 8400 : 7200;
-    const gross = basic + hra + 5000 + other;
-    const net = gross - pf - 200;
-    return {
-      data: {
-        data: [
-          { id: 301, month: 5, year: 2026, basicSalary: basic, hra: hra, medicalAllowance: 5000, otherAllowances: other, providentFund: pf, professionalTax: 200, grossSalary: gross, netSalary: net, status: "PAID", generatedAt: "2026-05-31" },
-          { id: 302, month: 4, year: 2026, basicSalary: basic, hra: hra, medicalAllowance: 5000, otherAllowances: other, providentFund: pf, professionalTax: 200, grossSalary: gross, netSalary: net, status: "PAID", generatedAt: "2026-04-30" },
-          { id: 303, month: 3, year: 2026, basicSalary: basic, hra: hra, medicalAllowance: 5000, otherAllowances: other, providentFund: pf, professionalTax: 200, grossSalary: gross, netSalary: net, status: "PAID", generatedAt: "2026-03-31" }
-        ]
-      }
-    };
+    const filtered = mockPayslips.filter(p => p.employeeId === Number(empId));
+    return { data: { data: filtered } };
   }),
   getPayslipsHistory:   employeeId => api.get(`/payroll/payslips/${employeeId}/history`).catch(() => {
-    const basic = Number(employeeId) === 5 ? 70000 : 60000;
-    const hra = Number(employeeId) === 5 ? 28000 : 24000;
-    const other = Number(employeeId) === 5 ? 12000 : 10000;
-    const pf = Number(employeeId) === 5 ? 8400 : 7200;
-    const gross = basic + hra + 5000 + other;
-    const net = gross - pf - 200;
-    return {
-      data: {
-        data: [
-          { id: 301, month: 5, year: 2026, basicSalary: basic, hra: hra, medicalAllowance: 5000, otherAllowances: other, providentFund: pf, professionalTax: 200, grossSalary: gross, netSalary: net, status: "PAID", generatedAt: "2026-05-31" },
-          { id: 302, month: 4, year: 2026, basicSalary: basic, hra: hra, medicalAllowance: 5000, otherAllowances: other, providentFund: pf, professionalTax: 200, grossSalary: gross, netSalary: net, status: "PAID", generatedAt: "2026-04-30" },
-          { id: 303, month: 3, year: 2026, basicSalary: basic, hra: hra, medicalAllowance: 5000, otherAllowances: other, providentFund: pf, professionalTax: 200, grossSalary: gross, netSalary: net, status: "PAID", generatedAt: "2026-03-31" }
-        ]
-      }
-    };
+    const filtered = mockPayslips.filter(p => p.employeeId === Number(employeeId));
+    return { data: { data: filtered } };
+  }),
+  getAllPayslips:       () => api.get("/payroll/payslips").catch(() => {
+    return { data: { data: mockPayslips } };
   }),
   downloadPayslip:      id => api.get(`/payroll/payslips/${id}/download`, { responseType: "blob" }).then(res => res).catch(() => {
-    // Generate a simple, valid mock PDF client-side
+    const payslip = mockPayslips.find(p => p.id === Number(id)) || mockPayslips[0];
     const pdfContent = `%PDF-1.4
 1 0 obj
 << /Type /Catalog /Pages 2 0 R >>
@@ -634,22 +739,19 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >> /Contents 4 0 R >>
 endobj
 4 0 obj
-<< /Length 200 >>
+<< /Length 250 >>
 stream
 BT
-/F1 14 Tf
-72 700 Td
-(WorkMate HRMS - Monthly Salary Slip) Tj
-0 -20 Td
-(-------------------------------------) Tj
-0 -20 Td
-(Status: PAID) Tj
-0 -15 Td
-(Gross Salary: Rs. 115,000) Tj
-0 -15 Td
-(Deductions: Rs. 8,600) Tj
-0 -20 Td
-(Net Salary: Rs. 106,400) Tj
+/F1 12 Tf
+72 720 Td (WorkMate HRMS - Monthly Salary Slip) Tj
+0 -20 Td (-------------------------------------) Tj
+0 -20 Td (Period: ${payslip.month}/${payslip.year}) Tj
+0 -15 Td (Basic Salary: Rs. ${payslip.basicSalary}) Tj
+0 -15 Td (HRA: Rs. ${payslip.hra}) Tj
+0 -15 Td (Gross Salary: Rs. ${payslip.grossSalary}) Tj
+0 -15 Td (Deductions: Rs. ${payslip.providentFund + payslip.professionalTax + payslip.incomeTax + payslip.esi}) Tj
+0 -20 Td (Net Salary: Rs. ${payslip.netSalary}) Tj
+0 -20 Td (Status: PAID) Tj
 ET
 endstream
 endobj
@@ -666,16 +768,63 @@ startxref
 450
 %%EOF`;
     const blob = new Blob([pdfContent], { type: "application/pdf" });
-    return {
-      data: blob
-    };
+    return { data: blob };
   }),
-  promoteEmployee:      (employeeId, d) => api.post(`/payroll/promotions/${employeeId}`, d),
-  getPromotionHistory:  employeeId => api.get(`/payroll/promotions/${employeeId}/history`).catch(() => ({
-    data: {
-      data: [
-        { id: 401, promotionDate: "2026-06-10", previousRole: "EMPLOYEE", newRole: "EMPLOYEE", previousDesignation: Number(employeeId) === 5 ? "Senior Frontend Engineer" : "Software Engineer", newDesignation: Number(employeeId) === 5 ? "Lead Frontend Architect" : "Lead React Developer", previousSalary: Number(employeeId) === 5 ? 1200000 : 800000, newSalary: Number(employeeId) === 5 ? 1500000 : 1200000, notes: "Excellent frontend engineering contributions." }
-      ]
+  promoteEmployee:      (employeeId, d) => api.post(`/payroll/promotions/${employeeId}`, d).then(res => {
+    return res;
+  }).catch(() => {
+    const emp = mockEmployees.find(e => e.id === Number(employeeId));
+    const prevRole = emp ? emp.role : "EMPLOYEE";
+    const prevDesignation = emp ? emp.designation : "Software Developer";
+    const prevSalary = emp ? emp.salary : 600000;
+
+    if (emp) {
+      emp.role = d.newRole;
+      emp.designation = d.newDesignation;
+      emp.salary = Number(d.newSalary);
+      
+      const basic = Number(d.newSalary) * 0.5;
+      const hra = Number(d.newSalary) * 0.3;
+      const med = Number(d.newSalary) * 0.1;
+      const other = Number(d.newSalary) * 0.1;
+      const pf = basic * 0.12;
+      const pt = 200;
+      mockSalaryStructures[Number(employeeId)] = {
+        basicSalary: basic,
+        hra: hra,
+        medicalAllowance: med,
+        otherAllowances: other,
+        specialAllowance: 0,
+        conveyanceAllowance: 0,
+        performanceBonus: 0,
+        providentFund: pf,
+        professionalTax: pt,
+        incomeTax: 0,
+        esi: 0
+      };
     }
-  })),
+
+    const newPromo = {
+      id: Math.floor(Math.random() * 1000) + 4000,
+      employeeId: Number(employeeId),
+      promotionDate: new Date().toISOString().split("T")[0],
+      previousRole: prevRole,
+      newRole: d.newRole,
+      previousDesignation: prevDesignation,
+      newDesignation: d.newDesignation,
+      previousSalary: prevSalary,
+      newSalary: Number(d.newSalary),
+      notes: d.notes || ""
+    };
+    mockPromotions.unshift(newPromo);
+    return { data: { data: newPromo } };
+  }),
+  getPromotionHistory:  employeeId => {
+    const isAll = !employeeId || employeeId === "all" || employeeId === "";
+    const url = isAll ? "/payroll/promotions/history" : `/payroll/promotions/${employeeId}/history`;
+    return api.get(url).catch(() => {
+      const filtered = isAll ? mockPromotions : mockPromotions.filter(p => p.employeeId === Number(employeeId));
+      return { data: { data: filtered } };
+    });
+  },
 };

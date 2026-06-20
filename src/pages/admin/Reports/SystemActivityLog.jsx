@@ -28,17 +28,127 @@ const categoryIconMap = {
   Onboarding: { icon: ClipboardCheck, bg: "#E6FFFA", color: "#0D9488" }
 };
 
-export default function SystemActivityLog() {
+export default function SystemActivityLog({ 
+  employees = [], 
+  leaves = [], 
+  jobs = [], 
+  payslips = [], 
+  promotions = [],
+  selectedDept = ""
+}) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [page, setPage] = useState(0);
   const pageSize = 5;
 
   const categories = ["All", "Payroll", "Promotions", "Recruitment", "Onboarding"];
 
-  // Filter logs
+  // Helper function to calculate relative date groups
+  const getRelativeDateGroup = (dateStr) => {
+    if (!dateStr) return "Today";
+    try {
+      const d = new Date(dateStr);
+      const today = new Date();
+      
+      // Clear time components for day comparison
+      const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const compDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      
+      const diffTime = todayDate - compDate;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays <= 0) return "Today";
+      if (diffDays === 1) return "Yesterday";
+      return "This Week";
+    } catch {
+      return "Today";
+    }
+  };
+
+  // Helper function to format time
+  const formatLogTime = (dateStr) => {
+    if (!dateStr) return "12:00 PM";
+    try {
+      const d = new Date(dateStr);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch {
+      return "12:00 PM";
+    }
+  };
+
+  // Compile dynamic logs
+  const dynamicLogs = [];
+
+  // 1. Process payslips
+  payslips.forEach(p => {
+    const emp = employees.find(e => e.id === p.employeeId) || p.employee;
+    if (selectedDept && emp?.department !== selectedDept) return;
+    const empName = emp?.fullName || "Employee";
+    const date = p.generatedAt || p.createdAt || new Date().toISOString();
+    dynamicLogs.push({
+      id: `payslip-${p.id}`,
+      text: `Generated monthly payslip for ${empName} - Period: ${p.month}/${p.year}, Gross: ₹${(p.grossSalary || p.grossEarnings || 0).toLocaleString()}`,
+      category: "Payroll",
+      dateGroup: getRelativeDateGroup(date),
+      time: formatLogTime(date),
+      timestamp: new Date(date).getTime()
+    });
+  });
+
+  // 2. Process promotions
+  promotions.forEach(pr => {
+    const emp = employees.find(e => e.id === pr.employeeId) || pr.employee;
+    if (selectedDept && emp?.department !== selectedDept) return;
+    const empName = emp?.fullName || "Employee";
+    const date = pr.promotionDate || new Date().toISOString();
+    dynamicLogs.push({
+      id: `promo-${pr.id}`,
+      text: `Promotion logged: ${empName} promoted to ${pr.newDesignation} (Salary: ₹${(pr.newSalary || 0).toLocaleString()})`,
+      category: "Promotions",
+      dateGroup: getRelativeDateGroup(date),
+      time: formatLogTime(date),
+      timestamp: new Date(date).getTime()
+    });
+  });
+
+  // 3. Process jobs
+  jobs.forEach(j => {
+    if (selectedDept && j.department !== selectedDept) return;
+    dynamicLogs.push({
+      id: `job-${j.id}`,
+      text: `New job posting published: ${j.title} in ${j.department} department (Openings: ${j.openings})`,
+      category: "Recruitment",
+      dateGroup: "This Week",
+      time: "10:00 AM",
+      timestamp: Date.now() - 3600000 * 24 // mock 1 day ago
+    });
+  });
+
+  // 4. Process leaves
+  leaves.forEach(l => {
+    const emp = employees.find(e => e.id === l.employeeId) || l.employee;
+    if (selectedDept && emp?.department !== selectedDept) return;
+    const empName = l.employeeName || emp?.fullName || "Employee";
+    const date = l.fromDate || new Date().toISOString();
+    dynamicLogs.push({
+      id: `leave-${l.id}`,
+      text: `Pending leave request: ${empName} requested ${l.leaveTypeName || 'Leave'} for ${l.totalDays} day(s)`,
+      category: "Onboarding", // Map leaves to Onboarding/HR admin category
+      dateGroup: getRelativeDateGroup(date),
+      time: "02:00 PM",
+      timestamp: new Date(date).getTime()
+    });
+  });
+
+  // Sort by timestamp desc
+  dynamicLogs.sort((a, b) => b.timestamp - a.timestamp);
+
+  // If no dynamic logs are generated, fallback to the hardcoded list
+  const activeLogs = dynamicLogs.length > 0 ? dynamicLogs : AUDIT_LOGS;
+
+  // Filter logs by activeCategory chip
   const filteredLogs = activeCategory === "All"
-    ? AUDIT_LOGS
-    : AUDIT_LOGS.filter(log => log.category === activeCategory);
+    ? activeLogs
+    : activeLogs.filter(log => log.category === activeCategory);
 
   // Group logs by dateGroup
   const paginatedLogs = filteredLogs.slice(page * pageSize, (page + 1) * pageSize);

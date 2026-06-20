@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { employeeAPI } from "../../../api/endpoints";
 import { useAuth } from "../../../context/AuthContext";
 import TopBar from "../../../components/layout/TopBar";
@@ -12,6 +13,7 @@ import CreateUserModal from "./CreateUserModal";
 import ChangeRoleModal from "./ChangeRoleModal";
 
 export default function UserManagementPage() {
+  const navigate = useNavigate();
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -156,7 +158,7 @@ export default function UserManagementPage() {
       <div className="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3.5 flex items-start gap-2.5 shadow-2xs">
         <Info size={16} className="text-blue-600 mt-0.5 shrink-0" />
         <p className="text-xs text-blue-700 leading-relaxed text-left">
-          <strong>Account Management Console:</strong> This interface manages login profiles, passwords, and security roles. For employee contract parameters (such as compensation details, phone numbers, or manager hierarchies), please navigate to the <span className="font-semibold underline cursor-pointer" onClick={() => window.location.hash = "/employees"}>Employees Directory</span>.
+          <strong>Account Management Console:</strong> This interface manages login profiles, passwords, and security roles. For employee contract parameters (such as compensation details, phone numbers, or manager hierarchies), please navigate to the <span className="font-semibold underline cursor-pointer" onClick={() => navigate("/employees")}>Employees Directory</span>.
         </p>
       </div>
 
