@@ -269,7 +269,7 @@ export default function HRDashboard() {
             {[
               { to: "/dashboard", icon: LayoutDashboard, active: true, label: "Home" },
               { to: "/employees", icon: Users, label: "Employees" },
-              { to: "/recruitment", icon: ClipboardCheck, label: "Recruitment" },
+              { to: "/recruitment", icon: Briefcase, label: "Recruitment" },
               { to: "/onboarding", icon: ClipboardCheck, label: "Onboarding" },
               { to: "/attendance", icon: Clock, label: "Attendance" },
               { to: "/leave", icon: Calendar, label: "Leave" },

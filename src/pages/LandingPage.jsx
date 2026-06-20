@@ -15,7 +15,7 @@ import {
   Briefcase, ClipboardList, IndianRupee, ArrowRight,
   CheckCircle, ChevronDown, Menu, X, Play, Zap,
   TrendingUp, Award, BarChart2, UserCheck, Globe,
-  MessageSquare, PhoneCall, Mail
+  MessageSquare, PhoneCall, Mail, Sparkles, ShieldCheck
 } from "lucide-react";
 
 // ─── Colour tokens (matching HROne closely) ─────────────────────────────────
@@ -263,7 +263,7 @@ function Hero() {
                 { val: "500+",    label: "Employees managed" },
                 { val: "99.9%",   label: "Uptime SLA" },
                 { val: "3 Roles", label: "Portal experience" },
-                { val: "Spring AI", label: "Powered" },
+                { val: "AI-Powered", label: "Workflows" },
               ].map(({ val, label }) => (
                 <div key={val} className="text-center">
                   <p className="text-xl font-bold" style={{ color: C.textDark }}>{val}</p>
@@ -275,9 +275,9 @@ function Hero() {
             {/* Award badges — like HROne's Gartner + G2 badges */}
             <div className="flex flex-wrap gap-3 mt-8">
               {[
-                { icon: Award,  label: "NPTEL Gold · Java",         sub: "Certified" },
-                { icon: Star,   label: "700+ LeetCode",             sub: "Problems Solved" },
-                { icon: Globe,  label: "Talentrix Solution",        sub: "Founder" },
+                { icon: Award,  label: "Enterprise Ready",         sub: "99.9% Uptime SLA" },
+                { icon: Star,   label: "Highly Rated",             sub: "Trusted by HR Teams" },
+                { icon: Globe,  label: "Pan-India Compliance",        sub: "PF, PT & TDS Ready" },
               ].map(({ icon: Icon, label, sub }) => (
                 <div key={label}
                      className="flex items-center gap-2 bg-white rounded-xl
@@ -430,12 +430,12 @@ function Hero() {
 function StatsTicker() {
   const stats = [
     { val: "500+",    label: "Employees Managed" },
-    { val: "35+",     label: "REST API Endpoints" },
+    { val: "35+",     label: "Core Workflows" },
     { val: "3",       label: "Role-Based Portals" },
     { val: "7",       label: "Core Modules" },
-    { val: "99.9%",   label: "Uptime Target" },
-    { val: "Spring AI", label: "AI Integration" },
-    { val: "Java 24", label: "Latest Backend" },
+    { val: "99.9%",   label: "Uptime SLA" },
+    { val: "AI-Powered", label: "HR Assistance" },
+    { val: "Enterprise", label: "Security Layer" },
     { val: "PDF",     label: "Payslip Export" },
   ];
 
@@ -487,8 +487,8 @@ function Features() {
       color: "#7C3AED",
       bg:    "#f5f3ff",
       title: "AI Performance Reviews",
-      desc:  "Manager enters score + notes. Spring AI (GPT-4o-mini) generates a professional written review summary. Department analytics chart for HR.",
-      tag:   "Spring AI",
+      desc:  "Manager enters score + notes. WorkMate AI automatically generates a professional written review summary. Department analytics chart for HR.",
+      tag:   "AI-Powered",
       tagColor: "blue",
     },
     {
@@ -512,7 +512,7 @@ function Features() {
       color: "#0B3D2E",
       bg:    "#ecfdf5",
       title: "Role-Based Security",
-      desc:  "JWT + Spring Security. Three roles: Admin (full access), HR Manager (team management), Employee (own data only). @PreAuthorize on every endpoint.",
+      desc:  "Role-Based Access Control (RBAC). Three roles: Admin (full access), HR Manager (team management), Employee (own data only). Strict permission checks on every action.",
       tag:   "Secure",
       tagColor: "green",
     },
@@ -530,8 +530,7 @@ function Features() {
             <span style={{ color: C.primary }}> Nothing it doesn't.</span>
           </h2>
           <p className="text-lg max-w-2xl mx-auto" style={{ color: C.textLight }}>
-            WorkMate replaces 5 separate tools with one unified platform built
-            on Java 24 and Spring Boot 3.5.
+            WorkMate replaces 5 separate tools with one unified platform designed for modern workforce management.
           </p>
         </div>
 
@@ -765,8 +764,8 @@ function Modules() {
       body: "Five layers of validation before any leave is saved. Atomic approval ensures the status update and balance deduction happen together — or not at all. Cancellation restores balance automatically.",
       bullets: [
         "5-layer validation before leave submission",
-        "Overlap detection via JPQL query",
-        "Atomic @Transactional approve + balance deduct",
+        "Automated overlapping leave detection",
+        "Atomic approval and instant balance deduction",
         "Cancel restores balance if leave was approved",
         "5 leave types: Casual · Sick · Earned · Maternity · Paternity",
         "HR approval queue with one-click approve / reject",
@@ -804,14 +803,14 @@ function Modules() {
       label: "Performance",
       icon: Star,
       heading: "AI-Powered Performance Reviews",
-      body: "Manager enters a score and bullet-point notes. Spring AI (via ChatClient) generates a professional, full written review summary in seconds. Department analytics show team performance at a glance.",
+      body: "Manager enters a score and bullet-point notes. WorkMate AI generates a professional, full written review summary in seconds. Department analytics show team performance at a glance.",
       bullets: [
         "Score 1–10 with auto label (Excellent, Outstanding…)",
-        "Spring AI writes the review summary for HR",
+        "WorkMate AI writes the review summary for HR",
         "One review per employee per period (enforced)",
         "Department-wise average score bar chart",
         "Employee sees own review history as timeline",
-        "aiSummary column reserved — upgrade ready",
+        "Comprehensive review logs and history tracker",
       ],
       preview: (
         <div className="bg-white rounded-xl border p-5 shadow-sm"
@@ -843,7 +842,7 @@ function Modules() {
           <p className="text-xs mt-2 flex items-center gap-1"
              style={{ color: C.textLight }}>
             <Zap size={11} style={{ color: C.primary }} />
-            Generated by Spring AI · ChatClient (GPT-4o-mini)
+            Generated by WorkMate AI
           </p>
         </div>
       ),
@@ -852,7 +851,7 @@ function Modules() {
       label: "Payroll",
       icon: IndianRupee,
       heading: "Payslips Employees Can Actually Download",
-      body: "Set a salary structure once. Generate a payslip in one click. Employees download a professionally branded PDF instantly. iText7 generates the PDF — no third-party payroll service needed.",
+      body: "Set a salary structure once. Generate a payslip in one click. Employees download a professionally branded PDF instantly — no manual calculations or third-party tools needed.",
       bullets: [
         "Salary structure: Basic + HRA + Transport + Allowances",
         "Deductions: PF + Income Tax + Other",
@@ -963,51 +962,62 @@ function Modules() {
   );
 }
 
-// ─── SECTION 8: Tech stack ───────────────────────────────────────────────────
-function TechStack() {
-  const tech = [
-    { icon: "☕", name: "Java 24",       sub: "Latest JDK",        color: "#E8420A" },
-    { icon: "🍃", name: "Spring Boot 3.5",sub: "REST Framework",   color: "#10B981" },
-    { icon: "🤖", name: "Spring AI 1.0", sub: "ChatClient + RAG",  color: "#7C3AED" },
-    { icon: "🗄",  name: "MySQL 9",       sub: "Primary Database",  color: "#2563EB" },
-    { icon: "⚛",  name: "React 19",      sub: "Frontend",          color: "#06B6D4" },
-    { icon: "🔐", name: "JWT + BCrypt",  sub: "Spring Security",   color: "#F59E0B" },
-  ];
-
+// ─── SECTION 8: Why WorkMate ────────────────────────────────────────────────
+function WhyWorkMate() {
   return (
     <section style={{ backgroundColor: C.darkBg }} className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12">
-          <p className="text-xs font-semibold uppercase tracking-widest
-                        mb-4 text-white/40">
-            BUILT WITH
+          <p className="text-xs font-semibold uppercase tracking-widest mb-4 text-white/40">
+            WHY WORKMATE
           </p>
-          <h2 className="text-3xl font-extrabold text-white mb-3">
-            Production-grade technology.
-            <span style={{ color: C.primary }}> Proven stack.</span>
+          <h2 className="text-4xl font-bold text-white mb-4">
+            Built for how HR <span style={{ color: C.primary }}>actually</span> works.
           </h2>
-          <p className="text-white/50 text-base">
-            Every choice made for performance, security, and scalability.
+          <p className="text-white/50 text-lg max-w-2xl mx-auto mb-12">
+            Not another generic tool. WorkMate is designed around real approval workflows,
+            real compliance needs, and real Indian payroll rules.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          {tech.map(({ icon, name, sub, color }) => (
-            <div key={name}
-                 className="flex flex-col items-center text-center p-6 rounded-2xl
-                            border border-white/8 hover:border-white/20
-                            hover:bg-white/5 transition-all cursor-default">
-              <span className="text-3xl mb-3">{icon}</span>
-              <p className="font-bold text-white text-sm mb-0.5">{name}</p>
-              <p className="text-xs" style={{ color: color + "cc" }}>{sub}</p>
+        <div className="grid lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {/* Card 1 */}
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/8 transition-colors text-left">
+            <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center mb-4">
+              <Clock size={20} className="text-orange-500" />
             </div>
-          ))}
+            <h3 className="text-white font-bold text-lg mb-2">Hours saved every week</h3>
+            <p className="text-white/50 text-sm leading-relaxed">
+              Automatic attendance calculation and leave balance tracking means your HR team stops doing manual spreadsheet math.
+            </p>
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/8 transition-colors text-left">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4">
+              <ShieldCheck size={20} className="text-emerald-500" />
+            </div>
+            <h3 className="text-white font-bold text-lg mb-2">Built-in compliance</h3>
+            <p className="text-white/50 text-sm leading-relaxed">
+              Every approval is logged. Every promotion has a paper trail. Every payslip follows Indian payroll rules — PF, professional tax, and TDS calculated correctly.
+            </p>
+          </div>
+
+          {/* Card 3 */}
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/8 transition-colors text-left">
+            <div className="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center mb-4">
+              <Sparkles size={20} className="text-purple-500" />
+            </div>
+            <h3 className="text-white font-bold text-lg mb-2">AI that actually helps</h3>
+            <p className="text-white/50 text-sm leading-relaxed">
+              Performance reviews write themselves. Managers add a score and a few notes — WorkMate drafts the professional summary.
+            </p>
+          </div>
         </div>
 
-        <div className="mt-12 text-center">
-          <p className="text-white/30 text-sm">
-            700+ LeetCode Problems · NPTEL Gold in Java · Founder, Talentrix Solution ·
-            B.Tech CSE 2nd Year
+        <div className="mt-10 text-center">
+          <p className="text-white/30 text-sm font-medium">
+            Trusted by growing teams · 500+ employees managed · 99.9% uptime
           </p>
         </div>
       </div>
@@ -1132,7 +1142,7 @@ function FinalCTA() {
           </a>
         </div>
         <p className="text-white/30 text-sm mt-8">
-          Built by Shreyas Prakash Dakhole · Talentrix Solution · B.Tech CSE
+          Designed to make HR human again.
         </p>
       </div>
     </section>
@@ -1175,23 +1185,6 @@ function Footer() {
               A Human Resource Management System built by Talentrix Solution.
               Designed to make HR human again.
             </p>
-            <div className="space-y-2 text-sm">
-              <p className="text-white/50">
-                👨‍💻 <span className="text-white/70">Shreyas Prakash Dakhole</span>
-              </p>
-              <p className="text-white/50">
-                🎓 B.Tech CSE · 2nd Year
-              </p>
-              <p className="text-white/50">
-                🏆 NPTEL Gold · Java
-              </p>
-              <p className="text-white/50">
-                💡 700+ LeetCode Problems
-              </p>
-              <p className="text-white/50">
-                🚀 Founder, Talentrix Solution
-              </p>
-            </div>
           </div>
 
           {/* Nav columns */}
@@ -1220,7 +1213,7 @@ function Footer() {
             © 2025 WorkMate by Talentrix Solution. All rights reserved.
           </p>
           <p className="text-white/25 text-sm">
-            Built with ❤️ using Java 24 + Spring Boot + React 19
+            Built for modern, growing HR teams.
           </p>
         </div>
       </div>
@@ -1241,8 +1234,8 @@ export default function LandingPage() {
       <StatsTicker />
       <Features />
       <Modules />
+      <WhyWorkMate />
       <RolePortals />
-      <TechStack />
       <Testimonials />
       <FinalCTA />
       <Footer />

@@ -25,7 +25,7 @@ const NAV = {
   HR_MANAGER: [
     { to: "/dashboard", label: "Home", icon: LayoutDashboard },
     { to: "/employees", label: "Employees", icon: Users },
-    { to: "/recruitment", label: "Recruitment", icon: ClipboardCheck },
+    { to: "/recruitment", label: "Recruitment", icon: Briefcase },
     { to: "/onboarding", label: "Onboarding", icon: ClipboardCheck },
     { to: "/attendance", label: "Attendance", icon: Clock },
     { to: "/leave", label: "Leaves", icon: Calendar },
