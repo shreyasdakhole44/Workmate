@@ -15,7 +15,8 @@ import PromotionHistoryPage from "./PromotionHistoryPage";
 
 export default function SalaryStructurePage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState("structures"); // "runs" | "structures" | "promotions" | "history"
+  const isOnlyHR = user?.role === "HR_MANAGER";
+  const [activeTab, setActiveTab] = useState(isOnlyHR ? "runs" : "structures"); // "runs" | "structures" | "promotions" | "history"
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState([]);
 
@@ -167,32 +168,34 @@ export default function SalaryStructurePage() {
   return (
     <div className="space-y-6">
       <TopBar 
-        title="Compensation & Payroll Hub"
-        subtitle="Manage salary configurations, payslips payouts, and log employee appraisal histories"
+        title={isOnlyHR ? "Run Monthly Payslips" : "Compensation & Payroll Hub"}
+        subtitle={isOnlyHR ? "Select an employee and period to generate monthly salary receipts" : "Manage salary configurations, payslips payouts, and log employee appraisal histories"}
       />
 
       {/* Tabs System Navigation */}
-      <div className="flex border-b border-gray-200 bg-white rounded-lg shadow-sm px-4">
-        {[
-          { id: "structures", label: "Salary Structures", icon: Settings },
-          { id: "runs", label: "Payslips Runs Registry", icon: Landmark },
-          { id: "history", label: "Promotions & Appraisals logs", icon: History }
-        ].map(t => {
-          const Icon = t.icon;
-          const active = activeTab === t.id;
-          return (
-            <button 
-              key={t.id} 
-              onClick={() => setActiveTab(t.id)}
-              className={`flex items-center gap-2 px-4 py-3.5 text-xs uppercase tracking-wider cursor-pointer border-b-2 transition-all duration-200
-                ${active ? "border-[#E8420A] text-[#E8420A] font-bold" : "border-transparent text-gray-500 hover:text-gray-900 font-semibold"}`}
-            >
-              <Icon size={14} />
-              {t.label}
-            </button>
-          );
-        })}
-      </div>
+      {!isOnlyHR && (
+        <div className="flex border-b border-gray-200 bg-white rounded-lg shadow-sm px-4">
+          {[
+            { id: "structures", label: "Salary Structures", icon: Settings },
+            { id: "runs", label: "Payslips Runs Registry", icon: Landmark },
+            { id: "history", label: "Promotions & Appraisals logs", icon: History }
+          ].map(t => {
+            const Icon = t.icon;
+            const active = activeTab === t.id;
+            return (
+              <button 
+                key={t.id} 
+                onClick={() => setActiveTab(t.id)}
+                className={`flex items-center gap-2 px-4 py-3.5 text-xs uppercase tracking-wider cursor-pointer border-b-2 transition-all duration-200
+                  ${active ? "border-[#E8420A] text-[#E8420A] font-bold" : "border-transparent text-gray-500 hover:text-gray-900 font-semibold"}`}
+              >
+                <Icon size={14} />
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* TAB CONTENTS */}
       {activeTab === "structures" && (
