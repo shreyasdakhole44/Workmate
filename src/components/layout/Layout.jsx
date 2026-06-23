@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import { 
   Menu, Search, ClipboardCheck, Lightbulb, Bell, LogOut, Sparkles 
 } from "lucide-react";
+import HrChatbot from "../ai/HrChatbot";
 
 export default function Layout() {
   const { user, logout } = useAuth();
@@ -115,6 +116,7 @@ export default function Layout() {
           }
         }}
       />
+      <HrChatbot />
     </div>
   );
 }

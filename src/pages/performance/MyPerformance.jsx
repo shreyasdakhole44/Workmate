@@ -5,7 +5,7 @@ import TopBar from "../../components/layout/TopBar";
 import StatCard from "../../components/ui/StatCard";
 import Badge from "../../components/ui/Badge";
 import EmptyState from "../../components/ui/EmptyState";
-import { Star, Award, TrendingUp, Calendar } from "lucide-react";
+import { Star, Award, TrendingUp, Calendar, Sparkles } from "lucide-react";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import toast from "react-hot-toast";
 
@@ -115,7 +115,7 @@ export default function MyPerformance() {
                         {r.score}/10
                       </div>
                     </div>
-                    <p className="text-xs text-gray-400 line-clamp-1 italic">"{r.comments}"</p>
+                    <p className="text-xs text-gray-400 line-clamp-1 italic">"{r.comments || r.feedbackText}"</p>
                   </div>
                 ))}
               </div>
@@ -146,7 +146,17 @@ export default function MyPerformance() {
                   </div>
                   <div className="bg-slate-50 border border-gray-100 rounded-xl p-4">
                     <p className="text-xs font-semibold text-gray-600 mb-1">Feedback Comments:</p>
-                    <p className="text-xs text-gray-700 leading-relaxed italic">"{r.comments}"</p>
+                    <p className="text-xs text-gray-700 leading-relaxed italic">"{r.comments || r.feedbackText}"</p>
+                    {r.aiSummary && (
+                      <div className="mt-3 p-3 bg-purple-50 rounded-lg border border-purple-100 text-left">
+                        <p className="text-[10px] font-semibold text-purple-700 mb-1 flex items-center gap-1.5">
+                          <Sparkles size={12} /> AI-generated summary
+                        </p>
+                        <p className="text-xs text-purple-900 leading-relaxed font-normal">
+                          {r.aiSummary}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

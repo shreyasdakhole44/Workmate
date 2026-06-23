@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { performanceAPI, employeeAPI } from "../../api/endpoints";
 import TopBar from "../../components/layout/TopBar";
+import api from "../../api/axios";
 import StatCard from "../../components/ui/StatCard";
 import ScoreRing from "../../components/ui/ScoreRing";
 import Badge from "../../components/ui/Badge";
@@ -15,7 +16,8 @@ import {
 } from "recharts";
 import { 
   Star, Clipboard, MessageSquare, Award, Plus, 
-  CheckCircle, ArrowRight, UserCheck, CalendarDays, Search 
+  CheckCircle, ArrowRight, UserCheck, CalendarDays, Search,
+  Sparkles
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -29,6 +31,7 @@ export default function PerformancePage() {
   // Loading state
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
 
   // Employee View States
   const [myReviews, setMyReviews] = useState([]);
@@ -127,6 +130,34 @@ export default function PerformancePage() {
       toast.error("Failed to create performance review");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleAIWriter = async () => {
+    if (!newReview.employeeId) {
+      toast.error("Please select an employee first");
+      return;
+    }
+    const selectedEmp = employees.find(e => e.id === Number(newReview.employeeId));
+    if (!selectedEmp) {
+      toast.error("Selected employee not found");
+      return;
+    }
+    setAiLoading(true);
+    try {
+      const res = await api.post("/ai/chat/draft-review", {
+        employeeName: selectedEmp.fullName,
+        designation: selectedEmp.designation || "Employee",
+        score: Number(newReview.score || 8),
+        managerNotes: newReview.feedback || ""
+      });
+      setNewReview(prev => ({ ...prev, feedback: res.data.data }));
+      toast.success("AI feedback drafted successfully!");
+    } catch (e) {
+      const errMsg = e.response?.data?.message || "Failed to generate AI draft feedback";
+      toast.error(errMsg);
+    } finally {
+      setAiLoading(false);
     }
   };
 
@@ -260,6 +291,16 @@ export default function PerformancePage() {
                     <div className="bg-[#FAF7F2]/50 border border-[#E8E2D9]/40 rounded-lg p-3 mt-2 text-xs text-gray-655 leading-relaxed italic font-medium">
                       "{rev.feedbackText || rev.feedback || "Good job! Keep performing well."}"
                     </div>
+                    {rev.aiSummary && (
+                      <div className="mt-3 p-3 bg-purple-50 rounded-lg border border-purple-100 text-left">
+                        <p className="text-[10px] font-semibold text-purple-700 mb-1 flex items-center gap-1.5">
+                          <Sparkles size={12} /> AI-generated summary
+                        </p>
+                        <p className="text-xs text-purple-900 leading-relaxed font-normal">
+                          {rev.aiSummary}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -387,10 +428,20 @@ export default function PerformancePage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1">Feedback Comments *</label>
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-xs font-semibold text-gray-600">Feedback Comments *</label>
+              <button
+                type="button"
+                onClick={handleAIWriter}
+                disabled={aiLoading}
+                className="text-xs text-brand font-semibold hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <Sparkles size={12} /> {aiLoading ? "AI Writer thinking..." : "AI Review Writer"}
+              </button>
+            </div>
             <textarea
               className="w-full border border-gray-200 rounded-lg p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent min-h-24"
-              placeholder="State key accomplishments, strengths, and goals..."
+              placeholder="State key accomplishments, strengths, and goals... (Optional: Type brief notes first, then click 'AI Review Writer' to expand them!)"
               value={newReview.feedback}
               onChange={e => setNewReview({...newReview, feedback: e.target.value})}
               required
