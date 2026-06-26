@@ -2,14 +2,66 @@ package com.sdproject.WorkMate.ai.config;
 
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
+import org.springframework.ai.embedding.Embedding;
+import org.springframework.ai.embedding.EmbeddingRequest;
+import org.springframework.ai.embedding.EmbeddingResponse;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Configuration
 public class VectorStoreConfig {
+
+    /**
+     * A lightweight mock EmbeddingModel active only in production.
+     * This avoids loading the heavy local ONNX transformer model into memory,
+     * which exceeds the 512MB RAM limit on Render's free tier and causes OOM crashes.
+     */
+    @Bean
+    @Profile("production")
+    public EmbeddingModel embeddingModel() {
+        return new EmbeddingModel() {
+            @Override
+            public float[] embed(String text) {
+                float[] vector = new float[384];
+                long seed = text.hashCode();
+                Random random = new Random(seed);
+                for (int i = 0; i < 384; i++) {
+                    vector[i] = random.nextFloat();
+                }
+                return vector;
+            }
+
+            @Override
+            public float[] embed(Document document) {
+                return embed(document.getText());
+            }
+
+            @Override
+            public EmbeddingResponse call(EmbeddingRequest request) {
+                List<String> texts = request.getInstructions();
+                List<Embedding> embeddings = new ArrayList<>();
+                for (int i = 0; i < texts.size(); i++) {
+                    embeddings.add(new Embedding(embed(texts.get(i)), i));
+                }
+                return new EmbeddingResponse(embeddings);
+            }
+
+            @Override
+            public EmbeddingResponse embedForResponse(List<String> texts) {
+                List<Embedding> embeddings = new ArrayList<>();
+                for (int i = 0; i < texts.size(); i++) {
+                    embeddings.add(new Embedding(embed(texts.get(i)), i));
+                }
+                return new EmbeddingResponse(embeddings);
+            }
+        };
+    }
 
     // EmbeddingModel here is auto-configured by 
     // spring-ai-transformers-embedding — runs entirely on your machine, 
