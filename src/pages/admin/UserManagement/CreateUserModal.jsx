@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Modal from "../../../components/ui/Modal";
 import { Eye, EyeOff, Info } from "lucide-react";
 import toast from "react-hot-toast";
+import { authAPI, employeeAPI } from "../../../api/endpoints";
 
 const ROLE_DESCRIPTIONS = {
   ADMIN: "Full system access to database configurations, user permissions, and audit logs.",
@@ -13,12 +14,14 @@ export default function CreateUserModal({ open, onClose, onCreated }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("EMPLOYEE");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password || !role) {
+    if (!email || !password || !role || !firstName.trim() || !lastName.trim()) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -28,16 +31,47 @@ export default function CreateUserModal({ open, onClose, onCreated }) {
     }
     setSubmitting(true);
     try {
-      // In a real flow, this triggers user registration
-      // Call authAPI.register or equivalent endpoint
-      toast.success("User account registered successfully!");
+      // Step 1: Register User Account
+      const userRes = await authAPI.register({
+        email,
+        password,
+        role
+      });
+      const userId = userRes.data.data?.userId;
+
+      // Determine default department and designation based on role
+      let department = "Engineering";
+      let designation = "Software Engineer";
+      if (role === "HR_MANAGER") {
+        department = "HR";
+        designation = "HR Manager";
+      } else if (role === "ADMIN") {
+        department = "Management";
+        designation = "Administrator";
+      }
+
+      // Step 2: Create Employee Profile
+      await employeeAPI.create({
+        firstName,
+        lastName,
+        department,
+        designation,
+        phone: "+91 99999 11111",
+        joinDate: new Date().toISOString().split("T")[0],
+        salary: role === "HR_MANAGER" ? 1200000 : (role === "ADMIN" ? 1500000 : 600000),
+        userId
+      });
+
+      toast.success("User account and profile created successfully!");
       onCreated();
       setEmail("");
       setPassword("");
+      setFirstName("");
+      setLastName("");
       setRole("EMPLOYEE");
       onClose();
     } catch (err) {
-      toast.error("Failed to create user account");
+      toast.error(err.response?.data?.message || "Failed to create user account");
     } finally {
       setSubmitting(false);
     }
@@ -46,6 +80,31 @@ export default function CreateUserModal({ open, onClose, onCreated }) {
   return (
     <Modal open={open} onClose={onClose} title="Create Login Account" size="md">
       <form onSubmit={handleSubmit} className="space-y-4 text-left">
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">First Name *</label>
+            <input 
+              type="text" 
+              placeholder="First Name"
+              className="h-11 border border-gray-200 rounded-lg px-3.5 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all outline-none w-full text-xs" 
+              value={firstName}
+              onChange={e => setFirstName(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1">Last Name *</label>
+            <input 
+              type="text" 
+              placeholder="Last Name"
+              className="h-11 border border-gray-200 rounded-lg px-3.5 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all outline-none w-full text-xs" 
+              value={lastName}
+              onChange={e => setLastName(e.target.value)}
+              required
+            />
+          </div>
+        </div>
+
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">Email Address *</label>
           <input 
