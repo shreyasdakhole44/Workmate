@@ -118,6 +118,87 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         // 7. Seed Recruitment Data
         seedRecruitmentData(shivamEmp, hrEmp);
+
+        // 8. Auto-heal orphaned users (users without an employee profile)
+        autoHealOrphanedUsers(leaveTypes);
+    }
+
+    private void autoHealOrphanedUsers(List<LeaveType> leaveTypes) {
+        List<User> allUsers = userRepository.findAll();
+        for (User user : allUsers) {
+            if (employeeRepository.findByUserId(user.getId()).isEmpty()) {
+                // Determine names based on email or roles
+                String firstName = "User";
+                String lastName = String.valueOf(user.getId());
+                String dept = "Engineering";
+                String designation = "Software Engineer";
+                BigDecimal salary = BigDecimal.valueOf(600000);
+
+                if (user.getEmail().equalsIgnoreCase("shreyasdakhole9@gmail.com")) {
+                    firstName = "Vivek";
+                    lastName = "Shukla";
+                    dept = "HR";
+                    designation = "HR Manager";
+                    salary = BigDecimal.valueOf(1200000);
+                } else if (user.getEmail().equalsIgnoreCase("shreyas123@gmail.com")) {
+                    firstName = "Shreyas";
+                    lastName = "HR";
+                    dept = "HR";
+                    designation = "HR Specialist";
+                    salary = BigDecimal.valueOf(1000000);
+                } else if (user.getRole() == Role.HR_MANAGER) {
+                    firstName = "HR";
+                    lastName = "Manager " + user.getId();
+                    dept = "HR";
+                    designation = "HR Specialist";
+                    salary = BigDecimal.valueOf(1000000);
+                } else if (user.getRole() == Role.ADMIN) {
+                    firstName = "Admin";
+                    lastName = "User " + user.getId();
+                    dept = "Management";
+                    designation = "Administrator";
+                    salary = BigDecimal.valueOf(1500000);
+                }
+
+                // Generate sequential employee code (e.g. WM-001)
+                long count = employeeRepository.count();
+                String empCode = String.format("WM-%03d", count + 1);
+                int suffix = 1;
+                while (employeeRepository.existsByEmpCode(empCode)) {
+                    empCode = String.format("WM-%03d", count + 1 + suffix);
+                    suffix++;
+                }
+
+                String pan = "ABCDE" + String.format("%04d", user.getId()) + "F";
+                String uan = "1009" + String.format("%08d", user.getId());
+                String bank = "987654" + String.format("%06d", user.getId());
+
+                Employee emp = Employee.builder()
+                        .empCode(empCode)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .department(dept)
+                        .designation(designation)
+                        .phone("+91 99999 11111")
+                        .address("Workmate Office")
+                        .joinDate(LocalDate.now())
+                        .salary(salary)
+                        .isActive(true)
+                        .user(user)
+                        .panNumber(pan)
+                        .uanNumber(uan)
+                        .bankAccount(bank)
+                        .build();
+
+                Employee savedEmp = employeeRepository.save(emp);
+                seedSalaryStructureAndPayslips(savedEmp);
+                seedLeaveBalances(savedEmp, leaveTypes);
+                if (user.getRole() != Role.ADMIN) {
+                    seedAttendance(savedEmp);
+                }
+                System.out.println("Auto-healed user " + user.getEmail() + " by creating employee profile: " + savedEmp.getFullName());
+            }
+        }
     }
 
     private LeaveType getOrCreateLeaveType(String name, int maxDays, boolean carryForward) {

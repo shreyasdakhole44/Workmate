@@ -467,7 +467,7 @@ export default function EmployeePage() {
             {/* General details grid */}
             <div className="space-y-4">
               <h5 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Personal Details</h5>
-              <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Employee Code</p>
                   <p className="font-mono text-gray-900 font-bold">{selectedEmp.empCode || "—"}</p>
@@ -492,7 +492,7 @@ export default function EmployeePage() {
             {/* Employment contract */}
             <div className="space-y-4">
               <h5 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Employment Contract</h5>
-              <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="space-y-1">
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Annual Compensation</p>
                   <p className="text-emerald-700 font-extrabold text-sm">{formatCurrency(selectedEmp.salary)}</p>
@@ -501,7 +501,7 @@ export default function EmployeePage() {
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Join Date</p>
                   <p className="text-gray-900 font-bold">{formatDate(selectedEmp.joinDate)}</p>
                 </div>
-                <div className="space-y-1 col-span-2">
+                <div className="space-y-1 col-span-1 sm:col-span-2">
                   <p className="font-semibold text-gray-400 uppercase tracking-wider text-[10px]">Reporting Manager</p>
                   <p className="text-gray-900 font-bold">{selectedEmp.managerName || "—"}</p>
                 </div>

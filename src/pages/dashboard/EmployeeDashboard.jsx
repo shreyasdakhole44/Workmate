@@ -327,9 +327,9 @@ export default function EmployeeDashboard() {
   const todayStr = `Today: ${new Date().toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric' })}`;
 
   return (
-    <div className="w-full flex h-[calc(100vh-3.5rem)] overflow-hidden">
+    <div className="w-full flex flex-col lg:flex-row h-[calc(100vh-3.5rem)] lg:overflow-hidden overflow-y-auto">
       {/* COLUMN 1: LEFT WIDGETS */}
-      <section className="w-[280px] shrink-0 border-r border-[#F0F0F0] bg-white p-4 overflow-y-auto space-y-4 text-left">
+      <section className="w-full lg:w-[280px] lg:shrink-0 border-b lg:border-b-0 lg:border-r border-[#F0F0F0] bg-white p-4 overflow-y-auto space-y-4 text-left shrink-0">
             
             {/* Shift Punching Card */}
             <div className="bg-white rounded-xl border border-gray-150 p-4 shadow-xs space-y-3">
@@ -542,7 +542,7 @@ export default function EmployeeDashboard() {
             </div>
 
             {/* Bottom Feed & Right Column Grid */}
-            <div className="flex-1 flex overflow-hidden p-4 pt-3 gap-4">
+            <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden p-4 pt-3 gap-4">
               
               {/* CENTER COLUMN: FEED */}
               <div className="flex-1 overflow-y-auto space-y-4 pr-1">
@@ -646,7 +646,7 @@ export default function EmployeeDashboard() {
               </div>
 
               {/* COLUMN 3: RIGHT SECTION */}
-              <div className="w-[300px] shrink-0 overflow-y-auto space-y-4 pr-1">
+              <div className="w-full lg:w-[300px] lg:shrink-0 overflow-y-auto space-y-4 pr-1">
                 
                 {/* My Team Members Card */}
                 <div className="bg-white rounded-xl border border-gray-150 p-4 shadow-xs text-left space-y-4">

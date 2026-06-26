@@ -21,6 +21,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sdproject.WorkMate.auth.entity.User;
+import com.sdproject.WorkMate.auth.entity.Role;
+import com.sdproject.WorkMate.auth.repository.UserRepository;
+import com.sdproject.WorkMate.notification.service.NotificationService;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -38,6 +43,8 @@ public class LeaveService {
     private final LeaveTypeRepository leaveTypeRepository;
     private final EmployeeRepository employeeRepository;
     private final AttendanceRepository attendanceRepository;
+    private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     // ── APPLY LEAVE ────────────────────────────────────────────────────────
 
@@ -87,6 +94,31 @@ public class LeaveService {
                 .build();
 
         LeaveRequest savedRequest = leaveRepository.save(leaveRequest);
+
+        try {
+            List<User> hrUsers = userRepository.findByRoleIn(List.of(Role.HR_MANAGER, Role.ADMIN));
+            hrUsers.forEach(hr -> {
+                try {
+                    notificationService.notifyHrNewLeaveRequest(
+                        hr.getEmail(),
+                        hr.getRole() == Role.ADMIN ? "Admin" : "HR Team",
+                        employee.getFullName(),
+                        employee.getEmpCode(),
+                        employee.getDepartment(),
+                        leaveType.getName(),
+                        savedRequest.getFromDate().toString(),
+                        savedRequest.getToDate().toString(),
+                        savedRequest.getTotalDays(),
+                        savedRequest.getReason()
+                    );
+                } catch (Exception e) {
+                    // Ignore, non-blocking
+                }
+            });
+        } catch (Exception e) {
+            // Ignore, non-blocking
+        }
+
         return mapToResponse(savedRequest);
     }
 
@@ -144,6 +176,36 @@ public class LeaveService {
         }
 
         LeaveRequest updatedRequest = leaveRepository.save(leaveRequest);
+
+        if (status == LeaveStatus.APPROVED) {
+            try {
+                int year = updatedRequest.getFromDate().getYear();
+                LeaveBalance balance = leaveBalanceRepository
+                        .findByEmployeeIdAndLeaveTypeIdAndYear(
+                                updatedRequest.getEmployee().getId(),
+                                updatedRequest.getLeaveType().getId(),
+                                year
+                        )
+                        .orElse(null);
+
+                int remainingDays = balance != null ? balance.getRemainingDays() : 0;
+                int totalDays = balance != null ? balance.getTotalDays() : 0;
+
+                notificationService.notifyLeaveApproved(
+                    updatedRequest.getEmployee().getUser().getEmail(),
+                    updatedRequest.getEmployee().getFullName(),
+                    updatedRequest.getLeaveType().getName(),
+                    updatedRequest.getFromDate().toString(),
+                    updatedRequest.getToDate().toString(),
+                    updatedRequest.getTotalDays(),
+                    remainingDays,
+                    totalDays
+                );
+            } catch (Exception e) {
+                // Ignore, non-blocking
+            }
+        }
+
         return mapToResponse(updatedRequest);
     }
 

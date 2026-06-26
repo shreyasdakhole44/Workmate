@@ -33,7 +33,8 @@ public class SecurityConfig {
             "/swagger-ui/**",          // Swagger UI page
             "/swagger-ui.html",
             "/v3/api-docs/**",         // OpenAPI JSON
-            "/api-docs/**"
+            "/api-docs/**",
+            "/api/test/notifications/**"
     };
 
     @Bean

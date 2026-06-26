@@ -43,4 +43,13 @@ public class PerformanceReview {
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    public String getScoreLabel() {
+        if (score == null) return "N/A";
+        if (score >= 9) return "Excellent";
+        if (score >= 8) return "Very Good";
+        if (score >= 7) return "Good";
+        if (score >= 5) return "Satisfactory";
+        return "Needs Improvement";
+    }
 }

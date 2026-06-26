@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.sdproject.WorkMate.notification.service.NotificationService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class PerformanceService {
     private final PerformanceRepository performanceRepository;
     private final EmployeeRepository employeeRepository;
     private final AiReviewService aiReviewService;
+    private final NotificationService notificationService;
 
     // ── CREATE REVIEW ───────────────────────────────────────────────────────
 
@@ -66,6 +68,21 @@ public class PerformanceService {
         }
 
         PerformanceReview savedReview = performanceRepository.save(review);
+
+        try {
+            notificationService.notifyReviewAdded(
+                employee.getUser().getEmail(),
+                employee.getFullName(),
+                request.getReviewPeriod(),
+                savedReview.getScore(),
+                savedReview.getScoreLabel(),
+                savedReview.getReviewer().getFullName(),
+                savedReview.getAiSummary()
+            );
+        } catch (Exception e) {
+            // Ignore, non-blocking
+        }
+
         return mapToResponse(savedReview);
     }
 

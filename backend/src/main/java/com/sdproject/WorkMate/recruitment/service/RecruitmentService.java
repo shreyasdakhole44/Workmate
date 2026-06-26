@@ -9,6 +9,10 @@ import com.sdproject.WorkMate.recruitment.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.sdproject.WorkMate.auth.entity.User;
+import com.sdproject.WorkMate.auth.entity.Role;
+import com.sdproject.WorkMate.auth.repository.UserRepository;
+import com.sdproject.WorkMate.notification.service.NotificationService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +27,8 @@ public class RecruitmentService {
     private final CandidateRepository  candidateRepo;
     private final InterviewRepository  interviewRepo;
     private final EmployeeRepository   employeeRepo;
+    private final UserRepository        userRepository;
+    private final NotificationService   notificationService;
 
     // ── JOB POSTINGS ──────────────────────────────────────────────
 
@@ -58,7 +64,31 @@ public class RecruitmentService {
             .phone(req.getPhone()).resumeUrl(req.getResumeUrl())
             .experienceYears(req.getExperienceYears()).notes(req.getNotes())
             .status(CandidateStatus.APPLIED).build();
-        return mapCandidate(candidateRepo.save(c));
+        Candidate savedCandidate = candidateRepo.save(c);
+
+        try {
+            List<User> hrUsers = userRepository.findByRoleIn(List.of(Role.HR_MANAGER, Role.ADMIN));
+            hrUsers.forEach(hr -> {
+                try {
+                    notificationService.notifyHrNewCandidate(
+                        hr.getEmail(),
+                        hr.getRole() == Role.ADMIN ? "Admin" : "HR Team",
+                        savedCandidate.getName(),
+                        savedCandidate.getEmail(),
+                        job.getTitle(),
+                        job.getDepartment(),
+                        req.getExperienceYears(),
+                        savedCandidate.getResumeUrl()
+                    );
+                } catch (Exception e) {
+                    // Ignore, non-blocking
+                }
+            });
+        } catch (Exception e) {
+            // Ignore, non-blocking
+        }
+
+        return mapCandidate(savedCandidate);
     }
 
     @Transactional(readOnly = true)

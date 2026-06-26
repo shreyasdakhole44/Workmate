@@ -18,6 +18,7 @@ import {
   MessageSquare, PhoneCall, Mail, Sparkles, ShieldCheck
 } from "lucide-react";
 import toast from "react-hot-toast";
+import api from "../api/axios";
 
 // Local SVG icons since brand icons are not in current lucide-react build
 const LinkedinIcon = (props) => (
@@ -206,9 +207,18 @@ function Hero() {
 
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }));
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    try {
+      await api.post("/test/notifications/submit-lead", {
+        email: form.email,
+        phone: form.phone,
+        size: form.size
+      });
+      setSubmitted(true);
+    } catch (err) {
+      toast.error("Failed to submit request. Please try again.");
+    }
   };
 
   return (

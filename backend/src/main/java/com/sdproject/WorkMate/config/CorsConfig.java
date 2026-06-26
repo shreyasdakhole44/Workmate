@@ -1,6 +1,5 @@
 package com.sdproject.WorkMate.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -12,16 +11,18 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-    @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:5173,http://localhost:5174,http://localhost:5175,https://workmate-hrms.netlify.app}")
-    private List<String> allowedOrigins;
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
         // ── Allowed origins ────────────────────────────────────────────────
         // React dev server runs on 5173 (Vite) or 3000 (CRA)
-        config.setAllowedOrigins(allowedOrigins);
+        config.setAllowedOrigins(List.of(
+                "http://localhost:3000",
+                "http://localhost:5173",
+                "http://localhost:5174",
+                "http://localhost:5175"
+        ));
 
         // ── Allowed HTTP methods ───────────────────────────────────────────
         config.setAllowedMethods(List.of(

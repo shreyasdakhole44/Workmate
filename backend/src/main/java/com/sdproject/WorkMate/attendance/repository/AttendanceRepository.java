@@ -22,5 +22,8 @@ public interface AttendanceRepository extends JpaRepository<AttendanceLog, Long>
     @Query("SELECT a FROM AttendanceLog a JOIN FETCH a.employee WHERE a.date = :date")
     List<AttendanceLog> findByDate(@Param("date") LocalDate date);
 
+    @Query("SELECT a FROM AttendanceLog a JOIN FETCH a.employee e JOIN FETCH e.user WHERE a.date = :date AND a.checkOutTime IS NULL")
+    List<AttendanceLog> findByDateAndCheckOutTimeIsNull(@Param("date") LocalDate date);
+
     long countByEmployeeIdAndStatusAndDateBetween(Long employeeId, AttendanceStatus status, LocalDate startDate, LocalDate endDate);
 }

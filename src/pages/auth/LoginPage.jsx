@@ -404,8 +404,7 @@ export default function LoginPage() {
                 {[
                   { role: "Admin", email: "admin@workmate.com", pass: "admin123", bg: "bg-red-50 text-red-700 hover:bg-red-100/50 border-red-100" },
                   { role: "HR Manager", email: "hr@workmate.com", pass: "hr123", bg: "bg-blue-50 text-blue-700 hover:bg-blue-100/50 border-blue-100" },
-                  { role: "Employee", email: "emp@workmate.com", pass: "emp123", bg: "bg-emerald-50 text-emerald-700 hover:bg-emerald-100/50 border-emerald-100" },
-                  { role: "Employee (Rohit)", email: "rohit@workmate.com", pass: "rohit123", bg: "bg-amber-50 text-amber-700 hover:bg-amber-100/50 border-amber-100" }
+                  { role: "Employee", email: "emp@workmate.com", pass: "emp123", bg: "bg-emerald-50 text-emerald-700 hover:bg-emerald-100/50 border-emerald-100" }
                 ].map((demo) => (
                   <button
                     key={demo.role}

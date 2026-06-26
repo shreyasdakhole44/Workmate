@@ -12,6 +12,8 @@ import com.sdproject.WorkMate.payroll.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.sdproject.WorkMate.notification.service.NotificationService;
+import java.time.Month;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,6 +30,7 @@ public class PayrollService {
     private final PromotionRepository promotionRepo;
     private final EmployeeRepository employeeRepo;
     private final UserRepository userRepo;
+    private final NotificationService notificationService;
 
     // ── SALARY STRUCTURES ─────────────────────────────────────────
 
@@ -99,7 +102,24 @@ public class PayrollService {
             .status("PAID")
             .build();
 
-        return payslipRepo.save(payslip);
+        Payslip savedPayslip = payslipRepo.save(payslip);
+
+        try {
+            notificationService.notifyPayslipGenerated(
+                emp.getUser().getEmail(),
+                emp.getFullName(),
+                Month.of(month).name(),
+                year,
+                savedPayslip.getBasicSalary(),
+                savedPayslip.getGrossEarnings(),
+                savedPayslip.getTotalDeductions(),
+                savedPayslip.getNetPay()
+            );
+        } catch (Exception e) {
+            // Ignore, non-blocking
+        }
+
+        return savedPayslip;
     }
 
     @Transactional(readOnly = true)
