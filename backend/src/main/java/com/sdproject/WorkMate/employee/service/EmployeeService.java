@@ -30,6 +30,11 @@ public class EmployeeService {
 
     public EmployeeResponse createEmployee(EmployeeRequest request) {
 
+        // 0. Enforce userId presence on creation
+        if (request.getUserId() == null) {
+            throw new WorkmateException("User ID is required to create employee profile");
+        }
+
         // 1. Check linked user exists
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", request.getUserId()));

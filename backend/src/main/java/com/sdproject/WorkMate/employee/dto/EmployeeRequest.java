@@ -20,7 +20,7 @@ public class EmployeeRequest {
 
     private String designation;
 
-    @Pattern(regexp = "^[0-9]{10}$", message = "Phone must be 10 digits")
+    @Pattern(regexp = "^([0-9]{10})?$", message = "Phone must be 10 digits")
     private String phone;
 
     private String address;
@@ -33,7 +33,6 @@ public class EmployeeRequest {
     private String profilePicUrl;
 
     // ID of the user account to link to this employee
-    @NotNull(message = "User ID is required")
     private Long userId;
 
     // Optional — employee's reporting manager

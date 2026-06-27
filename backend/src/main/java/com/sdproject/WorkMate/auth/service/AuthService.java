@@ -69,10 +69,25 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
 
-        // Step 1: Check email not already taken
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new WorkmateException(
-                    "Email already registered: " + request.getEmail());
+        // Step 1: Check if user already exists
+        Optional<User> existingUserOpt = userRepository.findByEmail(request.getEmail());
+        if (existingUserOpt.isPresent()) {
+            User existingUser = existingUserOpt.get();
+            // If the user is already linked to an employee profile, block duplicate registration
+            if (employeeRepository.findByUserId(existingUser.getId()).isPresent()) {
+                throw new WorkmateException("Email already registered: " + request.getEmail());
+            }
+            // Otherwise, return the existing user (self-healing from a previous half-failed creation)
+            String token = jwtUtil.generateToken(
+                    existingUser.getEmail(),
+                    existingUser.getRole().name()
+            );
+            return AuthResponse.builder()
+                    .token(token)
+                    .email(existingUser.getEmail())
+                    .role(existingUser.getRole())
+                    .userId(existingUser.getId())
+                    .build();
         }
 
         // Step 2: Hash password with BCrypt
