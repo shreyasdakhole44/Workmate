@@ -4,10 +4,10 @@ import { X } from "lucide-react";
 
 export default function Modal({ open, onClose, title, children, size = "md" }) {
   const sizeClasses = {
-    sm: "max-w-md",
-    md: "max-w-lg",
-    lg: "max-w-2xl",
-    xl: "max-w-4xl"
+    sm: "sm:max-w-md",
+    md: "sm:max-w-lg",
+    lg: "sm:max-w-2xl",
+    xl: "sm:max-w-4xl"
   };
   const widthClass = sizeClasses[size] || sizeClasses.md;
 
@@ -39,7 +39,7 @@ export default function Modal({ open, onClose, title, children, size = "md" }) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-full sm:translate-y-0 sm:scale-95"
             >
-              <DialogPanel className={`relative transform overflow-hidden rounded-t-2xl sm:rounded-2xl bg-white text-left shadow-xl transition-all w-full sm:${widthClass} max-h-[92vh] sm:max-h-[90vh] flex flex-col border border-gray-100`}>
+              <DialogPanel className={`relative transform overflow-hidden rounded-t-2xl sm:rounded-2xl bg-white text-left shadow-xl transition-all w-full ${widthClass} max-h-[92vh] sm:max-h-[90vh] flex flex-col border border-gray-100`}>
                 {/* Sticky Header */}
                 <div className="sticky top-0 bg-white flex items-center justify-between px-6 py-4 border-b border-gray-100 z-10 shrink-0">
                   <DialogTitle as="h3" className="text-base font-semibold text-gray-900 leading-none">
