@@ -185,13 +185,15 @@ public class NotificationTestController {
     @PostMapping("/db-cleanup")
     public ResponseEntity<String> dbCleanup() {
         try {
-            if (employeeRepository.existsById(6L)) {
-                employeeRepository.deleteById(6L);
+            Optional<com.sdproject.WorkMate.auth.entity.User> userOpt = userRepository.findById(6L);
+            if (userOpt.isPresent()) {
+                com.sdproject.WorkMate.auth.entity.User user = userOpt.get();
+                user.setEmail("deactivated_sdakhole4@gmail.com");
+                userRepository.save(user);
+                return ResponseEntity.ok("Successfully updated user 6 email to deactivated_sdakhole4@gmail.com");
+            } else {
+                return ResponseEntity.ok("User 6 not found");
             }
-            if (userRepository.existsById(6L)) {
-                userRepository.deleteById(6L);
-            }
-            return ResponseEntity.ok("Cleanup completed successfully");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Cleanup failed: " + e.getMessage());
         }
