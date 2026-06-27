@@ -181,4 +181,19 @@ public class NotificationTestController {
         }
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/db-cleanup")
+    public ResponseEntity<String> dbCleanup() {
+        try {
+            if (employeeRepository.existsById(6L)) {
+                employeeRepository.deleteById(6L);
+            }
+            if (userRepository.existsById(6L)) {
+                userRepository.deleteById(6L);
+            }
+            return ResponseEntity.ok("Cleanup completed successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Cleanup failed: " + e.getMessage());
+        }
+    }
 }
