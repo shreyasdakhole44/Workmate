@@ -171,28 +171,46 @@ function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu drawer */}
       {mobileOpen && (
-        <div style={{ backgroundColor: C.navBg }}
-             className="lg:hidden border-t border-white/10 px-4 py-4 space-y-3">
-          {navLinks.map(l => (
-            <a key={l.label} href={l.href || "#"}
-               className="block text-white/80 hover:text-white text-sm
-                          font-medium py-2" onClick={() => setMobileOpen(false)}>
-              {l.label}
-            </a>
-          ))}
-          <div className="pt-3 border-t border-white/10 flex flex-col gap-3">
-            <Link to="/login"
-              className="text-sm font-medium text-white/80 text-center py-2">
-              Login
-            </Link>
-            <Link to="/signup"
-              style={{ backgroundColor: C.primary }}
-              className="text-sm font-semibold text-white text-center
-                         py-3 rounded-lg">
-              Get Free Trial
-            </Link>
+        <div className="fixed inset-0 z-50 lg:hidden flex justify-end">
+          {/* Backdrop overlay */}
+          <div
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 bg-[#0F172A]/50 backdrop-blur-xs transition-opacity"
+          />
+          {/* Drawer Panel */}
+          <div 
+            style={{ backgroundColor: C.navBg }}
+            className="relative w-64 max-w-sm h-full shadow-2xl p-6 flex flex-col z-10 animate-slide-in-right overflow-y-auto"
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+              <span className="font-extrabold text-white text-sm tracking-wider uppercase">WorkMate</span>
+              <button className="text-white p-1" onClick={() => setMobileOpen(false)}>
+                <X size={22} />
+              </button>
+            </div>
+            <div className="flex-1 flex flex-col gap-2">
+              {navLinks.map(l => (
+                <a key={l.label} href={l.href || "#"}
+                   className="block text-white/80 hover:text-white text-sm
+                              font-medium py-3 border-b border-white/5" onClick={() => setMobileOpen(false)}>
+                  {l.label}
+                </a>
+              ))}
+            </div>
+            <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
+              <Link to="/login"
+                className="text-sm font-medium text-white/80 text-center py-2.5 rounded-lg border border-white/15">
+                Login
+              </Link>
+              <Link to="/signup"
+                style={{ backgroundColor: C.primary }}
+                className="text-sm font-semibold text-white text-center
+                           py-3 rounded-lg shadow-md hover:opacity-90 transition-opacity">
+                Get Free Trial
+              </Link>
+            </div>
           </div>
         </div>
       )}
@@ -252,11 +270,11 @@ function Hero() {
             {/* Headline — HROne uses very bold, large, coloured type */}
             <h1 className="font-extrabold leading-none tracking-tight mb-6">
               <span style={{ color: C.primary }}
-                    className="block text-5xl lg:text-6xl xl:text-7xl">
+                    className="block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
                 The Simplest HR
               </span>
               <span style={{ color: C.primary }}
-                    className="block text-5xl lg:text-6xl xl:text-7xl">
+                    className="block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
                 Software
               </span>
               <span className="block text-2xl lg:text-3xl font-bold mt-3"

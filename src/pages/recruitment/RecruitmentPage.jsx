@@ -254,20 +254,20 @@ export default function RecruitmentPage() {
       render: r => (
         <div className="flex gap-2">
           <button onClick={() => { setSelectedCandidate(r); setStatusForm({ status: r.status, notes: r.notes || "" }); setStatusModal(true); }}
-            className="btn btn-white btn-xs cursor-pointer py-1 px-2.5 flex items-center gap-1 text-[11px]">
+            className="btn btn-white btn-xs cursor-pointer py-2 sm:py-1 px-3.5 sm:px-2.5 flex items-center gap-1 text-[11px]">
             Stage
           </button>
           
           {r.status !== "SELECTED" && r.status !== "REJECTED" && (
             <button onClick={() => { setInterviewForm(f => ({ ...f, candidateId: r.id })); setInterviewModal(true); }}
-              className="btn btn-primary btn-xs cursor-pointer py-1 px-2.5 flex items-center gap-1 text-[11px]">
+              className="btn btn-primary btn-xs cursor-pointer py-2 sm:py-1 px-3.5 sm:px-2.5 flex items-center gap-1 text-[11px]">
               <CalendarDays size={12}/> Interview
             </button>
           )}
 
           {r.status === "INTERVIEW_SCHEDULED" && (
-            <button onClick={() => { setFeedbackForm(f => ({ ...f, interviewId: r.id })); setFeedbackModal(true); }} // assuming we map candidate status or find interview. In this MVP, we let them submit by candidateId or look up
-              className="btn btn-success btn-xs cursor-pointer py-1 px-2.5 flex items-center gap-1 text-[11px]">
+            <button onClick={() => { setFeedbackForm(f => ({ ...f, interviewId: r.id })); setFeedbackModal(true); }}
+              className="btn btn-success btn-xs cursor-pointer py-2 sm:py-1 px-3.5 sm:px-2.5 flex items-center gap-1 text-[11px]">
               Feedback
             </button>
           )}
@@ -370,12 +370,78 @@ export default function RecruitmentPage() {
                 />
               </div>
             ) : (
-              <Table
-                columns={candidateColumns}
-                data={candidates}
-                loading={loading}
-                emptyMsg="Select a job opening to view applicants or no candidates have applied yet."
-              />
+              <>
+                <div className="hidden sm:block">
+                  <Table
+                    columns={candidateColumns}
+                    data={candidates}
+                    loading={loading}
+                    emptyMsg="Select a job opening to view applicants or no candidates have applied yet."
+                  />
+                </div>
+
+                {/* Mobile Stacked Card View (sm:hidden) */}
+                <div className="sm:hidden divide-y divide-gray-150">
+                  {candidates.map((r, i) => (
+                    <div key={r.id || i} className="p-4 flex flex-col gap-3 text-left bg-white">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <Avatar name={r.name} size="sm"/>
+                          <div className="min-w-0">
+                            <h4 className="font-bold text-gray-900 leading-snug">{r.name}</h4>
+                            <p className="text-xs text-gray-450 truncate">{r.email} · {r.phone}</p>
+                          </div>
+                        </div>
+                        <Badge label={r.status}/>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-xs font-semibold mt-1">
+                        <div>
+                          <p className="text-[10px] text-gray-400 uppercase tracking-wider">Experience</p>
+                          <p className="text-gray-800 mt-0.5">{r.experienceYears} Years</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-gray-400 uppercase tracking-wider">Resume</p>
+                          <div className="mt-0.5">
+                            {r.resumeUrl ? (
+                              <a href={r.resumeUrl} target="_blank" rel="noreferrer" className="text-xs text-brand hover:underline font-bold">
+                                View Resume
+                              </a>
+                            ) : <span className="text-gray-400 text-xs">None</span>}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-end gap-2.5 border-t border-gray-50 pt-3 mt-1 flex-wrap">
+                        <button 
+                          onClick={() => { setSelectedCandidate(r); setStatusForm({ status: r.status, notes: r.notes || "" }); setStatusModal(true); }}
+                          className="btn btn-white btn-xs cursor-pointer py-2 px-3 flex items-center gap-1 text-[11px]"
+                        >
+                          Stage
+                        </button>
+                        
+                        {r.status !== "SELECTED" && r.status !== "REJECTED" && (
+                          <button 
+                            onClick={() => { setInterviewForm(f => ({ ...f, candidateId: r.id })); setInterviewModal(true); }}
+                            className="btn btn-primary btn-xs cursor-pointer py-2 px-3 flex items-center gap-1 text-[11px]"
+                          >
+                            <CalendarDays size={12}/> Interview
+                          </button>
+                        )}
+
+                        {r.status === "INTERVIEW_SCHEDULED" && (
+                          <button 
+                            onClick={() => { setFeedbackForm(f => ({ ...f, interviewId: r.id })); setFeedbackModal(true); }}
+                            className="btn btn-success btn-xs cursor-pointer py-2 px-3 flex items-center gap-1 text-[11px]"
+                          >
+                            Feedback
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         </div>

@@ -48,7 +48,7 @@ export default function AddEmployeeModal({
       {currentStep === 1 ? (
         // STEP 1: LOGIN ACCOUNT SETTINGS
         <form onSubmit={handleNextStep} className="space-y-4 text-left">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">Login Email *</label>
               <input 
@@ -71,7 +71,7 @@ export default function AddEmployeeModal({
                 required
               />
             </div>
-            <div className="col-span-1 md:col-span-2">
+            <div className="col-span-1 sm:col-span-2">
               <label className="block text-xs font-semibold text-gray-600 mb-1">Security Role *</label>
               <div className="relative">
                 <select 
@@ -100,7 +100,7 @@ export default function AddEmployeeModal({
       ) : (
         // STEP 2: PROFILE DETAILS
         <form onSubmit={onSubmit} className="space-y-4 text-left">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1">First Name *</label>
               <input 

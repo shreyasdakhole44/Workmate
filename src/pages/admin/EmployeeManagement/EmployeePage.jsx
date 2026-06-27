@@ -228,10 +228,10 @@ export default function EmployeePage() {
       key: "actions",
       label: "Actions",
       render: r => (
-        <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="flex items-center gap-1.5 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button 
             onClick={() => handleViewDetails(r)}
-            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
+            className="p-2.5 sm:p-1.5 -m-1 sm:m-0 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
             title="View Full Profile"
             aria-label="View employee"
           >
@@ -239,7 +239,7 @@ export default function EmployeePage() {
           </button>
           <button 
             onClick={() => openEditModal(r)}
-            className="p-1.5 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg cursor-pointer transition-colors"
+            className="p-2.5 sm:p-1.5 -m-1 sm:m-0 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg cursor-pointer transition-colors"
             title="Edit Details"
             aria-label="Edit employee"
           >
@@ -248,7 +248,7 @@ export default function EmployeePage() {
           {isAdmin() && r.isActive && (
             <button 
               onClick={() => setDeletingEmployee(r)}
-              className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer transition-colors"
+              className="p-2.5 sm:p-1.5 -m-1 sm:m-0 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg cursor-pointer transition-colors"
               title="Deactivate Profile"
               aria-label="Delete employee"
             >
@@ -308,12 +308,80 @@ export default function EmployeePage() {
           </div>
         ) : (
           <>
-            <Table
-              columns={columns}
-              data={employees}
-              loading={loading}
-              emptyMsg="No employees found matching the filters."
-            />
+            <div className="hidden sm:block">
+              <Table
+                columns={columns}
+                data={employees}
+                loading={loading}
+                emptyMsg="No employees found matching the filters."
+              />
+            </div>
+
+            {/* Mobile Stacked Card View (sm:hidden) */}
+            <div className="sm:hidden divide-y divide-gray-150">
+              {employees.map((r, i) => (
+                <div key={r.id || i} className="p-4 flex flex-col gap-3 text-left bg-white">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <Avatar name={r.fullName || `${r.firstName} ${r.lastName}`} size="sm"/>
+                      <div className="min-w-0">
+                        <h4 className="font-bold text-gray-900 leading-snug">{r.fullName || `${r.firstName} ${r.lastName}`}</h4>
+                        <p className="text-xs text-gray-450 truncate">{r.email}</p>
+                      </div>
+                    </div>
+                    <Badge label={r.isActive ? "ACTIVE" : "INACTIVE"} />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-xs font-semibold mt-1">
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">Employee Code</p>
+                      <p className="font-mono text-gray-800 mt-0.5">{r.empCode || "—"}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">Department</p>
+                      <div className="mt-0.5"><Badge label={r.department} /></div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">Designation</p>
+                      <p className="text-gray-700 mt-0.5">{r.designation || "—"}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">Join Date</p>
+                      <p className="text-gray-600 mt-0.5">{formatDate(r.joinDate)}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-3.5 border-t border-gray-50 pt-3 mt-1">
+                    <button 
+                      onClick={() => handleViewDetails(r)}
+                      className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-gray-600 border border-gray-200 rounded-lg hover:bg-slate-50 cursor-pointer"
+                      aria-label="View employee"
+                    >
+                      <Eye size={14} />
+                      <span>View</span>
+                    </button>
+                    <button 
+                      onClick={() => openEditModal(r)}
+                      className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-blue-600 border border-blue-100 bg-blue-50/30 rounded-lg hover:bg-blue-50 cursor-pointer"
+                      aria-label="Edit employee"
+                    >
+                      <Pencil size={14} />
+                      <span>Edit</span>
+                    </button>
+                    {isAdmin() && r.isActive && (
+                      <button 
+                        onClick={() => setDeletingEmployee(r)}
+                        className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-rose-600 border border-rose-100 bg-rose-50/30 rounded-lg hover:bg-rose-50 cursor-pointer"
+                        aria-label="Delete employee"
+                      >
+                        <Trash2 size={14} />
+                        <span>Deactivate</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
 
             <Pagination 
               page={page} 

@@ -317,7 +317,7 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr_320px] gap-5 items-stretch">
               
               {/* LEFT COLUMN */}
-              <div className="flex flex-col gap-4 h-full">
+              <div className="flex flex-col gap-4 h-full order-2 lg:order-1">
                 
                 {/* 1. LEAVE APPROVAL QUEUE */}
                 <CollapsibleCard title="Leave Approval Queue" count={pending.length}>
@@ -436,7 +436,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* CENTER COLUMN: CHART & FEED */}
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 order-1 lg:order-2">
                 
                 {/* HEADCOUNT CHART */}
                 <div className="bg-white rounded-xl shadow-xs border border-gray-200/60 p-5 text-left">
@@ -490,7 +490,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* RIGHT COLUMN */}
-              <div className="flex flex-col gap-4 h-full">
+              <div className="flex flex-col gap-4 h-full order-3">
                 
                 {/* SYSTEM ACTIVITY */}
                 <div className="bg-white rounded-xl shadow-xs border border-gray-200/60 p-5 text-left space-y-4">

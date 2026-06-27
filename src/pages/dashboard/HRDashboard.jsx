@@ -249,150 +249,20 @@ export default function HRDashboard() {
   const newCandidatesCount = 4; // Mock recruitment pipeline
 
   return (
-    <div className="fixed inset-0 z-30 flex bg-gray-50 overflow-hidden antialiased text-gray-700 w-full h-screen">
-      
-      {/* ==========================================
-          LEFT SLIM SIDEBAR (Green, Orange Active)
-         ========================================== */}
-      <aside className="w-16 bg-[#0B3D2E] border-r border-[#0B3D2E]/20 flex flex-col justify-between items-center py-5 shrink-0 z-10 h-full">
-        <div className="flex flex-col items-center gap-6 w-full">
-          {/* Logo Mark */}
-          <div 
-            onClick={() => navigate("/dashboard")}
-            className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform shrink-0"
-          >
-            <span className="text-[#0B3D2E] font-black text-sm">W</span>
-          </div>
+    <div className="w-full pb-10">
+      {/* GREEN BANNER */}
+      <div className="bg-[#0B3D2E] pb-24 pt-6 px-4 sm:px-8 text-white text-left relative z-0 border-t border-white/5">
+        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
+          Hello, {user?.fullName?.split(" ")?.[0] || "HR Manager"}!
+        </h1>
+        <p className="text-white/70 text-xs mt-1.5 font-semibold">HR Operations Workspace · Manage logs, onboarding & leaves approvals</p>
+      </div>
 
-          {/* Navigation Items */}
-          <div className="flex flex-col items-center gap-3 w-full">
-            {[
-              { to: "/dashboard", icon: LayoutDashboard, active: true, label: "Home" },
-              { to: "/employees", icon: Users, label: "Employees" },
-              { to: "/recruitment", icon: Briefcase, label: "Recruitment" },
-              { to: "/onboarding", icon: ClipboardCheck, label: "Onboarding" },
-              { to: "/attendance", icon: Clock, label: "Attendance" },
-              { to: "/leave", icon: Calendar, label: "Leave" },
-              { to: "/performance", icon: Star, label: "Reviews" },
-              { to: "/payroll", icon: DollarSign, label: "Payroll" },
-              { to: "/profile", icon: UserCircle, label: "Profile" }
-            ].map((item, idx) => (
-              <button
-                key={idx}
-                onClick={() => navigate(item.to)}
-                title={item.label}
-                className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all cursor-pointer relative group active:scale-[0.95] ${
-                  item.active 
-                    ? "bg-white/10 text-white border-l-2 border-[#E8420A] rounded-l-none pl-0.5 font-bold" 
-                    : "text-white/60 hover:bg-white/5 hover:text-white"
-                }`}
-              >
-                <item.icon size={18} strokeWidth={item.active ? 2.5 : 2} />
-                <span className="absolute left-full ml-3 px-2 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
-                  {item.label}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Sign Out Button */}
-        <button 
-          onClick={() => { logout(); navigate("/login"); }}
-          title="Sign Out"
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-white/50 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer group relative"
-        >
-          <LogOut size={16} />
-          <span className="absolute left-full ml-3 px-2 py-1.5 bg-gray-900 text-white text-[10px] font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap pointer-events-none shadow-md">
-            Sign Out
-          </span>
-        </button>
-      </aside>
-
-      {/* ==========================================
-          RIGHT VIEWPORT CONTAINER
-         ========================================== */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative h-full">
+      {/* PAGE CONTENT CONTAINER */}
+      <div className="px-4 sm:px-8 -mt-14 space-y-6 relative z-10 w-full max-w-screen-2xl mx-auto">
         
-        {/* TOP BAR */}
-        <header className="w-full bg-[#0B3D2E] text-white flex-shrink-0 relative z-20 shadow-sm border-b border-white/5">
-          <div className="px-8 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-[12px] md:text-sm tracking-wider uppercase">TALENTRIX SOLUTION</span>
-            </div>
-
-            <div className="hidden sm:block relative w-80 max-w-md">
-              <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input 
-                type="text" 
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === "Enter" && searchQuery.trim()) {
-                    navigate("/employees", { state: { search: searchQuery } });
-                  }
-                }}
-                className="w-full bg-white text-gray-800 placeholder-gray-400 rounded-lg pl-9.5 pr-4 py-1.5 text-xs focus:outline-none shadow-sm focus:ring-1 focus:ring-emerald-300"
-                placeholder="Search for requests, reports, people..."
-              />
-            </div>
-
-            <div className="flex items-center gap-3.5">
-              <button 
-                onClick={() => navigate("/leave")} 
-                className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer relative" 
-                title="Pending Leaves"
-              >
-                <Calendar size={18} />
-                {pending.length > 0 && (
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-[#F05537] rounded-full" />
-                )}
-              </button>
-              <button 
-                onClick={() => setAiDrawerOpen(!aiDrawerOpen)} 
-                className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer animate-pulse" 
-                title="Spring AI Operations"
-              >
-                <Sparkles size={18} />
-              </button>
-              <button 
-                onClick={() => toast.success("All systems operational. No new alerts.")} 
-                className="text-white/80 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer relative" 
-                title="System Alerts"
-              >
-                <Bell size={18} />
-              </button>
-              <div className="h-7 w-px bg-white/10" />
-              
-              <div 
-                onClick={() => navigate("/profile")}
-                className="flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform"
-              >
-                <Avatar name={user?.fullName || "HR"} size="sm" />
-                <span className="hidden md:inline text-xs font-bold tracking-tight text-white">
-                  {user?.fullName?.split(" ")?.[0]}
-                </span>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* CONTENT SCROLL WINDOW */}
-        <main className="flex-1 overflow-y-auto w-full bg-gray-50 pb-10">
-          
-          {/* GREEN BANNER */}
-          <div className="bg-[#0B3D2E] pb-24 pt-6 px-8 text-white text-left relative z-0 border-t border-white/5">
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white">
-              Hello, {user?.fullName?.split(" ")?.[0] || "HR Manager"}!
-            </h1>
-            <p className="text-white/70 text-xs mt-1.5 font-semibold">HR Operations Workspace · Manage logs, onboarding & leaves approvals</p>
-          </div>
-
-          {/* PAGE CONTENT CONTAINER */}
-          <div className="px-8 -mt-14 space-y-6 relative z-10 w-full max-w-screen-2xl mx-auto">
-            
-            {/* FLOATING ACTION TAB BAR */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200/50 p-2 flex flex-wrap items-center justify-between gap-3">
+        {/* FLOATING ACTION TAB BAR */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200/50 p-2 flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2">
                 <button 
                   onClick={() => setPostModalOpen(true)}
@@ -488,7 +358,7 @@ export default function HRDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 w-full items-start">
               
               {/* LEFT COLUMN */}
-              <div className="lg:col-span-3 space-y-6">
+              <div className="lg:col-span-3 order-2 lg:order-1 space-y-6">
                 
                 {/* 1. LEAVE APPROVAL QUEUE */}
                 <CollapsibleCard title="Leave Approval Queue" count={filteredPending.length}>
@@ -598,7 +468,7 @@ export default function HRDashboard() {
               </div>
 
               {/* CENTER COLUMN: FEED */}
-              <div className="lg:col-span-6 space-y-6">
+              <div className="lg:col-span-6 order-1 lg:order-2 space-y-6">
                 <div className="flex justify-between items-center">
                   <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">HR Board Announcements</h3>
                   <span className="bg-[#0B3D2E]/5 text-[#0B3D2E] text-[10px] font-bold px-2.5 py-1 rounded-full border border-[#0B3D2E]/10">Broadcast Enabled</span>
@@ -685,7 +555,7 @@ export default function HRDashboard() {
               </div>
 
               {/* RIGHT COLUMN: ATTENDANCE SUMMARY */}
-              <div className="lg:col-span-3 space-y-6">
+              <div className="lg:col-span-3 order-3 space-y-6">
                 
                 {/* TODAY'S ATTENDANCE SUMMARY */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 text-left space-y-4">
@@ -747,8 +617,6 @@ export default function HRDashboard() {
                 </div>
               </div>
             </div>
-          </div>
-        </main>
 
         {/* SPRING AI FLOATING ASSISTANT */}
         <div 

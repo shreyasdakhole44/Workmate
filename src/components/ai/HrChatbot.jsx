@@ -53,14 +53,14 @@ export default function HrChatbot() {
   return (
     <>
       <button onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#FF5A36] 
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#FF5A36] 
                    text-white shadow-lg hover:bg-[#E04F2E] hover:scale-105 transition-all 
                    flex items-center justify-center z-50 cursor-pointer border border-white/10">
         {open ? (
           <X size={22}/>
         ) : (
           <div className="relative w-full h-full flex items-center justify-center">
-            <Sparkles size={24} className="text-white fill-none stroke-[2]" />
+            <Sparkles size={20} className="text-white fill-none stroke-[2] sm:size-6" />
             <div className="absolute -top-1 -right-1 bg-[#024E31] text-[9px] 
                             font-black text-white px-1.5 py-0.5 rounded-lg 
                             border border-white shadow-sm flex items-center justify-center leading-none">
@@ -71,7 +71,8 @@ export default function HrChatbot() {
       </button>
 
       {open && (
-        <div className="fixed bottom-24 right-6 w-96 h-[500px] bg-slate-50 
+        <div className="fixed bottom-20 right-4 left-4 sm:left-auto sm:right-6 sm:bottom-24 
+                        w-auto sm:w-96 h-[70vh] sm:h-[500px] bg-slate-50 
                         rounded-2xl shadow-2xl border border-slate-100 
                         flex flex-col z-50 overflow-hidden transition-all duration-300">
           
