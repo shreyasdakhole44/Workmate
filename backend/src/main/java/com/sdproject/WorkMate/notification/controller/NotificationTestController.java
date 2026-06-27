@@ -2,13 +2,9 @@ package com.sdproject.WorkMate.notification.controller;
 
 import com.sdproject.WorkMate.notification.service.EmailService;
 import com.sdproject.WorkMate.notification.scheduler.MissingCheckoutScheduler;
-import com.sdproject.WorkMate.auth.repository.UserRepository;
-import com.sdproject.WorkMate.employee.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/test/notifications")
@@ -17,8 +13,6 @@ public class NotificationTestController {
 
     private final EmailService emailService;
     private final MissingCheckoutScheduler missingCheckoutScheduler;
-    private final UserRepository userRepository;
-    private final EmployeeRepository employeeRepository;
 
     @GetMapping("/send-direct")
     public ResponseEntity<String> sendDirectTestEmail(
@@ -146,56 +140,6 @@ public class NotificationTestController {
             return ResponseEntity.ok("Lead submitted successfully");
         } else {
             return ResponseEntity.status(500).body("Failed to send lead email");
-        }
-    }
-
-    @GetMapping("/db-diagnostics")
-    public ResponseEntity<Map<String, Object>> dbDiagnostics() {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            List<Map<String, Object>> usersList = userRepository.findAll().stream().map(u -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put("id", u.getId());
-                map.put("email", u.getEmail());
-                map.put("role", u.getRole() != null ? u.getRole().name() : null);
-                map.put("isActive", u.getIsActive());
-                return map;
-            }).collect(Collectors.toList());
-
-            List<Map<String, Object>> employeesList = employeeRepository.findAll().stream().map(e -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put("id", e.getId());
-                map.put("fullName", e.getFullName());
-                map.put("empCode", e.getEmpCode());
-                map.put("userId", e.getUser() != null ? e.getUser().getId() : null);
-                map.put("isActive", e.getIsActive());
-                return map;
-            }).collect(Collectors.toList());
-
-            response.put("success", true);
-            response.put("users", usersList);
-            response.put("employees", employeesList);
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("error", e.getMessage());
-        }
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/db-cleanup")
-    public ResponseEntity<String> dbCleanup() {
-        try {
-            Optional<com.sdproject.WorkMate.auth.entity.User> userOpt = userRepository.findById(6L);
-            if (userOpt.isPresent()) {
-                com.sdproject.WorkMate.auth.entity.User user = userOpt.get();
-                user.setEmail("deactivated_sdakhole4@gmail.com");
-                userRepository.save(user);
-                return ResponseEntity.ok("Successfully updated user 6 email to deactivated_sdakhole4@gmail.com");
-            } else {
-                return ResponseEntity.ok("User 6 not found");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Cleanup failed: " + e.getMessage());
         }
     }
 }
