@@ -20,7 +20,7 @@ public class EmployeeRequest {
 
     private String designation;
 
-    @Pattern(regexp = "^([0-9]{10})?$", message = "Phone must be 10 digits")
+    @Pattern(regexp = "^$|^[+0-9\\s\\-()]{7,20}$", message = "Phone must be a valid number")
     private String phone;
 
     private String address;
